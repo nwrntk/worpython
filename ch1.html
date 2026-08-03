@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 1 · List — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 01</div>
+  <h1>List — ลิสต์</h1>
+  <p class="lead">ตัวแปรตัวเดียว เก็บข้อมูลได้หลายค่า เรียงตามลำดับ และแก้ไขทีหลังได้</p>
+
+  <h2>1.1 ทำไมต้องมี List</h2>
+
+  <p>สมมติต้องเก็บคะแนนนักเรียน 5 คน ถ้าไม่มี list เราต้องทำแบบนี้</p>
+
+<pre>score1 = 80
+score2 = 75
+score3 = 92
+score4 = 68
+score5 = 88</pre>
+
+  <p>ถ้ามี 500 คนล่ะ? ตัวแปร 500 ตัวคงไม่ไหว <code>list</code> แก้ปัญหานี้ —
+  เก็บทุกค่าไว้ในตัวแปรเดียว</p>
+
+<pre>scores = [80, 75, 92, 68, 88]
+print(scores)        <span class="out"># [80, 75, 92, 68, 88]</span>
+print(len(scores))   <span class="out"># 5  → จำนวนสมาชิก</span></pre>
+
+  <p>สร้าง list ด้วยวงเล็บเหลี่ยม <code>[ ]</code> คั่นสมาชิกด้วยจุลภาค
+  สมาชิกจะเป็นชนิดอะไรก็ได้ และปนกันได้ด้วย</p>
+
+<pre>names   = ["ฟ้า", "นล", "อาร์ม"]
+mixed   = [1, "สอง", 3.0, True]
+empty   = []            <span class="out"># list ว่าง</span>
+nested  = [[1, 2], [3, 4]]   <span class="out"># list ซ้อน list ก็ได้</span></pre>
+
+  <h2>1.2 Index — เข้าถึงทีละตัว</h2>
+
+  <p>สมาชิกแต่ละตัวมีเลขประจำตำแหน่งเรียกว่า <strong>index</strong>
+  ข้อสำคัญที่สุดคือ <strong>เริ่มนับจาก 0 ไม่ใช่ 1</strong></p>
+
+<pre>fruits = ["apple", "banana", "cherry", "durian"]
+<span class="out">#  index:     0        1         2         3
+#  ติดลบ:    -4       -3        -2        -1</span>
+
+print(fruits[0])    <span class="out"># apple    → ตัวแรก</span>
+print(fruits[2])    <span class="out"># cherry</span>
+print(fruits[-1])   <span class="out"># durian   → ตัวสุดท้าย</span>
+print(fruits[-2])   <span class="out"># cherry   → ตัวรองสุดท้าย</span></pre>
+
+  <div class="warn">
+    <b>ระวัง IndexError:</b> <code>fruits</code> มี 4 ตัว index สูงสุดคือ 3
+    ถ้าเรียก <code>fruits[4]</code> โปรแกรมจะพัง —
+    <span class="mono">IndexError: list index out of range</span>
+  </div>
+
+  <h2>1.3 Slice — ตัดเป็นช่วง</h2>
+
+  <p>รูปแบบคือ <code>list[start:stop]</code> — เอาตั้งแต่ <code>start</code>
+  ไปจนถึง <strong>ก่อน</strong> <code>stop</code> (ไม่รวมตัวที่ stop)</p>
+
+<pre>nums = [10, 20, 30, 40, 50, 60]
+
+print(nums[1:4])    <span class="out"># [20, 30, 40]   → index 1,2,3 (ไม่เอา 4)</span>
+print(nums[:3])     <span class="out"># [10, 20, 30]   → ละ start = เริ่มจากต้น</span>
+print(nums[3:])     <span class="out"># [40, 50, 60]   → ละ stop  = ไปจนจบ</span>
+print(nums[:])      <span class="out"># ทั้งหมด (สำเนา list)</span>
+print(nums[-2:])    <span class="out"># [50, 60]       → 2 ตัวท้าย</span>
+print(nums[::2])    <span class="out"># [10, 30, 50]   → เว้นทีละ 2 (step)</span>
+print(nums[::-1])   <span class="out"># [60,50,40,30,20,10] → กลับด้าน</span></pre>
+
+  <div class="note">
+    <b>slice ไม่พังง่าย ๆ:</b> ต่างจาก index ตรงที่ถ้าเลขเกินขอบ
+    slice จะไม่ error แต่จะคืนเท่าที่มี — <code>nums[2:99]</code> ได้
+    <code>[30, 40, 50, 60]</code>
+  </div>
+
+  <h2>1.4 List แก้ไขได้ (Mutable)</h2>
+
+<pre>colors = ["red", "green", "blue"]
+
+colors[1] = "yellow"      <span class="out"># แก้ค่าที่ตำแหน่ง 1</span>
+print(colors)             <span class="out"># ['red', 'yellow', 'blue']</span></pre>
+
+  <p>คำสั่งที่ใช้บ่อยที่สุด</p>
+
+  <table>
+    <tr><th>คำสั่ง</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+    <tr><td><code>append(x)</code></td><td>เพิ่ม x ต่อท้าย</td><td><code>a.append(9)</code></td></tr>
+    <tr><td><code>insert(i, x)</code></td><td>แทรก x ที่ตำแหน่ง i</td><td><code>a.insert(0, 9)</code></td></tr>
+    <tr><td><code>extend(b)</code></td><td>ต่อ list b เข้าท้าย</td><td><code>a.extend([7, 8])</code></td></tr>
+    <tr><td><code>remove(x)</code></td><td>ลบ x <em>ตัวแรก</em>ที่เจอ</td><td><code>a.remove(9)</code></td></tr>
+    <tr><td><code>pop(i)</code></td><td>ดึงตัวที่ i ออกมา (ไม่ใส่ i = ตัวท้าย)</td><td><code>x = a.pop()</code></td></tr>
+    <tr><td><code>sort()</code></td><td>เรียงค่าใน list เดิม</td><td><code>a.sort()</code></td></tr>
+    <tr><td><code>reverse()</code></td><td>กลับด้าน list เดิม</td><td><code>a.reverse()</code></td></tr>
+    <tr><td><code>count(x)</code></td><td>นับว่ามี x กี่ตัว</td><td><code>a.count(3)</code></td></tr>
+    <tr><td><code>index(x)</code></td><td>บอกตำแหน่งของ x ตัวแรก</td><td><code>a.index(3)</code></td></tr>
+  </table>
+
+<pre>a = [3, 1, 2]
+
+a.append(5)      <span class="out"># [3, 1, 2, 5]</span>
+a.insert(0, 9)   <span class="out"># [9, 3, 1, 2, 5]</span>
+a.remove(1)      <span class="out"># [9, 3, 2, 5]</span>
+last = a.pop()   <span class="out"># last = 5 ; a = [9, 3, 2]</span>
+a.sort()         <span class="out"># [2, 3, 9]</span>
+a.reverse()      <span class="out"># [9, 3, 2]</span></pre>
+
+  <div class="warn">
+    <b>กับดักคลาสสิก:</b> <code>a.sort()</code> เรียง list เดิมแล้วคืนค่า
+    <code>None</code> ดังนั้น <code>b = a.sort()</code> จะได้ <code>b = None</code>
+    ถ้าอยากได้ list ใหม่ให้ใช้ <code>b = sorted(a)</code> แทน
+  </div>
+
+  <h2>1.5 ฟังก์ชันที่ใช้กับ List ได้เลย</h2>
+
+<pre>scores = [80, 75, 92, 68, 88]
+
+print(len(scores))          <span class="out"># 5   → จำนวนสมาชิก</span>
+print(sum(scores))          <span class="out"># 403 → ผลรวม</span>
+print(max(scores))          <span class="out"># 92</span>
+print(min(scores))          <span class="out"># 68</span>
+print(sum(scores) / len(scores))   <span class="out"># 80.6 → ค่าเฉลี่ย</span>
+print(sorted(scores))       <span class="out"># [68, 75, 80, 88, 92] (ตัวเดิมไม่เปลี่ยน)</span>
+print(92 in scores)         <span class="out"># True  → เช็กว่ามีอยู่ไหม</span></pre>
+
+  <h2>1.6 กับดักการก๊อบปี้ list</h2>
+
+  <p>เรื่องนี้ทำคนพลาดเยอะมาก — <code>b = a</code> <strong>ไม่ได้</strong>ก๊อบปี้
+  แต่ทำให้ชื่อสองชื่อชี้ไปที่ list ก้อนเดียวกัน</p>
+
+<pre>a = [1, 2, 3]
+b = a            <span class="out"># ชี้ก้อนเดียวกัน!</span>
+b.append(4)
+print(a)         <span class="out"># [1, 2, 3, 4]  ← a เปลี่ยนตามไปด้วย</span>
+
+<span class="out"># ถ้าอยากได้ก้อนใหม่จริง ๆ</span>
+c = a[:]         <span class="out"># หรือ list(a) หรือ a.copy()</span>
+c.append(99)
+print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี่ยน</span></pre>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">โค้ดนี้พิมพ์อะไรออกมา?<br>
+      <code>a = [5, 10, 15, 20]</code><br><code>print(a[1])</code></div>
+    <button class="choice">5</button>
+    <button class="choice" data-correct>10</button>
+    <button class="choice">15</button>
+    <button class="choice">เกิด IndexError</button>
+    <div class="explain">index เริ่มที่ 0 → <code>a[0]=5</code>, <code>a[1]=10</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2"><code>nums = [1,2,3,4,5,6]</code> แล้ว <code>nums[2:5]</code> ได้อะไร?</div>
+    <button class="choice">[2, 3, 4]</button>
+    <button class="choice" data-correct>[3, 4, 5]</button>
+    <button class="choice">[3, 4, 5, 6]</button>
+    <button class="choice">[2, 3, 4, 5]</button>
+    <div class="explain">เอา index 2, 3, 4 (ไม่รวม index 5) → ค่าคือ 3, 4, 5</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>a = [1, 2, 3]</code> แล้ว <code>b = a.sort()</code> — ตอนนี้ <code>b</code> คืออะไร?</div>
+    <button class="choice">[1, 2, 3]</button>
+    <button class="choice">[3, 2, 1]</button>
+    <button class="choice" data-correct>None</button>
+    <button class="choice">เกิด TypeError</button>
+    <div class="explain"><code>sort()</code> เรียงในตัวเดิมและคืน <code>None</code>
+      ถ้าอยากได้ list ใหม่ต้องใช้ <code>sorted(a)</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ต้องการเพิ่มเลข 7 ต่อท้าย list <code>a</code> ใช้คำสั่งไหน?</div>
+    <button class="choice">a.add(7)</button>
+    <button class="choice" data-correct>a.append(7)</button>
+    <button class="choice">a.insert(7)</button>
+    <button class="choice">a.push(7)</button>
+    <div class="explain">Python ใช้ <code>append()</code> — <code>add()</code> เป็นของ set,
+      ส่วน <code>push()</code> เป็นของภาษาอื่น</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">ผลลัพธ์ของโค้ดนี้คือ?<br>
+      <code>x = [1, 2, 3]</code><br><code>y = x</code><br>
+      <code>y.append(4)</code><br><code>print(len(x))</code></div>
+    <button class="choice">3</button>
+    <button class="choice" data-correct>4</button>
+    <button class="choice">1</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain"><code>y = x</code> ทำให้ทั้งสองชื่อชี้ list ก้อนเดียวกัน
+      เพิ่มผ่าน <code>y</code> ก็คือเพิ่มใน <code>x</code> ด้วย → ยาว 4</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6"><code>a = [10, 20, 30]</code> แล้ว <code>a[-1]</code> คือ?</div>
+    <button class="choice">10</button>
+    <button class="choice">20</button>
+    <button class="choice" data-correct>30</button>
+    <button class="choice">เกิด IndexError</button>
+    <div class="explain">index ติดลบนับถอยหลังจากท้าย → <code>-1</code> คือตัวสุดท้าย</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — สถิติคะแนน</h4>
+    <p>กำหนด <code>scores = [78, 95, 62, 88, 71, 90]</code> เขียนโปรแกรมพิมพ์
+    จำนวนคน, คะแนนรวม, คะแนนสูงสุด, คะแนนต่ำสุด และค่าเฉลี่ย (ทศนิยม 2 ตำแหน่ง)</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>scores = [78, 95, 62, 88, 71, 90]
+
+print("จำนวนคน:", len(scores))
+print("รวม:", sum(scores))
+print("สูงสุด:", max(scores))
+print("ต่ำสุด:", min(scores))
+print("เฉลี่ย:", round(sum(scores) / len(scores), 2))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — จัดการรายชื่อ</h4>
+    <p>เริ่มจาก <code>names = ["นล", "ฟ้า", "อาร์ม"]</code> ทำตามลำดับแล้วพิมพ์ผลทุกขั้น:</p>
+    <ol>
+      <li>เพิ่ม "มิน" ต่อท้าย</li>
+      <li>แทรก "เก้า" ไว้หน้าสุด</li>
+      <li>ลบ "ฟ้า" ออก</li>
+      <li>เรียงตามตัวอักษร</li>
+      <li>พิมพ์ชื่อคนสุดท้ายใน list</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>names = ["นล", "ฟ้า", "อาร์ม"]
+
+names.append("มิน")
+print(names)
+
+names.insert(0, "เก้า")
+print(names)
+
+names.remove("ฟ้า")
+print(names)
+
+names.sort()
+print(names)
+
+print("คนสุดท้าย:", names[-1])</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — แยกครึ่ง</h4>
+    <p>กำหนด <code>nums = [1,2,3,4,5,6,7,8,9,10]</code> ใช้ <strong>slice เท่านั้น</strong>
+    (ห้ามใช้ loop) พิมพ์: 5 ตัวแรก, 5 ตัวหลัง, ตัวที่อยู่ตำแหน่งคู่ (index 0,2,4…),
+    และ list ที่กลับด้าน</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+print(nums[:5])     <span class="out"># [1, 2, 3, 4, 5]</span>
+print(nums[5:])     <span class="out"># [6, 7, 8, 9, 10]</span>
+print(nums[::2])    <span class="out"># [1, 3, 5, 7, 9]</span>
+print(nums[::-1])   <span class="out"># [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย</h4>
+    <p>รับตัวเลข 5 จำนวนจากผู้ใช้เก็บลง list (ใช้ <code>input()</code> กับ <code>int()</code>)
+    แล้วพิมพ์ list ที่เรียงจากมากไปน้อย พร้อมบอกว่าเลขที่มากที่สุดอยู่ตำแหน่ง index ที่เท่าไรใน list ต้นฉบับ</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = []
+nums.append(int(input("เลขที่ 1: ")))
+nums.append(int(input("เลขที่ 2: ")))
+nums.append(int(input("เลขที่ 3: ")))
+nums.append(int(input("เลขที่ 4: ")))
+nums.append(int(input("เลขที่ 5: ")))
+
+print("ต้นฉบับ:", nums)
+print("มากไปน้อย:", sorted(nums, reverse=True))
+print("ตัวมากสุดอยู่ index:", nums.index(max(nums)))
+
+<span class="out"># หมายเหตุ: บทถัดไปจะได้เรียน for loop ซึ่งเขียนส่วนรับค่าให้สั้นลงมากได้</span></pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>
