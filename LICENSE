@@ -1,3 +1,17 @@
+Copyright (c) 2026 K. Woranidtha
+
+This repository is dual-licensed. Which license applies depends on which part
+of the repository you are using.
+
+เอกสารนี้ใช้สัญญาอนุญาต 2 แบบ ขึ้นกับว่าคุณนำส่วนไหนไปใช้
+
+================================================================================
+1. SOFTWARE — MIT License
+================================================================================
+
+Applies to the source code: *.html (markup and scripts), *.css, *.js, *.py
+ใช้กับซอร์สโค้ด ได้แก่ไฟล์ *.html (โครงสร้างและสคริปต์), *.css, *.js, *.py
+
 MIT License
 
 Copyright (c) 2026 K. Woranidtha
@@ -19,3 +33,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+================================================================================
+2. EDUCATIONAL CONTENT — CC BY 4.0
+================================================================================
+
+Applies to the lesson text, explanations, quiz questions, coding exercises,
+answer keys, and any accompanying documents (*.docx).
+
+ใช้กับเนื้อหาบทเรียน คำอธิบาย ข้อสอบ โจทย์ เฉลย และเอกสารประกอบ (*.docx)
+
+Licensed under the Creative Commons Attribution 4.0 International License
+(CC BY 4.0). อนุญาตให้ทำซ้ำ ดัดแปลง และใช้เชิงพาณิชย์ได้ โดยต้องให้เครดิตผู้สร้าง
+
+  Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+  Full legal text:        https://creativecommons.org/licenses/by/4.0/legalcode
+
+Suggested attribution / รูปแบบการให้เครดิตที่แนะนำ:
+
+  "Python Lab: List, Tuple, Iteration" by K. Woranidtha, licensed under
+  CC BY 4.0. Source: https://github.com/nwrntk/worpython
