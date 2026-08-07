@@ -2,11 +2,19 @@
    สร้างโครง .pres-layout ครอบ <main> ที่มีอยู่แล้ว จึงไม่ต้องแก้ HTML ทุกไฟล์ */
 
 const PAGES = [
-  { group: 'Start',           file: 'index.html', num: '·', title: 'หน้าแรก' },
-  { group: 'I · ข้อมูลชุด',   file: 'ch1.html',   num: '1', title: 'List — ลิสต์' },
-  { group: 'I · ข้อมูลชุด',   file: 'ch2.html',   num: '2', title: 'Tuple — ทูเพิล' },
-  { group: 'II · การวนซ้ำ',   file: 'ch3.html',   num: '3', title: 'for loop' },
-  { group: 'II · การวนซ้ำ',   file: 'ch4.html',   num: '4', title: 'while loop' },
+  { group: 'Start',                   file: 'index.html', num: '·',  title: 'หน้าแรก' },
+  { group: 'I · พื้นฐาน',             file: 'ch1.html',   num: '1',  title: 'print และตัวแปร' },
+  { group: 'I · พื้นฐาน',             file: 'ch2.html',   num: '2',  title: 'ชนิดข้อมูล' },
+  { group: 'II · การตัดสินใจ',        file: 'ch3.html',   num: '3',  title: 'เงื่อนไข if' },
+  { group: 'III · ข้อมูลชุด',         file: 'ch4.html',   num: '4',  title: 'List — ลิสต์' },
+  { group: 'III · ข้อมูลชุด',         file: 'ch5.html',   num: '5',  title: 'Tuple — ทูเพิล' },
+  { group: 'IV · การวนซ้ำ',           file: 'ch6.html',   num: '6',  title: 'for loop' },
+  { group: 'IV · การวนซ้ำ',           file: 'ch7.html',   num: '7',  title: 'while loop' },
+  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch8.html',   num: '8',  title: 'Dictionary' },
+  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch9.html',   num: '9',  title: 'Set — เซต' },
+  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch10.html',  num: '10', title: 'String — ข้อความ' },
+  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch11.html',  num: '11', title: 'Function' },
+  { group: 'VII · ไฟล์และข้อผิดพลาด', file: 'ch12.html',  num: '12', title: 'File I/O & Exception' },
 ];
 
 const here = location.pathname.split('/').pop() || 'index.html';

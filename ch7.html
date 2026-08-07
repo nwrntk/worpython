@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 7 · while loop — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 07</div>
+  <h1>while loop</h1>
+  <p class="lead">วนซ้ำเมื่อ<strong>ไม่รู้ว่าต้องทำกี่รอบ</strong> — รู้แค่ว่าจะหยุดเมื่อไร</p>
+
+  <h2>7.1 รูปแบบพื้นฐาน</h2>
+
+  <p>อ่านว่า "ตราบใดที่<em>เงื่อนไข</em>ยังเป็นจริง ให้ทำสิ่งนี้ซ้ำไปเรื่อย ๆ"</p>
+
+<pre>i = 1
+while i &lt;= 5:
+    print(i)
+    i += 1        <span class="out"># ห้ามลืม! ไม่งั้นวนไม่จบ</span>
+
+<span class="out"># 1 2 3 4 5</span></pre>
+
+  <p>while loop ที่ถูกต้องต้องมีครบ 3 อย่างเสมอ</p>
+
+  <table>
+    <tr><th>ส่วน</th><th>ทำอะไร</th><th>ในตัวอย่าง</th></tr>
+    <tr><td>1. เริ่มต้น</td><td>ตั้งค่าตัวแปรก่อนเข้า loop</td><td><code>i = 1</code></td></tr>
+    <tr><td>2. เงื่อนไข</td><td>เช็กทุกรอบว่าจะไปต่อไหม</td><td><code>i &lt;= 5</code></td></tr>
+    <tr><td>3. เปลี่ยนค่า</td><td>ทำให้เงื่อนไขเป็นเท็จได้สักวัน</td><td><code>i += 1</code></td></tr>
+  </table>
+
+  <div class="warn">
+    <b>Infinite loop:</b> ถ้าลืมข้อ 3 โปรแกรมจะวนไม่มีวันจบ<br>
+    <code>i = 1</code><br><code>while i &lt;= 5:</code><br>
+    <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code> ← <code>i</code> เป็น 1 ตลอด เงื่อนไขจริงตลอด<br>
+    ถ้าเผลอรันไปแล้ว กด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด
+  </div>
+
+  <h2>7.2 for หรือ while เลือกยังไง</h2>
+
+  <table>
+    <tr><th></th><th>for</th><th>while</th></tr>
+    <tr><td>ใช้เมื่อ</td><td>รู้จำนวนรอบ / มีข้อมูลชุดหนึ่งให้ไล่</td><td>ไม่รู้จำนวนรอบ รู้แค่เงื่อนไขหยุด</td></tr>
+    <tr><td>ตัวอย่าง</td><td>พิมพ์สมาชิกทุกตัวใน list, สูตรคูณ 12 บรรทัด</td><td>ถามรหัสผ่านจนกว่าจะถูก, เล่นเกมจนกว่าจะแพ้</td></tr>
+    <tr><td>ตัวนับ</td><td>Python จัดการให้</td><td>เราต้องเพิ่มเอง</td></tr>
+  </table>
+
+  <p>ทั้งคู่เขียนแทนกันได้ แต่เลือกให้ตรงงานจะอ่านง่ายกว่า</p>
+
+<pre><span class="out"># งานเดียวกัน เขียนได้ทั้งสองแบบ</span>
+for i in range(5):
+    print(i)
+
+i = 0
+while i &lt; 5:
+    print(i)
+    i += 1
+<span class="out"># งานนี้ for เหมาะกว่า เพราะรู้อยู่แล้วว่า 5 รอบ</span></pre>
+
+  <h2>7.3 งานที่ while ทำได้ดีกว่า</h2>
+
+  <p><strong>วนจนกว่าผู้ใช้จะกรอกถูก</strong> — ไม่มีทางรู้ว่าเขาจะกรอกผิดกี่ครั้ง</p>
+
+<pre>password = ""
+while password != "python123":
+    password = input("รหัสผ่าน: ")
+    if password != "python123":
+        print("ผิด ลองใหม่")
+print("เข้าสู่ระบบสำเร็จ")</pre>
+
+  <p><strong>รับค่าไปเรื่อย ๆ จนเจอค่าที่สั่งหยุด</strong> (เรียกว่า sentinel)</p>
+
+<pre>total = 0
+n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
+
+while n != 0:
+    total += n
+    n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
+
+print("ผลรวม:", total)</pre>
+
+  <p><strong>คำนวณจนกว่าจะถึงเป้า</strong></p>
+
+<pre><span class="out"># เงินฝาก 1000 ดอกเบี้ย 5% ต่อปี กี่ปีถึงจะได้ 2000?</span>
+money = 1000
+year = 0
+
+while money &lt; 2000:
+    money = money * 1.05
+    year += 1
+
+print(f"ใช้เวลา {year} ปี ได้เงิน {money:.2f} บาท")
+<span class="out"># ใช้เวลา 15 ปี ได้เงิน 2078.93 บาท</span></pre>
+
+  <h2>7.4 break และ continue ใน while</h2>
+
+<pre><span class="out"># รูปแบบยอดนิยม: while True + break</span>
+while True:
+    n = input("ใส่ตัวเลข (q เพื่อออก): ")
+    if n == "q":
+        break                <span class="out"># ออกจาก loop</span>
+    print("กำลังสอง:", int(n) ** 2)
+
+print("จบโปรแกรม")</pre>
+
+  <p><code>while True</code> คือ loop ที่จริงตลอดกาล ต้องมี <code>break</code>
+  เสมอไม่งั้นไม่มีวันจบ — แต่ในงานรับ input มันอ่านง่ายกว่าเงื่อนไขซับซ้อน ๆ</p>
+
+<pre><span class="out"># continue: ข้ามรอบนี้ไป</span>
+i = 0
+while i &lt; 10:
+    i += 1
+    if i % 2 == 0:
+        continue          <span class="out"># เลขคู่ไม่ต้องพิมพ์</span>
+    print(i, end=" ")
+<span class="out"># 1 3 5 7 9</span></pre>
+
+  <div class="warn">
+    <b>ระวัง continue ใน while:</b> ถ้าเขียน <code>i += 1</code> ไว้<em>หลัง</em>
+    <code>continue</code> ตัวนับจะไม่ถูกเพิ่มในรอบที่ข้าม → infinite loop ทันที
+    ในตัวอย่างข้างบนจึงเพิ่ม <code>i</code> ไว้บรรทัดแรกสุดของ loop
+  </div>
+
+  <h2>7.5 ตรวจ input ให้ไม่พัง</h2>
+
+  <p>ถ้าผู้ใช้พิมพ์ตัวอักษรใส่ <code>int(input())</code> โปรแกรมจะพังทันที
+  ป้องกันด้วย while</p>
+
+<pre>while True:
+    s = input("อายุ: ")
+    if s.isdigit():          <span class="out"># เช็กว่าเป็นตัวเลขล้วนไหม</span>
+        age = int(s)
+        break
+    print("กรุณาใส่ตัวเลขเท่านั้น")
+
+print("อายุของคุณคือ", age)</pre>
+
+  <h2>7.6 while กับ list</h2>
+
+  <p>ใช้ตอนที่ต้องทยอย "ดึงของออก" จนหมด — for ทำแบบนี้ไม่ได้ดีนัก
+  เพราะการแก้ list ระหว่างวน for จะทำให้ผลเพี้ยน</p>
+
+<pre>queue = ["ฟ้า", "นล", "อาร์ม", "มิน"]
+
+while queue:                 <span class="out"># list ว่าง = False, มีของ = True</span>
+    person = queue.pop(0)    <span class="out"># ดึงคนหน้าสุดออก</span>
+    print(f"เรียก {person} (เหลือคิว {len(queue)} คน)")
+
+print("หมดคิวแล้ว")</pre>
+
+  <div class="note">
+    <b>ค่าที่ถือว่าเป็นเท็จใน Python:</b> <code>0</code>, <code>""</code>,
+    <code>[]</code>, <code>()</code>, <code>None</code>, <code>False</code><br>
+    ดังนั้น <code>while queue:</code> จึงแปลว่า "ตราบใดที่ยังมีของใน queue"
+  </div>
+
+  <h2>7.7 while...else</h2>
+
+  <p>ท่าที่พบไม่บ่อยแต่มีจริง — <code>else</code> จะรันเมื่อ loop จบด้วยเงื่อนไขเป็นเท็จ
+  แต่จะ<strong>ไม่รัน</strong>ถ้าออกด้วย <code>break</code></p>
+
+<pre>target = 7
+nums = [3, 5, 9, 12]
+i = 0
+
+while i &lt; len(nums):
+    if nums[i] == target:
+        print("เจอที่ index", i)
+        break
+    i += 1
+else:
+    print("ไม่พบเลข", target)
+
+<span class="out"># ไม่พบเลข 7</span></pre>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">โค้ดนี้เกิดอะไรขึ้น?<br>
+      <code>i = 0</code><br><code>while i &lt; 3:</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print("hi")</code></div>
+    <button class="choice">พิมพ์ hi 3 ครั้ง</button>
+    <button class="choice">พิมพ์ hi 1 ครั้ง</button>
+    <button class="choice" data-correct>พิมพ์ hi ไม่มีวันจบ (infinite loop)</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">ไม่มีบรรทัดเพิ่มค่า <code>i</code> เงื่อนไข <code>0 &lt; 3</code>
+      จึงจริงตลอด → ต้องมี <code>i += 1</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">โค้ดนี้พิมพ์อะไร?<br>
+      <code>i = 5</code><br><code>while i &gt; 0:</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;i -= 2</code></div>
+    <button class="choice">5 4 3 2 1</button>
+    <button class="choice" data-correct>5 3 1</button>
+    <button class="choice">5 3 1 -1</button>
+    <button class="choice">3 1</button>
+    <div class="explain">5 → 3 → 1 → -1 (ตอน i = -1 เงื่อนไขเป็นเท็จ จึงไม่พิมพ์)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">งานใดควรใช้ <code>while</code> มากกว่า <code>for</code>?</div>
+    <button class="choice">พิมพ์สมาชิกทุกตัวใน list</button>
+    <button class="choice">พิมพ์สูตรคูณแม่ 5 ตั้งแต่ 1 ถึง 12</button>
+    <button class="choice" data-correct>ถามรหัสผ่านซ้ำจนกว่าผู้ใช้จะกรอกถูก</button>
+    <button class="choice">หาผลรวมของเลข 1 ถึง 100</button>
+    <div class="explain">ไม่รู้ว่าผู้ใช้จะกรอกผิดกี่ครั้ง → รู้แค่เงื่อนไขหยุด → while
+      ส่วนอีก 3 ข้อรู้จำนวนรอบชัดเจน → for</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4"><code>while True:</code> ต้องมีอะไรเสมอ?</div>
+    <button class="choice">continue</button>
+    <button class="choice" data-correct>break (หรือ return / exit)</button>
+    <button class="choice">else</button>
+    <button class="choice">ตัวนับ i</button>
+    <div class="explain">เงื่อนไขจริงตลอด ต้องมีทางออกจาก loop ไม่งั้นวนไม่จบ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">โค้ดนี้พิมพ์เลขอะไรบ้าง?<br>
+      <code>i = 0</code><br><code>while i &lt; 5:</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")</code></div>
+    <button class="choice">1 2 3 4 5</button>
+    <button class="choice" data-correct>1 2 4 5</button>
+    <button class="choice">1 2</button>
+    <button class="choice">วนไม่จบ</button>
+    <div class="explain">รอบที่ i เป็น 3 โดน <code>continue</code> ข้าม <code>print</code> ไป
+      แต่เพราะ <code>i += 1</code> อยู่ก่อน <code>continue</code> จึงไม่ติด infinite loop</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6"><code>q = [1, 2, 3]</code> แล้ว <code>while q:</code> หมายความว่าอะไร?</div>
+    <button class="choice">วนตราบใดที่ q เป็น list</button>
+    <button class="choice" data-correct>วนตราบใดที่ q ยังไม่ว่าง</button>
+    <button class="choice">วน 3 รอบเสมอ</button>
+    <button class="choice">เกิด error เพราะ q ไม่ใช่ค่าความจริง</button>
+    <div class="explain">list ว่างถือเป็นเท็จ list ที่มีของถือเป็นจริง —
+      ต้องมีคำสั่งลดของใน list ข้างใน loop ด้วย ไม่งั้นวนไม่จบ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ต่างกันอย่างไรระหว่าง <code>break</code> กับ <code>continue</code>?</div>
+    <button class="choice">เหมือนกัน เขียนแบบไหนก็ได้</button>
+    <button class="choice">break ข้ามรอบ · continue ออกจาก loop</button>
+    <button class="choice" data-correct>break ออกจาก loop · continue ข้ามไปรอบถัดไป</button>
+    <button class="choice">break ใช้ได้เฉพาะใน for · continue ใช้ได้เฉพาะใน while</button>
+    <div class="explain">ทั้งสองคำสั่งใช้ได้ทั้ง for และ while — ต่างกันที่ break หยุดทั้ง loop
+      ส่วน continue แค่ข้ามรอบปัจจุบัน</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — นับถอยหลัง</h4>
+    <p>ใช้ while loop พิมพ์นับถอยหลังจาก 10 ถึง 1 แล้วจบด้วยคำว่า "Go!"</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>i = 10
+while i &gt;= 1:
+    print(i, end=" ")
+    i -= 1
+print("Go!")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — รวมเลขจนกว่าจะใส่ 0</h4>
+    <p>รับตัวเลขจากผู้ใช้ไปเรื่อย ๆ เก็บลง list จนกว่าผู้ใช้จะใส่ 0
+    แล้วพิมพ์ list, ผลรวม, ค่าเฉลี่ย และค่ามากสุด<br>
+    (ถ้าผู้ใช้ใส่ 0 ทันทีตั้งแต่แรก ให้พิมพ์ว่า "ไม่มีข้อมูล")</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = []
+
+while True:
+    n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
+    if n == 0:
+        break
+    nums.append(n)
+
+if not nums:                     <span class="out"># list ว่าง</span>
+    print("ไม่มีข้อมูล")
+else:
+    print("ข้อมูล:", nums)
+    print("ผลรวม:", sum(nums))
+    print("เฉลี่ย:", round(sum(nums) / len(nums), 2))
+    print("มากสุด:", max(nums))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — เกมทายเลข</h4>
+    <p>โปรแกรมสุ่มเลข 1–100 (ใช้ <code>import random</code> กับ
+    <code>random.randint(1, 100)</code>) ให้ผู้ใช้ทายไปเรื่อย ๆ
+    ตอบว่า "สูงไป" หรือ "ต่ำไป" ทุกครั้ง จนกว่าจะทายถูก
+    แล้วบอกว่าใช้ไปกี่ครั้ง</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import random
+
+secret = random.randint(1, 100)
+count = 0
+
+while True:
+    guess = int(input("ทายเลข 1-100: "))
+    count += 1
+
+    if guess &lt; secret:
+        print("ต่ำไป")
+    elif guess &gt; secret:
+        print("สูงไป")
+    else:
+        print(f"ถูกต้อง! ใช้ไป {count} ครั้ง")
+        break</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — เมนูโปรแกรม</h4>
+    <p>ทำโปรแกรมจัดการรายชื่อ วนแสดงเมนูไปเรื่อย ๆ จนกว่าจะเลือก 4<br>
+    1) เพิ่มชื่อ &nbsp; 2) ลบชื่อ &nbsp; 3) แสดงรายชื่อทั้งหมด &nbsp; 4) ออก<br>
+    (รวม list, for และ while เข้าด้วยกัน)</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>names = []
+
+while True:
+    print("\n1) เพิ่ม  2) ลบ  3) แสดง  4) ออก")
+    choice = input("เลือก: ")
+
+    if choice == "1":
+        names.append(input("ชื่อ: "))
+        print("เพิ่มแล้ว")
+
+    elif choice == "2":
+        target = input("ลบชื่อ: ")
+        if target in names:
+            names.remove(target)
+            print("ลบแล้ว")
+        else:
+            print("ไม่พบชื่อนี้")
+
+    elif choice == "3":
+        if not names:
+            print("ยังไม่มีรายชื่อ")
+        for i, n in enumerate(names, start=1):
+            print(f"{i}. {n}")
+
+    elif choice == "4":
+        print("บ๊ายบาย")
+        break
+
+    else:
+        print("เลือก 1-4 เท่านั้น")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — ท้าทาย</h4>
+    <p>รับเลขจำนวนเต็มบวก 1 ตัว แล้วหา<strong>ผลรวมของเลขแต่ละหลัก</strong>
+    ด้วย while loop โดยห้ามแปลงเป็น string<br>
+    เช่น 4821 → 4+8+2+1 = 15<br>
+    ใบ้: <code>n % 10</code> ได้หลักสุดท้าย, <code>n // 10</code> ตัดหลักสุดท้ายทิ้ง</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>n = int(input("ใส่จำนวนเต็มบวก: "))
+
+total = 0
+temp = n            <span class="out"># เก็บค่าเดิมไว้พิมพ์ตอนท้าย</span>
+
+while temp &gt; 0:
+    total += temp % 10     <span class="out"># เอาหลักสุดท้าย</span>
+    temp = temp // 10      <span class="out"># ตัดหลักสุดท้ายทิ้ง</span>
+
+print(f"ผลรวมหลักของ {n} คือ {total}")
+
+<span class="out"># 4821 → 1 → 2 → 8 → 4 → รวม 15</span></pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>ผ่านครึ่งทางแล้ว</b> — ถ้าทำโจทย์ทั้งหมดได้เอง แปลว่าใช้ list, tuple,
+    for และ while ได้จริงแล้ว บทถัดไปคือ dictionary ซึ่งเก็บข้อมูลเป็นคู่
+    key → value และค้นด้วยชื่อได้เลย
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

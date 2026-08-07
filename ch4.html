@@ -3,179 +3,145 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>บทที่ 4 · while loop — Python Lab</title>
+<title>บทที่ 4 · List — Python Lab</title>
 <link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <main>
   <div class="eyebrow">Chapter 04</div>
-  <h1>while loop</h1>
-  <p class="lead">วนซ้ำเมื่อ<strong>ไม่รู้ว่าต้องทำกี่รอบ</strong> — รู้แค่ว่าจะหยุดเมื่อไร</p>
+  <h1>List — ลิสต์</h1>
+  <p class="lead">ตัวแปรตัวเดียว เก็บข้อมูลได้หลายค่า เรียงตามลำดับ และแก้ไขทีหลังได้</p>
 
-  <h2>4.1 รูปแบบพื้นฐาน</h2>
+  <h2>4.1 ทำไมต้องมี List</h2>
 
-  <p>อ่านว่า "ตราบใดที่<em>เงื่อนไข</em>ยังเป็นจริง ให้ทำสิ่งนี้ซ้ำไปเรื่อย ๆ"</p>
+  <p>สมมติต้องเก็บคะแนนนักเรียน 5 คน ถ้าไม่มี list เราต้องทำแบบนี้</p>
 
-<pre>i = 1
-while i &lt;= 5:
-    print(i)
-    i += 1        <span class="out"># ห้ามลืม! ไม่งั้นวนไม่จบ</span>
+<pre>score1 = 80
+score2 = 75
+score3 = 92
+score4 = 68
+score5 = 88</pre>
 
-<span class="out"># 1 2 3 4 5</span></pre>
+  <p>ถ้ามี 500 คนล่ะ? ตัวแปร 500 ตัวคงไม่ไหว <code>list</code> แก้ปัญหานี้ —
+  เก็บทุกค่าไว้ในตัวแปรเดียว</p>
 
-  <p>while loop ที่ถูกต้องต้องมีครบ 3 อย่างเสมอ</p>
+<pre>scores = [80, 75, 92, 68, 88]
+print(scores)        <span class="out"># [80, 75, 92, 68, 88]</span>
+print(len(scores))   <span class="out"># 5  → จำนวนสมาชิก</span></pre>
 
-  <table>
-    <tr><th>ส่วน</th><th>ทำอะไร</th><th>ในตัวอย่าง</th></tr>
-    <tr><td>1. เริ่มต้น</td><td>ตั้งค่าตัวแปรก่อนเข้า loop</td><td><code>i = 1</code></td></tr>
-    <tr><td>2. เงื่อนไข</td><td>เช็กทุกรอบว่าจะไปต่อไหม</td><td><code>i &lt;= 5</code></td></tr>
-    <tr><td>3. เปลี่ยนค่า</td><td>ทำให้เงื่อนไขเป็นเท็จได้สักวัน</td><td><code>i += 1</code></td></tr>
-  </table>
+  <p>สร้าง list ด้วยวงเล็บเหลี่ยม <code>[ ]</code> คั่นสมาชิกด้วยจุลภาค
+  สมาชิกจะเป็นชนิดอะไรก็ได้ และปนกันได้ด้วย</p>
 
-  <div class="warn">
-    <b>Infinite loop:</b> ถ้าลืมข้อ 3 โปรแกรมจะวนไม่มีวันจบ<br>
-    <code>i = 1</code><br><code>while i &lt;= 5:</code><br>
-    <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code> ← <code>i</code> เป็น 1 ตลอด เงื่อนไขจริงตลอด<br>
-    ถ้าเผลอรันไปแล้ว กด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด
-  </div>
+<pre>names   = ["ฟ้า", "นล", "อาร์ม"]
+mixed   = [1, "สอง", 3.0, True]
+empty   = []            <span class="out"># list ว่าง</span>
+nested  = [[1, 2], [3, 4]]   <span class="out"># list ซ้อน list ก็ได้</span></pre>
 
-  <h2>4.2 for หรือ while เลือกยังไง</h2>
+  <h2>4.2 Index — เข้าถึงทีละตัว</h2>
 
-  <table>
-    <tr><th></th><th>for</th><th>while</th></tr>
-    <tr><td>ใช้เมื่อ</td><td>รู้จำนวนรอบ / มีข้อมูลชุดหนึ่งให้ไล่</td><td>ไม่รู้จำนวนรอบ รู้แค่เงื่อนไขหยุด</td></tr>
-    <tr><td>ตัวอย่าง</td><td>พิมพ์สมาชิกทุกตัวใน list, สูตรคูณ 12 บรรทัด</td><td>ถามรหัสผ่านจนกว่าจะถูก, เล่นเกมจนกว่าจะแพ้</td></tr>
-    <tr><td>ตัวนับ</td><td>Python จัดการให้</td><td>เราต้องเพิ่มเอง</td></tr>
-  </table>
+  <p>สมาชิกแต่ละตัวมีเลขประจำตำแหน่งเรียกว่า <strong>index</strong>
+  ข้อสำคัญที่สุดคือ <strong>เริ่มนับจาก 0 ไม่ใช่ 1</strong></p>
 
-  <p>ทั้งคู่เขียนแทนกันได้ แต่เลือกให้ตรงงานจะอ่านง่ายกว่า</p>
+<pre>fruits = ["apple", "banana", "cherry", "durian"]
+<span class="out">#  index:     0        1         2         3
+#  ติดลบ:    -4       -3        -2        -1</span>
 
-<pre><span class="out"># งานเดียวกัน เขียนได้ทั้งสองแบบ</span>
-for i in range(5):
-    print(i)
-
-i = 0
-while i &lt; 5:
-    print(i)
-    i += 1
-<span class="out"># งานนี้ for เหมาะกว่า เพราะรู้อยู่แล้วว่า 5 รอบ</span></pre>
-
-  <h2>4.3 งานที่ while ทำได้ดีกว่า</h2>
-
-  <p><strong>วนจนกว่าผู้ใช้จะกรอกถูก</strong> — ไม่มีทางรู้ว่าเขาจะกรอกผิดกี่ครั้ง</p>
-
-<pre>password = ""
-while password != "python123":
-    password = input("รหัสผ่าน: ")
-    if password != "python123":
-        print("ผิด ลองใหม่")
-print("เข้าสู่ระบบสำเร็จ")</pre>
-
-  <p><strong>รับค่าไปเรื่อย ๆ จนเจอค่าที่สั่งหยุด</strong> (เรียกว่า sentinel)</p>
-
-<pre>total = 0
-n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
-
-while n != 0:
-    total += n
-    n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
-
-print("ผลรวม:", total)</pre>
-
-  <p><strong>คำนวณจนกว่าจะถึงเป้า</strong></p>
-
-<pre><span class="out"># เงินฝาก 1000 ดอกเบี้ย 5% ต่อปี กี่ปีถึงจะได้ 2000?</span>
-money = 1000
-year = 0
-
-while money &lt; 2000:
-    money = money * 1.05
-    year += 1
-
-print(f"ใช้เวลา {year} ปี ได้เงิน {money:.2f} บาท")
-<span class="out"># ใช้เวลา 15 ปี ได้เงิน 2078.93 บาท</span></pre>
-
-  <h2>4.4 break และ continue ใน while</h2>
-
-<pre><span class="out"># รูปแบบยอดนิยม: while True + break</span>
-while True:
-    n = input("ใส่ตัวเลข (q เพื่อออก): ")
-    if n == "q":
-        break                <span class="out"># ออกจาก loop</span>
-    print("กำลังสอง:", int(n) ** 2)
-
-print("จบโปรแกรม")</pre>
-
-  <p><code>while True</code> คือ loop ที่จริงตลอดกาล ต้องมี <code>break</code>
-  เสมอไม่งั้นไม่มีวันจบ — แต่ในงานรับ input มันอ่านง่ายกว่าเงื่อนไขซับซ้อน ๆ</p>
-
-<pre><span class="out"># continue: ข้ามรอบนี้ไป</span>
-i = 0
-while i &lt; 10:
-    i += 1
-    if i % 2 == 0:
-        continue          <span class="out"># เลขคู่ไม่ต้องพิมพ์</span>
-    print(i, end=" ")
-<span class="out"># 1 3 5 7 9</span></pre>
+print(fruits[0])    <span class="out"># apple    → ตัวแรก</span>
+print(fruits[2])    <span class="out"># cherry</span>
+print(fruits[-1])   <span class="out"># durian   → ตัวสุดท้าย</span>
+print(fruits[-2])   <span class="out"># cherry   → ตัวรองสุดท้าย</span></pre>
 
   <div class="warn">
-    <b>ระวัง continue ใน while:</b> ถ้าเขียน <code>i += 1</code> ไว้<em>หลัง</em>
-    <code>continue</code> ตัวนับจะไม่ถูกเพิ่มในรอบที่ข้าม → infinite loop ทันที
-    ในตัวอย่างข้างบนจึงเพิ่ม <code>i</code> ไว้บรรทัดแรกสุดของ loop
+    <b>ระวัง IndexError:</b> <code>fruits</code> มี 4 ตัว index สูงสุดคือ 3
+    ถ้าเรียก <code>fruits[4]</code> โปรแกรมจะพัง —
+    <span class="mono">IndexError: list index out of range</span>
   </div>
 
-  <h2>4.5 ตรวจ input ให้ไม่พัง</h2>
+  <h2>4.3 Slice — ตัดเป็นช่วง</h2>
 
-  <p>ถ้าผู้ใช้พิมพ์ตัวอักษรใส่ <code>int(input())</code> โปรแกรมจะพังทันที
-  ป้องกันด้วย while</p>
+  <p>รูปแบบคือ <code>list[start:stop]</code> — เอาตั้งแต่ <code>start</code>
+  ไปจนถึง <strong>ก่อน</strong> <code>stop</code> (ไม่รวมตัวที่ stop)</p>
 
-<pre>while True:
-    s = input("อายุ: ")
-    if s.isdigit():          <span class="out"># เช็กว่าเป็นตัวเลขล้วนไหม</span>
-        age = int(s)
-        break
-    print("กรุณาใส่ตัวเลขเท่านั้น")
+<pre>nums = [10, 20, 30, 40, 50, 60]
 
-print("อายุของคุณคือ", age)</pre>
-
-  <h2>4.6 while กับ list</h2>
-
-  <p>ใช้ตอนที่ต้องทยอย "ดึงของออก" จนหมด — for ทำแบบนี้ไม่ได้ดีนัก
-  เพราะการแก้ list ระหว่างวน for จะทำให้ผลเพี้ยน</p>
-
-<pre>queue = ["ฟ้า", "นล", "อาร์ม", "มิน"]
-
-while queue:                 <span class="out"># list ว่าง = False, มีของ = True</span>
-    person = queue.pop(0)    <span class="out"># ดึงคนหน้าสุดออก</span>
-    print(f"เรียก {person} (เหลือคิว {len(queue)} คน)")
-
-print("หมดคิวแล้ว")</pre>
+print(nums[1:4])    <span class="out"># [20, 30, 40]   → index 1,2,3 (ไม่เอา 4)</span>
+print(nums[:3])     <span class="out"># [10, 20, 30]   → ละ start = เริ่มจากต้น</span>
+print(nums[3:])     <span class="out"># [40, 50, 60]   → ละ stop  = ไปจนจบ</span>
+print(nums[:])      <span class="out"># ทั้งหมด (สำเนา list)</span>
+print(nums[-2:])    <span class="out"># [50, 60]       → 2 ตัวท้าย</span>
+print(nums[::2])    <span class="out"># [10, 30, 50]   → เว้นทีละ 2 (step)</span>
+print(nums[::-1])   <span class="out"># [60,50,40,30,20,10] → กลับด้าน</span></pre>
 
   <div class="note">
-    <b>ค่าที่ถือว่าเป็นเท็จใน Python:</b> <code>0</code>, <code>""</code>,
-    <code>[]</code>, <code>()</code>, <code>None</code>, <code>False</code><br>
-    ดังนั้น <code>while queue:</code> จึงแปลว่า "ตราบใดที่ยังมีของใน queue"
+    <b>slice ไม่พังง่าย ๆ:</b> ต่างจาก index ตรงที่ถ้าเลขเกินขอบ
+    slice จะไม่ error แต่จะคืนเท่าที่มี — <code>nums[2:99]</code> ได้
+    <code>[30, 40, 50, 60]</code>
   </div>
 
-  <h2>4.7 while...else</h2>
+  <h2>4.4 List แก้ไขได้ (Mutable)</h2>
 
-  <p>ท่าที่พบไม่บ่อยแต่มีจริง — <code>else</code> จะรันเมื่อ loop จบด้วยเงื่อนไขเป็นเท็จ
-  แต่จะ<strong>ไม่รัน</strong>ถ้าออกด้วย <code>break</code></p>
+<pre>colors = ["red", "green", "blue"]
 
-<pre>target = 7
-nums = [3, 5, 9, 12]
-i = 0
+colors[1] = "yellow"      <span class="out"># แก้ค่าที่ตำแหน่ง 1</span>
+print(colors)             <span class="out"># ['red', 'yellow', 'blue']</span></pre>
 
-while i &lt; len(nums):
-    if nums[i] == target:
-        print("เจอที่ index", i)
-        break
-    i += 1
-else:
-    print("ไม่พบเลข", target)
+  <p>คำสั่งที่ใช้บ่อยที่สุด</p>
 
-<span class="out"># ไม่พบเลข 7</span></pre>
+  <table>
+    <tr><th>คำสั่ง</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+    <tr><td><code>append(x)</code></td><td>เพิ่ม x ต่อท้าย</td><td><code>a.append(9)</code></td></tr>
+    <tr><td><code>insert(i, x)</code></td><td>แทรก x ที่ตำแหน่ง i</td><td><code>a.insert(0, 9)</code></td></tr>
+    <tr><td><code>extend(b)</code></td><td>ต่อ list b เข้าท้าย</td><td><code>a.extend([7, 8])</code></td></tr>
+    <tr><td><code>remove(x)</code></td><td>ลบ x <em>ตัวแรก</em>ที่เจอ</td><td><code>a.remove(9)</code></td></tr>
+    <tr><td><code>pop(i)</code></td><td>ดึงตัวที่ i ออกมา (ไม่ใส่ i = ตัวท้าย)</td><td><code>x = a.pop()</code></td></tr>
+    <tr><td><code>sort()</code></td><td>เรียงค่าใน list เดิม</td><td><code>a.sort()</code></td></tr>
+    <tr><td><code>reverse()</code></td><td>กลับด้าน list เดิม</td><td><code>a.reverse()</code></td></tr>
+    <tr><td><code>count(x)</code></td><td>นับว่ามี x กี่ตัว</td><td><code>a.count(3)</code></td></tr>
+    <tr><td><code>index(x)</code></td><td>บอกตำแหน่งของ x ตัวแรก</td><td><code>a.index(3)</code></td></tr>
+  </table>
+
+<pre>a = [3, 1, 2]
+
+a.append(5)      <span class="out"># [3, 1, 2, 5]</span>
+a.insert(0, 9)   <span class="out"># [9, 3, 1, 2, 5]</span>
+a.remove(1)      <span class="out"># [9, 3, 2, 5]</span>
+last = a.pop()   <span class="out"># last = 5 ; a = [9, 3, 2]</span>
+a.sort()         <span class="out"># [2, 3, 9]</span>
+a.reverse()      <span class="out"># [9, 3, 2]</span></pre>
+
+  <div class="warn">
+    <b>กับดักคลาสสิก:</b> <code>a.sort()</code> เรียง list เดิมแล้วคืนค่า
+    <code>None</code> ดังนั้น <code>b = a.sort()</code> จะได้ <code>b = None</code>
+    ถ้าอยากได้ list ใหม่ให้ใช้ <code>b = sorted(a)</code> แทน
+  </div>
+
+  <h2>4.5 ฟังก์ชันที่ใช้กับ List ได้เลย</h2>
+
+<pre>scores = [80, 75, 92, 68, 88]
+
+print(len(scores))          <span class="out"># 5   → จำนวนสมาชิก</span>
+print(sum(scores))          <span class="out"># 403 → ผลรวม</span>
+print(max(scores))          <span class="out"># 92</span>
+print(min(scores))          <span class="out"># 68</span>
+print(sum(scores) / len(scores))   <span class="out"># 80.6 → ค่าเฉลี่ย</span>
+print(sorted(scores))       <span class="out"># [68, 75, 80, 88, 92] (ตัวเดิมไม่เปลี่ยน)</span>
+print(92 in scores)         <span class="out"># True  → เช็กว่ามีอยู่ไหม</span></pre>
+
+  <h2>4.6 กับดักการก๊อบปี้ list</h2>
+
+  <p>เรื่องนี้ทำคนพลาดเยอะมาก — <code>b = a</code> <strong>ไม่ได้</strong>ก๊อบปี้
+  แต่ทำให้ชื่อสองชื่อชี้ไปที่ list ก้อนเดียวกัน</p>
+
+<pre>a = [1, 2, 3]
+b = a            <span class="out"># ชี้ก้อนเดียวกัน!</span>
+b.append(4)
+print(a)         <span class="out"># [1, 2, 3, 4]  ← a เปลี่ยนตามไปด้วย</span>
+
+<span class="out"># ถ้าอยากได้ก้อนใหม่จริง ๆ</span>
+c = a[:]         <span class="out"># หรือ list(a) หรือ a.copy()</span>
+c.append(99)
+print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี่ยน</span></pre>
 
   <hr>
 
@@ -183,216 +149,148 @@ else:
   <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
 
   <div class="quiz">
-    <div class="q" data-n="Q1">โค้ดนี้เกิดอะไรขึ้น?<br>
-      <code>i = 0</code><br><code>while i &lt; 3:</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;print("hi")</code></div>
-    <button class="choice">พิมพ์ hi 3 ครั้ง</button>
-    <button class="choice">พิมพ์ hi 1 ครั้ง</button>
-    <button class="choice" data-correct>พิมพ์ hi ไม่มีวันจบ (infinite loop)</button>
+    <div class="q" data-n="Q1">โค้ดนี้พิมพ์อะไรออกมา?<br>
+      <code>a = [5, 10, 15, 20]</code><br><code>print(a[1])</code></div>
+    <button class="choice">5</button>
+    <button class="choice" data-correct>10</button>
+    <button class="choice">15</button>
+    <button class="choice">เกิด IndexError</button>
+    <div class="explain">index เริ่มที่ 0 → <code>a[0]=5</code>, <code>a[1]=10</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2"><code>nums = [1,2,3,4,5,6]</code> แล้ว <code>nums[2:5]</code> ได้อะไร?</div>
+    <button class="choice">[2, 3, 4]</button>
+    <button class="choice" data-correct>[3, 4, 5]</button>
+    <button class="choice">[3, 4, 5, 6]</button>
+    <button class="choice">[2, 3, 4, 5]</button>
+    <div class="explain">เอา index 2, 3, 4 (ไม่รวม index 5) → ค่าคือ 3, 4, 5</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>a = [1, 2, 3]</code> แล้ว <code>b = a.sort()</code> — ตอนนี้ <code>b</code> คืออะไร?</div>
+    <button class="choice">[1, 2, 3]</button>
+    <button class="choice">[3, 2, 1]</button>
+    <button class="choice" data-correct>None</button>
+    <button class="choice">เกิด TypeError</button>
+    <div class="explain"><code>sort()</code> เรียงในตัวเดิมและคืน <code>None</code>
+      ถ้าอยากได้ list ใหม่ต้องใช้ <code>sorted(a)</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ต้องการเพิ่มเลข 7 ต่อท้าย list <code>a</code> ใช้คำสั่งไหน?</div>
+    <button class="choice">a.add(7)</button>
+    <button class="choice" data-correct>a.append(7)</button>
+    <button class="choice">a.insert(7)</button>
+    <button class="choice">a.push(7)</button>
+    <div class="explain">Python ใช้ <code>append()</code> — <code>add()</code> เป็นของ set,
+      ส่วน <code>push()</code> เป็นของภาษาอื่น</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">ผลลัพธ์ของโค้ดนี้คือ?<br>
+      <code>x = [1, 2, 3]</code><br><code>y = x</code><br>
+      <code>y.append(4)</code><br><code>print(len(x))</code></div>
+    <button class="choice">3</button>
+    <button class="choice" data-correct>4</button>
+    <button class="choice">1</button>
     <button class="choice">เกิด error</button>
-    <div class="explain">ไม่มีบรรทัดเพิ่มค่า <code>i</code> เงื่อนไข <code>0 &lt; 3</code>
-      จึงจริงตลอด → ต้องมี <code>i += 1</code></div>
+    <div class="explain"><code>y = x</code> ทำให้ทั้งสองชื่อชี้ list ก้อนเดียวกัน
+      เพิ่มผ่าน <code>y</code> ก็คือเพิ่มใน <code>x</code> ด้วย → ยาว 4</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q2">โค้ดนี้พิมพ์อะไร?<br>
-      <code>i = 5</code><br><code>while i &gt; 0:</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;i -= 2</code></div>
-    <button class="choice">5 4 3 2 1</button>
-    <button class="choice" data-correct>5 3 1</button>
-    <button class="choice">5 3 1 -1</button>
-    <button class="choice">3 1</button>
-    <div class="explain">5 → 3 → 1 → -1 (ตอน i = -1 เงื่อนไขเป็นเท็จ จึงไม่พิมพ์)</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q3">งานใดควรใช้ <code>while</code> มากกว่า <code>for</code>?</div>
-    <button class="choice">พิมพ์สมาชิกทุกตัวใน list</button>
-    <button class="choice">พิมพ์สูตรคูณแม่ 5 ตั้งแต่ 1 ถึง 12</button>
-    <button class="choice" data-correct>ถามรหัสผ่านซ้ำจนกว่าผู้ใช้จะกรอกถูก</button>
-    <button class="choice">หาผลรวมของเลข 1 ถึง 100</button>
-    <div class="explain">ไม่รู้ว่าผู้ใช้จะกรอกผิดกี่ครั้ง → รู้แค่เงื่อนไขหยุด → while
-      ส่วนอีก 3 ข้อรู้จำนวนรอบชัดเจน → for</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q4"><code>while True:</code> ต้องมีอะไรเสมอ?</div>
-    <button class="choice">continue</button>
-    <button class="choice" data-correct>break (หรือ return / exit)</button>
-    <button class="choice">else</button>
-    <button class="choice">ตัวนับ i</button>
-    <div class="explain">เงื่อนไขจริงตลอด ต้องมีทางออกจาก loop ไม่งั้นวนไม่จบ</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q5">โค้ดนี้พิมพ์เลขอะไรบ้าง?<br>
-      <code>i = 0</code><br><code>while i &lt; 5:</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")</code></div>
-    <button class="choice">1 2 3 4 5</button>
-    <button class="choice" data-correct>1 2 4 5</button>
-    <button class="choice">1 2</button>
-    <button class="choice">วนไม่จบ</button>
-    <div class="explain">รอบที่ i เป็น 3 โดน <code>continue</code> ข้าม <code>print</code> ไป
-      แต่เพราะ <code>i += 1</code> อยู่ก่อน <code>continue</code> จึงไม่ติด infinite loop</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q6"><code>q = [1, 2, 3]</code> แล้ว <code>while q:</code> หมายความว่าอะไร?</div>
-    <button class="choice">วนตราบใดที่ q เป็น list</button>
-    <button class="choice" data-correct>วนตราบใดที่ q ยังไม่ว่าง</button>
-    <button class="choice">วน 3 รอบเสมอ</button>
-    <button class="choice">เกิด error เพราะ q ไม่ใช่ค่าความจริง</button>
-    <div class="explain">list ว่างถือเป็นเท็จ list ที่มีของถือเป็นจริง —
-      ต้องมีคำสั่งลดของใน list ข้างใน loop ด้วย ไม่งั้นวนไม่จบ</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q7">ต่างกันอย่างไรระหว่าง <code>break</code> กับ <code>continue</code>?</div>
-    <button class="choice">เหมือนกัน เขียนแบบไหนก็ได้</button>
-    <button class="choice">break ข้ามรอบ · continue ออกจาก loop</button>
-    <button class="choice" data-correct>break ออกจาก loop · continue ข้ามไปรอบถัดไป</button>
-    <button class="choice">break ใช้ได้เฉพาะใน for · continue ใช้ได้เฉพาะใน while</button>
-    <div class="explain">ทั้งสองคำสั่งใช้ได้ทั้ง for และ while — ต่างกันที่ break หยุดทั้ง loop
-      ส่วน continue แค่ข้ามรอบปัจจุบัน</div>
+    <div class="q" data-n="Q6"><code>a = [10, 20, 30]</code> แล้ว <code>a[-1]</code> คือ?</div>
+    <button class="choice">10</button>
+    <button class="choice">20</button>
+    <button class="choice" data-correct>30</button>
+    <button class="choice">เกิด IndexError</button>
+    <div class="explain">index ติดลบนับถอยหลังจากท้าย → <code>-1</code> คือตัวสุดท้าย</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
-    <h4>โจทย์ 1 — นับถอยหลัง</h4>
-    <p>ใช้ while loop พิมพ์นับถอยหลังจาก 10 ถึง 1 แล้วจบด้วยคำว่า "Go!"</p>
+    <h4>โจทย์ 1 — สถิติคะแนน</h4>
+    <p>กำหนด <code>scores = [78, 95, 62, 88, 71, 90]</code> เขียนโปรแกรมพิมพ์
+    จำนวนคน, คะแนนรวม, คะแนนสูงสุด, คะแนนต่ำสุด และค่าเฉลี่ย (ทศนิยม 2 ตำแหน่ง)</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>i = 10
-while i &gt;= 1:
-    print(i, end=" ")
-    i -= 1
-print("Go!")</pre>
+<pre>scores = [78, 95, 62, 88, 71, 90]
+
+print("จำนวนคน:", len(scores))
+print("รวม:", sum(scores))
+print("สูงสุด:", max(scores))
+print("ต่ำสุด:", min(scores))
+print("เฉลี่ย:", round(sum(scores) / len(scores), 2))</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 2 — รวมเลขจนกว่าจะใส่ 0</h4>
-    <p>รับตัวเลขจากผู้ใช้ไปเรื่อย ๆ เก็บลง list จนกว่าผู้ใช้จะใส่ 0
-    แล้วพิมพ์ list, ผลรวม, ค่าเฉลี่ย และค่ามากสุด<br>
-    (ถ้าผู้ใช้ใส่ 0 ทันทีตั้งแต่แรก ให้พิมพ์ว่า "ไม่มีข้อมูล")</p>
+    <h4>โจทย์ 2 — จัดการรายชื่อ</h4>
+    <p>เริ่มจาก <code>names = ["นล", "ฟ้า", "อาร์ม"]</code> ทำตามลำดับแล้วพิมพ์ผลทุกขั้น:</p>
+    <ol>
+      <li>เพิ่ม "มิน" ต่อท้าย</li>
+      <li>แทรก "เก้า" ไว้หน้าสุด</li>
+      <li>ลบ "ฟ้า" ออก</li>
+      <li>เรียงตามตัวอักษร</li>
+      <li>พิมพ์ชื่อคนสุดท้ายใน list</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>names = ["นล", "ฟ้า", "อาร์ม"]
+
+names.append("มิน")
+print(names)
+
+names.insert(0, "เก้า")
+print(names)
+
+names.remove("ฟ้า")
+print(names)
+
+names.sort()
+print(names)
+
+print("คนสุดท้าย:", names[-1])</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — แยกครึ่ง</h4>
+    <p>กำหนด <code>nums = [1,2,3,4,5,6,7,8,9,10]</code> ใช้ <strong>slice เท่านั้น</strong>
+    (ห้ามใช้ loop) พิมพ์: 5 ตัวแรก, 5 ตัวหลัง, ตัวที่อยู่ตำแหน่งคู่ (index 0,2,4…),
+    และ list ที่กลับด้าน</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+print(nums[:5])     <span class="out"># [1, 2, 3, 4, 5]</span>
+print(nums[5:])     <span class="out"># [6, 7, 8, 9, 10]</span>
+print(nums[::2])    <span class="out"># [1, 3, 5, 7, 9]</span>
+print(nums[::-1])   <span class="out"># [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย</h4>
+    <p>รับตัวเลข 5 จำนวนจากผู้ใช้เก็บลง list (ใช้ <code>input()</code> กับ <code>int()</code>)
+    แล้วพิมพ์ list ที่เรียงจากมากไปน้อย พร้อมบอกว่าเลขที่มากที่สุดอยู่ตำแหน่ง index ที่เท่าไรใน list ต้นฉบับ</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
 <pre>nums = []
+nums.append(int(input("เลขที่ 1: ")))
+nums.append(int(input("เลขที่ 2: ")))
+nums.append(int(input("เลขที่ 3: ")))
+nums.append(int(input("เลขที่ 4: ")))
+nums.append(int(input("เลขที่ 5: ")))
 
-while True:
-    n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
-    if n == 0:
-        break
-    nums.append(n)
+print("ต้นฉบับ:", nums)
+print("มากไปน้อย:", sorted(nums, reverse=True))
+print("ตัวมากสุดอยู่ index:", nums.index(max(nums)))
 
-if not nums:                     <span class="out"># list ว่าง</span>
-    print("ไม่มีข้อมูล")
-else:
-    print("ข้อมูล:", nums)
-    print("ผลรวม:", sum(nums))
-    print("เฉลี่ย:", round(sum(nums) / len(nums), 2))
-    print("มากสุด:", max(nums))</pre>
+<span class="out"># หมายเหตุ: บทที่ 6 จะได้เรียน for loop ซึ่งเขียนส่วนรับค่าให้สั้นลงมากได้</span></pre>
     </details>
-  </div>
-
-  <div class="lab">
-    <h4>โจทย์ 3 — เกมทายเลข</h4>
-    <p>โปรแกรมสุ่มเลข 1–100 (ใช้ <code>import random</code> กับ
-    <code>random.randint(1, 100)</code>) ให้ผู้ใช้ทายไปเรื่อย ๆ
-    ตอบว่า "สูงไป" หรือ "ต่ำไป" ทุกครั้ง จนกว่าจะทายถูก
-    แล้วบอกว่าใช้ไปกี่ครั้ง</p>
-    <details>
-      <summary>▸ ดูเฉลย</summary>
-<pre>import random
-
-secret = random.randint(1, 100)
-count = 0
-
-while True:
-    guess = int(input("ทายเลข 1-100: "))
-    count += 1
-
-    if guess &lt; secret:
-        print("ต่ำไป")
-    elif guess &gt; secret:
-        print("สูงไป")
-    else:
-        print(f"ถูกต้อง! ใช้ไป {count} ครั้ง")
-        break</pre>
-    </details>
-  </div>
-
-  <div class="lab">
-    <h4>โจทย์ 4 — เมนูโปรแกรม</h4>
-    <p>ทำโปรแกรมจัดการรายชื่อ วนแสดงเมนูไปเรื่อย ๆ จนกว่าจะเลือก 4<br>
-    1) เพิ่มชื่อ &nbsp; 2) ลบชื่อ &nbsp; 3) แสดงรายชื่อทั้งหมด &nbsp; 4) ออก<br>
-    (รวม list, for และ while เข้าด้วยกัน)</p>
-    <details>
-      <summary>▸ ดูเฉลย</summary>
-<pre>names = []
-
-while True:
-    print("\n1) เพิ่ม  2) ลบ  3) แสดง  4) ออก")
-    choice = input("เลือก: ")
-
-    if choice == "1":
-        names.append(input("ชื่อ: "))
-        print("เพิ่มแล้ว")
-
-    elif choice == "2":
-        target = input("ลบชื่อ: ")
-        if target in names:
-            names.remove(target)
-            print("ลบแล้ว")
-        else:
-            print("ไม่พบชื่อนี้")
-
-    elif choice == "3":
-        if not names:
-            print("ยังไม่มีรายชื่อ")
-        for i, n in enumerate(names, start=1):
-            print(f"{i}. {n}")
-
-    elif choice == "4":
-        print("บ๊ายบาย")
-        break
-
-    else:
-        print("เลือก 1-4 เท่านั้น")</pre>
-    </details>
-  </div>
-
-  <div class="lab">
-    <h4>โจทย์ 5 — ท้าทาย</h4>
-    <p>รับเลขจำนวนเต็มบวก 1 ตัว แล้วหา<strong>ผลรวมของเลขแต่ละหลัก</strong>
-    ด้วย while loop โดยห้ามแปลงเป็น string<br>
-    เช่น 4821 → 4+8+2+1 = 15<br>
-    ใบ้: <code>n % 10</code> ได้หลักสุดท้าย, <code>n // 10</code> ตัดหลักสุดท้ายทิ้ง</p>
-    <details>
-      <summary>▸ ดูเฉลย</summary>
-<pre>n = int(input("ใส่จำนวนเต็มบวก: "))
-
-total = 0
-temp = n            <span class="out"># เก็บค่าเดิมไว้พิมพ์ตอนท้าย</span>
-
-while temp &gt; 0:
-    total += temp % 10     <span class="out"># เอาหลักสุดท้าย</span>
-    temp = temp // 10      <span class="out"># ตัดหลักสุดท้ายทิ้ง</span>
-
-print(f"ผลรวมหลักของ {n} คือ {total}")
-
-<span class="out"># 4821 → 1 → 2 → 8 → 4 → รวม 15</span></pre>
-    </details>
-  </div>
-
-  <div class="note">
-    <b>จบครบ 4 บทแล้ว</b> — ถ้าทำโจทย์ทั้งหมดได้เอง แปลว่าใช้ list, tuple,
-    for และ while ได้จริงแล้ว ขั้นต่อไปคือ dictionary กับ function
   </div>
 </main>
 

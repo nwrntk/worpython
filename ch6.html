@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 6 · for loop — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 06</div>
+  <h1>for loop</h1>
+  <p class="lead">วนซ้ำเมื่อ<strong>รู้ว่าต้องทำกี่รอบ</strong> หรือมีข้อมูลชุดหนึ่งให้ไล่ทีละตัว</p>
+
+  <h2>6.1 รูปแบบพื้นฐาน</h2>
+
+  <p>อ่านเป็นภาษาไทยว่า "สำหรับ<em>แต่ละตัว</em>ใน<em>ชุดข้อมูล</em> ให้ทำสิ่งนี้"</p>
+
+<pre>fruits = ["apple", "banana", "cherry"]
+
+for f in fruits:
+    print(f)
+
+<span class="out"># apple
+# banana
+# cherry</span></pre>
+
+  <p>Python จะหยิบสมาชิกทีละตัวใส่ตัวแปร <code>f</code> แล้วรันโค้ดที่ย่อหน้าข้างใน
+  จนครบทุกตัวแล้วจึงออกจาก loop</p>
+
+  <div class="warn">
+    <b>ย่อหน้าคือทุกอย่าง:</b> Python ใช้การเยื้อง (indent) บอกว่าโค้ดไหนอยู่ใน loop
+    ปกติเยื้อง 4 ช่อง และห้ามลืมเครื่องหมาย <code>:</code> ท้ายบรรทัด <code>for</code>
+  </div>
+
+<pre>for f in fruits:
+    print(f)          <span class="out"># อยู่ใน loop → รันทุกรอบ</span>
+print("จบแล้ว")        <span class="out"># อยู่นอก loop → รันครั้งเดียว</span></pre>
+
+  <h2>6.2 range() — วนตามจำนวนรอบ</h2>
+
+<pre>for i in range(5):
+    print(i)
+<span class="out"># 0 1 2 3 4  ← เริ่มที่ 0 ไม่รวม 5</span></pre>
+
+  <table>
+    <tr><th>เขียน</th><th>ได้ค่า</th><th>ความหมาย</th></tr>
+    <tr><td><code>range(5)</code></td><td>0,1,2,3,4</td><td>0 ถึงก่อน 5</td></tr>
+    <tr><td><code>range(2, 6)</code></td><td>2,3,4,5</td><td>เริ่ม 2 ถึงก่อน 6</td></tr>
+    <tr><td><code>range(0, 10, 2)</code></td><td>0,2,4,6,8</td><td>ก้าวทีละ 2</td></tr>
+    <tr><td><code>range(5, 0, -1)</code></td><td>5,4,3,2,1</td><td>นับถอยหลัง</td></tr>
+    <tr><td><code>range(len(a))</code></td><td>0…len-1</td><td>ไล่ทุก index ของ a</td></tr>
+  </table>
+
+<pre><span class="out"># นับ 1 ถึง 10</span>
+for i in range(1, 11):
+    print(i, end=" ")
+<span class="out"># 1 2 3 4 5 6 7 8 9 10</span>
+
+<span class="out"># สูตรคูณแม่ 7</span>
+for i in range(1, 13):
+    print(f"7 x {i} = {7 * i}")</pre>
+
+  <h2>6.3 สะสมค่าใน loop</h2>
+
+  <p>รูปแบบที่ใช้บ่อยที่สุดในโลก — เตรียมตัวแปรไว้ก่อน loop แล้วสะสมข้างใน</p>
+
+<pre>scores = [80, 75, 92, 68, 88]
+
+total = 0                  <span class="out"># เตรียมไว้ "ก่อน" loop</span>
+for s in scores:
+    total = total + s      <span class="out"># หรือเขียนสั้น ๆ total += s</span>
+print(total)               <span class="out"># 403</span></pre>
+
+  <p>นับจำนวนตามเงื่อนไข ก็ใช้หลักเดียวกัน</p>
+
+<pre>count = 0
+for s in scores:
+    if s >= 80:
+        count += 1
+print(f"คะแนน 80 ขึ้นไปมี {count} คน")   <span class="out"># 3 คน</span></pre>
+
+  <p>สร้าง list ใหม่จาก list เดิม</p>
+
+<pre>nums = [1, 2, 3, 4, 5]
+
+squares = []
+for n in nums:
+    squares.append(n ** 2)
+print(squares)      <span class="out"># [1, 4, 9, 16, 25]</span></pre>
+
+  <div class="note">
+    <b>เขียนสั้นได้ด้วย list comprehension:</b><br>
+    <code>squares = [n ** 2 for n in nums]</code><br>
+    ให้ผลเหมือนกันเป๊ะ แต่ตอนเริ่มเรียนควรเขียนแบบ loop เต็ม ๆ ให้คล่องก่อน
+  </div>
+
+  <h2>6.4 enumerate() — เอาทั้ง index และค่า</h2>
+
+  <p>เวลาต้องรู้ว่ากำลังอยู่ตัวที่เท่าไร คนใหม่มักเขียนแบบนี้</p>
+
+<pre>fruits = ["apple", "banana", "cherry"]
+
+for i in range(len(fruits)):
+    print(i, fruits[i])</pre>
+
+  <p>ใช้ได้ แต่วิธีที่เป็น Python มากกว่าคือ</p>
+
+<pre>for i, f in enumerate(fruits):
+    print(i, f)
+<span class="out"># 0 apple
+# 1 banana
+# 2 cherry</span>
+
+<span class="out"># อยากให้เริ่มนับที่ 1</span>
+for i, f in enumerate(fruits, start=1):
+    print(f"{i}. {f}")
+<span class="out"># 1. apple
+# 2. banana
+# 3. cherry</span></pre>
+
+  <h2>6.5 zip() — วนสอง list พร้อมกัน</h2>
+
+<pre>names  = ["ฟ้า", "นล", "อาร์ม"]
+scores = [85, 92, 78]
+
+for n, s in zip(names, scores):
+    print(f"{n} ได้ {s} คะแนน")
+
+<span class="out"># ฟ้า ได้ 85 คะแนน
+# นล ได้ 92 คะแนน
+# อาร์ม ได้ 78 คะแนน</span></pre>
+
+  <p><code>zip</code> จะหยุดที่ list ที่สั้นที่สุด ถ้า <code>names</code> มี 3 ตัว
+  แต่ <code>scores</code> มี 2 ตัว จะวนแค่ 2 รอบ</p>
+
+  <h2>6.6 วนบน string ก็ได้</h2>
+
+<pre>word = "Python"
+
+for ch in word:
+    print(ch, end="-")
+<span class="out"># P-y-t-h-o-n-</span>
+
+<span class="out"># นับสระเสียง</span>
+count = 0
+for ch in "programming":
+    if ch in "aeiou":
+        count += 1
+print(count)      <span class="out"># 3</span></pre>
+
+  <h2>6.7 break และ continue</h2>
+
+<pre><span class="out"># break = ออกจาก loop ทันที</span>
+for n in [3, 7, 12, 5, 9]:
+    if n > 10:
+        print("เจอเลขเกิน 10:", n)
+        break
+    print("ผ่าน:", n)
+<span class="out"># ผ่าน: 3
+# ผ่าน: 7
+# เจอเลขเกิน 10: 12   ← หยุดตรงนี้ ไม่ไปต่อ</span>
+
+<span class="out"># continue = ข้ามรอบนี้ ไปรอบถัดไป</span>
+for n in range(1, 11):
+    if n % 2 == 0:
+        continue          <span class="out"># เลขคู่ข้ามไป</span>
+    print(n, end=" ")
+<span class="out"># 1 3 5 7 9</span></pre>
+
+  <h2>6.8 Loop ซ้อน Loop</h2>
+
+  <p>loop ข้างในจะวนครบทุกรอบ ต่อ 1 รอบของ loop ข้างนอก</p>
+
+<pre>for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"{i}x{j}={i*j}", end="  ")
+    print()          <span class="out"># ขึ้นบรรทัดใหม่ทุกจบแถว</span>
+
+<span class="out"># 1x1=1  1x2=2  1x3=3
+# 2x1=2  2x2=4  2x3=6
+# 3x1=3  3x2=6  3x3=9</span></pre>
+
+  <p>วาดรูปสามเหลี่ยมด้วย loop ซ้อน</p>
+
+<pre>for i in range(1, 6):
+    for j in range(i):
+        print("*", end="")
+    print()
+
+<span class="out"># *
+# **
+# ***
+# ****
+# *****</span>
+
+<span class="out"># วิธีสั้นกว่า ใช้การคูณ string</span>
+for i in range(1, 6):
+    print("*" * i)</pre>
+
+  <div class="warn">
+    <b>ระวัง:</b> loop ซ้อน 2 ชั้นที่วนอย่างละ 1,000 รอบ = ทำงาน 1,000,000 รอบ
+    ถ้าโปรแกรมช้าผิดปกติ ให้มองหา loop ซ้อนก่อนเป็นอันดับแรก
+  </div>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1"><code>for i in range(3):</code> จะวนกี่รอบ และ i มีค่าอะไรบ้าง?</div>
+    <button class="choice">2 รอบ · 1, 2</button>
+    <button class="choice" data-correct>3 รอบ · 0, 1, 2</button>
+    <button class="choice">3 รอบ · 1, 2, 3</button>
+    <button class="choice">4 รอบ · 0, 1, 2, 3</button>
+    <div class="explain"><code>range(n)</code> เริ่มที่ 0 และหยุดก่อน n → 0, 1, 2</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">โค้ดนี้พิมพ์อะไร?<br>
+      <code>for i in range(1, 10, 3):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")</code></div>
+    <button class="choice">1 2 3 ... 9</button>
+    <button class="choice" data-correct>1 4 7</button>
+    <button class="choice">1 4 7 10</button>
+    <button class="choice">3 6 9</button>
+    <div class="explain">เริ่ม 1 ก้าวทีละ 3 หยุดก่อนถึง 10 → 1, 4, 7 (ตัวถัดไปคือ 10 ซึ่งไม่รวม)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">ผลของโค้ดนี้คือ?<br>
+      <code>total = 0</code><br>
+      <code>for n in [1, 2, 3, 4]:</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;total += n</code><br>
+      <code>print(total)</code></div>
+    <button class="choice">4</button>
+    <button class="choice">0</button>
+    <button class="choice" data-correct>10</button>
+    <button class="choice">1 3 6 10</button>
+    <div class="explain">สะสมทีละตัว 1+2+3+4 = 10 และ <code>print</code> อยู่นอก loop จึงพิมพ์ครั้งเดียว</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">อยากได้ทั้งลำดับที่และค่าไปพร้อมกัน ควรใช้อะไร?</div>
+    <button class="choice">zip()</button>
+    <button class="choice" data-correct>enumerate()</button>
+    <button class="choice">range()</button>
+    <button class="choice">len()</button>
+    <div class="explain"><code>enumerate()</code> คืน (index, ค่า) ทุกรอบ
+      ส่วน <code>zip()</code> ใช้จับคู่ข้อมูลคนละชุด</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5"><code>continue</code> ทำอะไร?</div>
+    <button class="choice">ออกจาก loop ทันที</button>
+    <button class="choice" data-correct>ข้ามโค้ดที่เหลือในรอบนี้ แล้วไปรอบถัดไป</button>
+    <button class="choice">เริ่ม loop ใหม่ตั้งแต่รอบแรก</button>
+    <button class="choice">หยุดโปรแกรมทั้งหมด</button>
+    <div class="explain">ออกจาก loop ทันทีคือ <code>break</code> ส่วน <code>continue</code>
+      แค่ข้ามไปรอบต่อไป</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">โค้ดนี้พิมพ์ทั้งหมดกี่บรรทัด?<br>
+      <code>for i in range(3):</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(4):</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(i, j)</code></div>
+    <button class="choice">7</button>
+    <button class="choice">3</button>
+    <button class="choice" data-correct>12</button>
+    <button class="choice">4</button>
+    <div class="explain">loop ข้างในวน 4 รอบ ต่อ 1 รอบของข้างนอก → 3 × 4 = 12</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7"><code>a = [1,2,3]</code>, <code>b = [10,20]</code> แล้ว
+      <code>for x, y in zip(a, b):</code> วนกี่รอบ?</div>
+    <button class="choice">3</button>
+    <button class="choice" data-correct>2</button>
+    <button class="choice">5</button>
+    <button class="choice">6</button>
+    <div class="explain"><code>zip</code> หยุดตามตัวที่สั้นที่สุด → 2 รอบ</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — สูตรคูณ</h4>
+    <p>รับเลขแม่สูตรคูณจากผู้ใช้ 1 ตัว แล้วพิมพ์สูตรคูณแม่นั้นตั้งแต่ ×1 ถึง ×12
+    ในรูปแบบ <code>7 x 3 = 21</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>n = int(input("แม่สูตรคูณ: "))
+
+for i in range(1, 13):
+    print(f"{n} x {i} = {n * i}")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — คัดกรองตัวเลข</h4>
+    <p>กำหนด <code>nums = [12, 7, 30, 5, 18, 9, 24]</code> เขียน for loop เพื่อพิมพ์:</p>
+    <ol>
+      <li>เฉพาะเลขคู่</li>
+      <li>ผลรวมของเลขที่มากกว่า 10</li>
+      <li>จำนวนเลขคี่ทั้งหมด</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = [12, 7, 30, 5, 18, 9, 24]
+
+print("เลขคู่:", end=" ")
+for n in nums:
+    if n % 2 == 0:
+        print(n, end=" ")
+print()
+
+total = 0
+odd = 0
+for n in nums:
+    if n > 10:
+        total += n
+    if n % 2 != 0:
+        odd += 1
+
+print("ผลรวมเลขที่มากกว่า 10:", total)   <span class="out"># 84</span>
+print("จำนวนเลขคี่:", odd)                <span class="out"># 3</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — ใบเสร็จ</h4>
+    <p>มี <code>items = ["ข้าวผัด", "ชาเย็น", "ส้มตำ"]</code> และ
+    <code>prices = [50, 25, 45]</code><br>
+    ใช้ <code>zip()</code> กับ <code>enumerate()</code> พิมพ์ใบเสร็จมีเลขลำดับเริ่มที่ 1
+    และบรรทัดสุดท้ายบอกราคารวม</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>items  = ["ข้าวผัด", "ชาเย็น", "ส้มตำ"]
+prices = [50, 25, 45]
+
+total = 0
+for i, (name, price) in enumerate(zip(items, prices), start=1):
+    print(f"{i}. {name:10s} {price:4d} บาท")
+    total += price
+
+print("-" * 24)
+print(f"   {'รวม':10s} {total:4d} บาท")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — วาดรูปสามเหลี่ยม</h4>
+    <p>ใช้ loop ซ้อน loop วาดรูปนี้ (รับความสูงจากผู้ใช้)</p>
+<pre>    *
+   ***
+  *****
+ *******
+*********</pre>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>h = int(input("ความสูง: "))
+
+for i in range(1, h + 1):
+    <span class="out"># ช่องว่างซ้าย ลดลงทีละ 1 ; ดาว เพิ่มทีละ 2</span>
+    for _ in range(h - i):
+        print(" ", end="")
+    for _ in range(2 * i - 1):
+        print("*", end="")
+    print()
+
+<span class="out"># วิธีสั้นกว่า</span>
+for i in range(1, h + 1):
+    print(" " * (h - i) + "*" * (2 * i - 1))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — ท้าทาย</h4>
+    <p>เขียนโปรแกรมหาจำนวนเฉพาะ (prime) ทั้งหมดตั้งแต่ 2 ถึง 50<br>
+    ใบ้: จำนวนเฉพาะคือเลขที่หารลงตัวเฉพาะ 1 กับตัวเอง — ใช้ loop ซ้อนกับ
+    <code>break</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>for n in range(2, 51):
+    is_prime = True
+    for d in range(2, n):          <span class="out"># ลองหารด้วย 2 ถึง n-1</span>
+        if n % d == 0:
+            is_prime = False
+            break                  <span class="out"># เจอตัวหารแล้ว ไม่ต้องหาต่อ</span>
+    if is_prime:
+        print(n, end=" ")
+
+<span class="out"># 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47</span></pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

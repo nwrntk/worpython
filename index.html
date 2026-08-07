@@ -3,40 +3,106 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python Lab · List, Tuple, Iteration</title>
+<title>Python Lab · พื้นฐานถึงการเขียนไฟล์</title>
 <link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <main>
   <div class="eyebrow">Computer Programming · Lab</div>
-  <h1>Python พื้นฐาน<br>List · Tuple · Iteration</h1>
+  <h1>Python พื้นฐาน<br>ตั้งแต่ print ถึงการเขียนไฟล์</h1>
   <p class="lead">บทเรียนสั้น ๆ พร้อมแบบทดสอบท้ายบท อ่านจบแล้วต้องเขียนโค้ดได้จริง</p>
 
-  <p>ทั้ง 4 บทนี้เรียงต่อกัน อ่านตามลำดับจะได้ผลดีที่สุด แต่ละบทมี
+  <p>ทั้ง 12 บทนี้เรียงต่อกันจากง่ายไปยาก อ่านตามลำดับจะได้ผลดีที่สุด
+  เพราะบทหลัง ๆ ใช้ของจากบทก่อนหน้าตลอด แต่ละบทมี
   <strong>แบบทดสอบแบบเลือกตอบ</strong> ให้เช็กความเข้าใจ และ
   <strong>โจทย์ให้ไปเขียนโค้ดจริง</strong> พร้อมเฉลยที่กดเปิดดูได้เมื่อทำเสร็จแล้ว</p>
 
+  <h2>I · พื้นฐาน</h2>
   <div class="cards">
     <a class="card" href="ch1.html">
       <div class="k">CHAPTER 01</div>
-      <div class="t">List — ลิสต์</div>
-      <div class="d">เก็บข้อมูลหลายค่าในตัวแปรเดียว เข้าถึงด้วย index, ตัดด้วย slice, แก้ไขได้</div>
+      <div class="t">print และตัวแปร</div>
+      <div class="d">แสดงผลด้วย print, เก็บค่าในตัวแปร, รับค่าด้วย input, f-string, คอมเมนต์</div>
     </a>
     <a class="card" href="ch2.html">
       <div class="k">CHAPTER 02</div>
+      <div class="t">ชนิดข้อมูลและตัวดำเนินการ</div>
+      <div class="d">int / float / str / bool, แปลงชนิด, <code>// % **</code>, เปรียบเทียบ, and / or / not</div>
+    </a>
+  </div>
+
+  <h2>II · การตัดสินใจ</h2>
+  <div class="cards">
+    <a class="card" href="ch3.html">
+      <div class="k">CHAPTER 03</div>
+      <div class="t">เงื่อนไข if / elif / else</div>
+      <div class="d">ให้โปรแกรมเลือกทางเอง — ลำดับเงื่อนไข, if ซ้อน, เงื่อนไขซับซ้อน</div>
+    </a>
+  </div>
+
+  <h2>III · ข้อมูลชุด</h2>
+  <div class="cards">
+    <a class="card" href="ch4.html">
+      <div class="k">CHAPTER 04</div>
+      <div class="t">List — ลิสต์</div>
+      <div class="d">เก็บข้อมูลหลายค่าในตัวแปรเดียว เข้าถึงด้วย index, ตัดด้วย slice, แก้ไขได้</div>
+    </a>
+    <a class="card" href="ch5.html">
+      <div class="k">CHAPTER 05</div>
       <div class="t">Tuple — ทูเพิล</div>
       <div class="d">เหมือน list แต่แก้ไม่ได้ ใช้เมื่อข้อมูลต้องคงที่ และการ unpack ค่า</div>
     </a>
-    <a class="card" href="ch3.html">
-      <div class="k">CHAPTER 03</div>
+  </div>
+
+  <h2>IV · การวนซ้ำ</h2>
+  <div class="cards">
+    <a class="card" href="ch6.html">
+      <div class="k">CHAPTER 06</div>
       <div class="t">for loop</div>
       <div class="d">วนซ้ำเมื่อ<em>รู้จำนวนรอบ</em> — range, enumerate, zip, loop ซ้อน loop</div>
     </a>
-    <a class="card" href="ch4.html">
-      <div class="k">CHAPTER 04</div>
+    <a class="card" href="ch7.html">
+      <div class="k">CHAPTER 07</div>
       <div class="t">while loop</div>
       <div class="d">วนซ้ำเมื่อ<em>ไม่รู้จำนวนรอบ</em> — เงื่อนไข, break, continue, infinite loop</div>
+    </a>
+  </div>
+
+  <h2>V · ข้อมูลแบบกลุ่ม</h2>
+  <div class="cards">
+    <a class="card" href="ch8.html">
+      <div class="k">CHAPTER 08</div>
+      <div class="t">Dictionary — ดิกชันนารี</div>
+      <div class="d">เก็บข้อมูลเป็นคู่ key → value ค้นด้วยชื่อ, .get(), .items(), นับของ</div>
+    </a>
+    <a class="card" href="ch9.html">
+      <div class="k">CHAPTER 09</div>
+      <div class="t">Set — เซต</div>
+      <div class="d">กลุ่มข้อมูลที่ห้ามซ้ำ — ตัดค่าซ้ำ, หาส่วนร่วม, union / intersection</div>
+    </a>
+  </div>
+
+  <h2>VI · ข้อความและฟังก์ชัน</h2>
+  <div class="cards">
+    <a class="card" href="ch10.html">
+      <div class="k">CHAPTER 10</div>
+      <div class="t">String — ข้อความ</div>
+      <div class="d">slice, split / join, replace, f-string จัดรูปแบบตัวเลขและตาราง</div>
+    </a>
+    <a class="card" href="ch11.html">
+      <div class="k">CHAPTER 11</div>
+      <div class="t">Function — ฟังก์ชัน</div>
+      <div class="d">def, พารามิเตอร์, ค่า default, return กับ print, ขอบเขตตัวแปร</div>
+    </a>
+  </div>
+
+  <h2>VII · ไฟล์และข้อผิดพลาด</h2>
+  <div class="cards">
+    <a class="card" href="ch12.html">
+      <div class="k">CHAPTER 12</div>
+      <div class="t">File I/O &amp; Exception</div>
+      <div class="d">อ่าน-เขียนไฟล์ด้วย with open, try-except กันโปรแกรมพัง</div>
     </a>
   </div>
 

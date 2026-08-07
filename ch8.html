@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 8 · Dictionary — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 08</div>
+  <h1>Dictionary — ดิกชันนารี</h1>
+  <p class="lead">เก็บข้อมูลเป็นคู่ <strong>key → value</strong> ค้นด้วยชื่อ ไม่ใช่ตัวเลขตำแหน่ง</p>
+
+  <h2>8.1 ทำไมต้องมี dict</h2>
+
+  <p>สมมติเก็บคะแนนนักเรียน ถ้าใช้ list เราต้องจำว่าใครอยู่ตำแหน่งไหน</p>
+
+<pre>names  = ["ฟ้า", "นล", "อาร์ม"]
+scores = [85, 92, 78]
+
+<span class="out"># อยากรู้คะแนนของ "นล" ต้องหา index ก่อน แล้วค่อยไปเปิดอีก list</span>
+i = names.index("นล")
+print(scores[i])       <span class="out"># 92</span></pre>
+
+  <p>ด้วย dict เราค้นด้วยชื่อได้ตรง ๆ</p>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+
+print(scores["นล"])    <span class="out"># 92</span></pre>
+
+  <p>ใช้ปีกกา <code>{ }</code> เขียนเป็น <code>key: value</code> คั่นด้วยจุลภาค</p>
+
+<pre>student = {
+    "name": "ฟ้าใส",
+    "age": 20,
+    "gpa": 3.45,
+    "subjects": ["Python", "Calculus"]     <span class="out"># value เป็นอะไรก็ได้</span>
+}
+
+empty = {}      <span class="out"># dict ว่าง</span></pre>
+
+  <div class="note">
+    <b>key ต้องเป็นชนิดที่แก้ไม่ได้:</b> ใช้ <code>str</code>, <code>int</code>,
+    <code>tuple</code> ได้ แต่ใช้ <code>list</code> เป็น key ไม่ได้
+    (นี่คือเหตุผลหนึ่งที่ tuple มีอยู่)<br>
+    ส่วน <b>value</b> เป็นอะไรก็ได้ รวมถึง list หรือ dict ซ้อนอีกที
+  </div>
+
+  <h2>8.2 อ่าน เพิ่ม แก้ ลบ</h2>
+
+<pre>student = {"name": "ฟ้าใส", "age": 20}
+
+<span class="out"># อ่าน</span>
+print(student["name"])       <span class="out"># ฟ้าใส</span>
+
+<span class="out"># เพิ่ม key ใหม่ — แค่กำหนดค่าให้ key ที่ยังไม่มี</span>
+student["gpa"] = 3.45
+print(student)   <span class="out"># {'name': 'ฟ้าใส', 'age': 20, 'gpa': 3.45}</span>
+
+<span class="out"># แก้ค่าเดิม — เขียนแบบเดียวกันเป๊ะ</span>
+student["age"] = 21
+
+<span class="out"># ลบ</span>
+del student["gpa"]
+gpa = student.pop("age")     <span class="out"># ลบพร้อมเอาค่าออกมา</span></pre>
+
+  <div class="warn">
+    <b>KeyError:</b> เรียก key ที่ไม่มีจะพังทันที —
+    <code>student["email"]</code> → <span class="mono">KeyError: 'email'</span>
+  </div>
+
+  <h2>8.3 .get() — อ่านแบบไม่พัง</h2>
+
+<pre>student = {"name": "ฟ้าใส", "age": 20}
+
+print(student.get("email"))              <span class="out"># None (ไม่ error)</span>
+print(student.get("email", "ไม่ระบุ"))    <span class="out"># ไม่ระบุ  ← ค่าสำรอง</span>
+
+<span class="out"># เช็กก่อนใช้ก็ได้</span>
+if "email" in student:
+    print(student["email"])
+else:
+    print("ยังไม่มีอีเมล")</pre>
+
+  <p><code>in</code> กับ dict เช็ก<strong>ที่ key</strong> ไม่ใช่ value</p>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92}
+
+print("ฟ้า" in scores)          <span class="out"># True  → เช็ก key</span>
+print(85 in scores)             <span class="out"># False → 85 เป็น value ไม่ใช่ key</span>
+print(85 in scores.values())    <span class="out"># True  → ถ้าจะเช็ก value ต้องแบบนี้</span></pre>
+
+  <h2>8.4 วน loop บน dict</h2>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+
+<span class="out"># วนธรรมดา = ได้ key</span>
+for name in scores:
+    print(name, scores[name])
+
+<span class="out"># วิธีที่นิยมที่สุด: .items() ได้ทั้ง key และ value</span>
+for name, score in scores.items():
+    print(f"{name} ได้ {score} คะแนน")
+
+<span class="out"># เอาเฉพาะ key หรือเฉพาะ value</span>
+print(list(scores.keys()))      <span class="out"># ['ฟ้า', 'นล', 'อาร์ม']</span>
+print(list(scores.values()))    <span class="out"># [85, 92, 78]</span>
+print(sum(scores.values()))     <span class="out"># 255</span>
+print(max(scores.values()))     <span class="out"># 92</span></pre>
+
+  <p><code>.items()</code> คืนคู่ <code>(key, value)</code> เป็น tuple ทุกรอบ —
+  ที่เขียน <code>for name, score in ...</code> ได้ก็เพราะเป็นการ unpack tuple
+  แบบเดียวกับบทที่ 5</p>
+
+  <h2>8.5 นับของด้วย dict</h2>
+
+  <p>งานคลาสสิกที่ dict ทำได้ดีที่สุด — นับว่าอะไรปรากฏกี่ครั้ง</p>
+
+<pre>text = "banana"
+count = {}
+
+for ch in text:
+    if ch in count:
+        count[ch] += 1
+    else:
+        count[ch] = 1
+
+print(count)     <span class="out"># {'b': 1, 'a': 3, 'n': 2}</span>
+
+<span class="out"># เขียนสั้นลงด้วย .get() ค่าสำรอง 0</span>
+count = {}
+for ch in text:
+    count[ch] = count.get(ch, 0) + 1</pre>
+
+  <h2>8.6 คำสั่งอื่นที่ใช้บ่อย</h2>
+
+  <table>
+    <tr><th>คำสั่ง</th><th>ความหมาย</th></tr>
+    <tr><td><code>len(d)</code></td><td>จำนวนคู่ key-value</td></tr>
+    <tr><td><code>d.keys()</code></td><td>key ทั้งหมด</td></tr>
+    <tr><td><code>d.values()</code></td><td>value ทั้งหมด</td></tr>
+    <tr><td><code>d.items()</code></td><td>คู่ (key, value) ทั้งหมด</td></tr>
+    <tr><td><code>d.get(k, ค่าสำรอง)</code></td><td>อ่านแบบไม่ error</td></tr>
+    <tr><td><code>d.pop(k)</code></td><td>ลบ k พร้อมคืนค่า</td></tr>
+    <tr><td><code>d.update(d2)</code></td><td>รวม d2 เข้า d (key ซ้ำจะทับของเดิม)</td></tr>
+    <tr><td><code>d.clear()</code></td><td>ล้างทั้งหมด</td></tr>
+    <tr><td><code>dict(a=1, b=2)</code></td><td>สร้าง dict อีกแบบ</td></tr>
+  </table>
+
+  <h2>8.7 dict ซ้อน dict</h2>
+
+  <p>ข้อมูลจริงมักซับซ้อนกว่าคู่เดียว — ซ้อนกันได้เรื่อย ๆ</p>
+
+<pre>students = {
+    "6510123": {"name": "ฟ้าใส", "gpa": 3.45},
+    "6510124": {"name": "นล",    "gpa": 3.10},
+}
+
+print(students["6510123"]["name"])     <span class="out"># ฟ้าใส  → ไล่เข้าไปทีละชั้น</span>
+
+for sid, info in students.items():
+    print(f"{sid} {info['name']} เกรด {info['gpa']}")</pre>
+
+  <div class="note">
+    <b>สังเกตเครื่องหมายคำพูดใน f-string:</b> ข้างนอกใช้ <code>"</code>
+    ข้างในต้องใช้ <code>'</code> สลับกัน ไม่งั้น Python จะงงว่า string จบตรงไหน
+  </div>
+
+  <h2>8.8 เรียงลำดับ dict</h2>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+
+<span class="out"># เรียงตาม key</span>
+for name in sorted(scores):
+    print(name, scores[name])
+
+<span class="out"># เรียงตาม value จากมากไปน้อย</span>
+for name, score in sorted(scores.items(), key=lambda x: x[1], reverse=True):
+    print(name, score)
+<span class="out"># นล 92
+# ฟ้า 85
+# อาร์ม 78</span>
+
+<span class="out"># หา key ที่ value สูงสุด</span>
+print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1"><code>d = {"a": 1, "b": 2}</code> แล้ว <code>d["c"]</code> ได้อะไร?</div>
+    <button class="choice">None</button>
+    <button class="choice">0</button>
+    <button class="choice" data-correct>KeyError</button>
+    <button class="choice">เพิ่ม key "c" ให้อัตโนมัติ</button>
+    <div class="explain">อ่าน key ที่ไม่มีด้วย <code>[ ]</code> จะพัง ถ้าไม่อยากพังใช้
+      <code>d.get("c")</code> ซึ่งคืน <code>None</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">อยากวนเอาทั้งชื่อและคะแนนพร้อมกัน เขียนยังไง?</div>
+    <button class="choice">for k in d:</button>
+    <button class="choice">for k, v in d:</button>
+    <button class="choice" data-correct>for k, v in d.items():</button>
+    <button class="choice">for k, v in d.values():</button>
+    <div class="explain"><code>.items()</code> คืนคู่ (key, value) — วน dict เฉย ๆ จะได้แค่ key</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>scores = {"ฟ้า": 85}</code> แล้ว <code>85 in scores</code> ได้อะไร?</div>
+    <button class="choice">True</button>
+    <button class="choice" data-correct>False</button>
+    <button class="choice">KeyError</button>
+    <button class="choice">TypeError</button>
+    <div class="explain"><code>in</code> เช็กที่ key เท่านั้น ถ้าจะเช็ก value ต้อง
+      <code>85 in scores.values()</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ข้อใดใช้เป็น key ของ dict <strong>ไม่ได้</strong>?</div>
+    <button class="choice">"name"</button>
+    <button class="choice">42</button>
+    <button class="choice">(1, 2)</button>
+    <button class="choice" data-correct>[1, 2]</button>
+    <div class="explain">key ต้องเป็นชนิดที่แก้ไม่ได้ — list แก้ได้จึงใช้ไม่ได้ แต่ tuple ใช้ได้</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">โค้ดนี้ได้ผลอะไร?<br>
+      <code>d = {"a": 1}</code><br><code>d["a"] = 5</code><br><code>print(d)</code></div>
+    <button class="choice">{'a': 1, 'a': 5}</button>
+    <button class="choice" data-correct>{'a': 5}</button>
+    <button class="choice">{'a': 1}</button>
+    <button class="choice">KeyError</button>
+    <div class="explain">key ห้ามซ้ำ — กำหนดค่าให้ key เดิมคือการแก้ค่า ไม่ใช่เพิ่มคู่ใหม่</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6"><code>d.get("x", 0)</code> ต่างจาก <code>d["x"]</code> ยังไง?</div>
+    <button class="choice">เหมือนกันทุกอย่าง</button>
+    <button class="choice" data-correct>ถ้าไม่มี key "x" จะคืน 0 แทนที่จะ error</button>
+    <button class="choice">get จะสร้าง key "x" ให้ด้วย</button>
+    <button class="choice">get ใช้ได้เฉพาะกับ value ที่เป็นตัวเลข</button>
+    <div class="explain">พารามิเตอร์ตัวที่ 2 คือค่าสำรองเมื่อไม่เจอ key (ถ้าไม่ใส่จะได้ <code>None</code>)</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — สมุดโทรศัพท์</h4>
+    <p>สร้าง dict เก็บชื่อกับเบอร์โทร 3 คน แล้ว: เพิ่มคนที่ 4, แก้เบอร์ของคนแรก,
+    ลบคนที่ 2, และพิมพ์ทุกคู่ด้วย <code>.items()</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>phone = {"ฟ้า": "081-1111111", "นล": "082-2222222", "อาร์ม": "083-3333333"}
+
+phone["มิน"] = "084-4444444"
+phone["ฟ้า"] = "089-9999999"
+del phone["นล"]
+
+for name, num in phone.items():
+    print(f"{name:6s} {num}")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — นับตัวอักษร</h4>
+    <p>รับข้อความจากผู้ใช้ แล้วนับว่าตัวอักษรแต่ละตัวปรากฏกี่ครั้ง
+    (ไม่ต้องนับช่องว่าง) พิมพ์ผลเรียงจากตัวที่เจอบ่อยที่สุด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>text = input("ข้อความ: ")
+
+count = {}
+for ch in text:
+    if ch == " ":
+        continue
+    count[ch] = count.get(ch, 0) + 1
+
+for ch, n in sorted(count.items(), key=lambda x: x[1], reverse=True):
+    print(f"{ch} : {n}")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — สรุปคะแนน</h4>
+    <p>กำหนด <code>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}</code><br>
+    พิมพ์: จำนวนคน, คะแนนเฉลี่ย, ชื่อคนที่ได้คะแนนสูงสุด, และรายชื่อคนที่ได้ต่ำกว่าค่าเฉลี่ย</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}
+
+avg = sum(scores.values()) / len(scores)
+
+print("จำนวนคน:", len(scores))
+print("เฉลี่ย:", round(avg, 2))
+print("สูงสุด:", max(scores, key=scores.get))
+
+print("ต่ำกว่าเฉลี่ย:")
+for name, s in scores.items():
+    if s &lt; avg:
+        print(" -", name, s)</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย: ระบบสต๊อกสินค้า</h4>
+    <p>ทำโปรแกรมเมนูวนซ้ำ (ใช้ while + dict ซ้อน dict):<br>
+    1) เพิ่มสินค้า (ชื่อ, ราคา, จำนวน) &nbsp; 2) ขายสินค้า (ลดจำนวน) &nbsp;
+    3) แสดงสต๊อกทั้งหมดพร้อมมูลค่ารวม &nbsp; 4) ออก</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>stock = {}
+
+while True:
+    print("\n1) เพิ่ม  2) ขาย  3) แสดง  4) ออก")
+    c = input("เลือก: ")
+
+    if c == "1":
+        name = input("ชื่อสินค้า: ")
+        stock[name] = {
+            "price": float(input("ราคา: ")),
+            "qty":   int(input("จำนวน: ")),
+        }
+        print("เพิ่มแล้ว")
+
+    elif c == "2":
+        name = input("ขายสินค้า: ")
+        if name not in stock:
+            print("ไม่มีสินค้านี้")
+        else:
+            n = int(input("ขายกี่ชิ้น: "))
+            if n &gt; stock[name]["qty"]:
+                print("ของไม่พอ เหลือ", stock[name]["qty"])
+            else:
+                stock[name]["qty"] -= n
+                print("ขายแล้ว เหลือ", stock[name]["qty"])
+
+    elif c == "3":
+        if not stock:
+            print("ยังไม่มีสินค้า")
+        total = 0
+        for name, info in stock.items():
+            value = info["price"] * info["qty"]
+            total += value
+            print(f"{name:12s} {info['price']:8.2f} x {info['qty']:3d} = {value:9.2f}")
+        print(f"{'มูลค่ารวม':12s} {total:24.2f}")
+
+    elif c == "4":
+        break
+
+    else:
+        print("เลือก 1-4 เท่านั้น")</pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

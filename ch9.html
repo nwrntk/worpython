@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 9 · Set — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 09</div>
+  <h1>Set — เซต</h1>
+  <p class="lead">กลุ่มข้อมูลที่<strong>ห้ามซ้ำ</strong> และ<strong>ไม่มีลำดับ</strong> — ตัดค่าซ้ำกับหาส่วนร่วมได้ในบรรทัดเดียว</p>
+
+  <h2>9.1 สร้าง set</h2>
+
+  <p>ใช้ปีกกาเหมือน dict แต่ใส่แค่ค่า ไม่มี key</p>
+
+<pre>fruits = {"apple", "banana", "cherry"}
+nums   = {1, 2, 3, 4}
+
+print(fruits)      <span class="out"># {'banana', 'cherry', 'apple'} ← ลำดับไม่แน่นอน</span></pre>
+
+  <div class="warn">
+    <b>set ว่างต้องใช้ <code>set()</code>:</b> เพราะ <code>{}</code> ถูกจองไว้ให้ dict ว่างไปแล้ว<br>
+    <code>type({})</code> → <span class="mono">dict</span> ·
+    <code>type(set())</code> → <span class="mono">set</span>
+  </div>
+
+  <p>ค่าซ้ำจะถูกตัดทิ้งอัตโนมัติ</p>
+
+<pre>s = {1, 2, 2, 3, 3, 3}
+print(s)           <span class="out"># {1, 2, 3}</span>
+print(len(s))      <span class="out"># 3 ไม่ใช่ 6</span></pre>
+
+  <h2>9.2 ใช้งานจริงที่พบบ่อยที่สุด — ตัดค่าซ้ำ</h2>
+
+<pre>nums = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+
+unique = set(nums)
+print(unique)              <span class="out"># {1, 2, 3, 4, 5, 6, 9}</span>
+print(len(unique))         <span class="out"># 7 → มีค่าไม่ซ้ำ 7 ตัว</span>
+
+<span class="out"># อยากได้ list กลับคืน (และเรียงด้วย)</span>
+print(sorted(set(nums)))   <span class="out"># [1, 2, 3, 4, 5, 6, 9]</span></pre>
+
+  <p>เทียบกับการเขียนเองด้วย list — set สั้นกว่ามาก</p>
+
+<pre><span class="out"># วิธีเดิม</span>
+unique = []
+for n in nums:
+    if n not in unique:
+        unique.append(n)
+
+<span class="out"># วิธี set</span>
+unique = list(set(nums))</pre>
+
+  <h2>9.3 เพิ่ม ลบ เช็ก</h2>
+
+<pre>s = {1, 2, 3}
+
+s.add(4)           <span class="out"># {1, 2, 3, 4}</span>
+s.add(2)           <span class="out"># {1, 2, 3, 4} ← มีอยู่แล้ว ไม่มีอะไรเกิดขึ้น</span>
+s.remove(1)        <span class="out"># {2, 3, 4} ← ถ้าไม่มีจะเกิด KeyError</span>
+s.discard(99)      <span class="out"># ไม่มีก็ไม่ error (ปลอดภัยกว่า)</span>
+s.update([7, 8])   <span class="out"># เพิ่มทีละหลายตัว</span>
+
+print(3 in s)      <span class="out"># True</span>
+print(len(s))</pre>
+
+  <div class="note">
+    <b>set เช็ก <code>in</code> เร็วมาก:</b> list ต้องไล่ดูทีละตัวจนเจอ
+    แต่ set กระโดดไปหาได้เลย ถ้าต้องเช็ก "มีค่านี้ไหม" กับข้อมูลหลักหมื่นตัว
+    set เร็วกว่า list หลายร้อยเท่า
+  </div>
+
+  <h2>9.4 การดำเนินการแบบเซต</h2>
+
+<pre>a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+
+print(a | b)    <span class="out"># {1,2,3,4,5,6}  union         — รวมทั้งสอง</span>
+print(a &amp; b)    <span class="out"># {3, 4}         intersection  — เฉพาะที่มีทั้งคู่</span>
+print(a - b)    <span class="out"># {1, 2}         difference    — มีใน a แต่ไม่มีใน b</span>
+print(a ^ b)    <span class="out"># {1,2,5,6}      symmetric diff— มีข้างเดียวเท่านั้น</span></pre>
+
+  <p>เขียนเป็นชื่อเต็มก็ได้ ความหมายเดียวกัน</p>
+
+  <table>
+    <tr><th>สัญลักษณ์</th><th>เมธอด</th><th>ความหมาย</th></tr>
+    <tr><td><code>a | b</code></td><td><code>a.union(b)</code></td><td>รวมกัน</td></tr>
+    <tr><td><code>a &amp; b</code></td><td><code>a.intersection(b)</code></td><td>ส่วนร่วม</td></tr>
+    <tr><td><code>a - b</code></td><td><code>a.difference(b)</code></td><td>ผลต่าง</td></tr>
+    <tr><td><code>a ^ b</code></td><td><code>a.symmetric_difference(b)</code></td><td>ต่างสมมาตร</td></tr>
+    <tr><td><code>a &lt;= b</code></td><td><code>a.issubset(b)</code></td><td>a เป็นสับเซตของ b</td></tr>
+  </table>
+
+  <p>ตัวอย่างใช้จริง — เทียบรายชื่อสองวิชา</p>
+
+<pre>python = {"ฟ้า", "นล", "อาร์ม", "มิน"}
+calculus = {"นล", "มิน", "เก้า"}
+
+print("ลงทั้งสองวิชา:", python &amp; calculus)     <span class="out"># {'นล', 'มิน'}</span>
+print("ลงอย่างน้อยหนึ่ง:", python | calculus)
+print("ลง Python อย่างเดียว:", python - calculus)  <span class="out"># {'ฟ้า', 'อาร์ม'}</span></pre>
+
+  <h2>9.5 set ไม่มีลำดับ</h2>
+
+<pre>s = {"c", "a", "b"}
+
+print(s[0])        <span class="out"># TypeError: 'set' object is not subscriptable</span></pre>
+
+  <p>เข้าถึงด้วย index ไม่ได้ เพราะไม่มีความคิดเรื่อง "ตัวแรก ตัวที่สอง"
+  แต่วน loop ได้ตามปกติ</p>
+
+<pre>for x in s:
+    print(x)       <span class="out"># ลำดับไม่รับประกัน</span>
+
+for x in sorted(s):
+    print(x)       <span class="out"># a b c ← ถ้าต้องการลำดับ ให้ sorted ก่อน</span></pre>
+
+  <h2>9.6 เลือกใช้ตัวไหนดี</h2>
+
+  <table>
+    <tr><th></th><th>list</th><th>tuple</th><th>dict</th><th>set</th></tr>
+    <tr><td>เขียน</td><td><code>[1,2]</code></td><td><code>(1,2)</code></td><td><code>{"a":1}</code></td><td><code>{1,2}</code></td></tr>
+    <tr><td>มีลำดับ</td><td>มี</td><td>มี</td><td>มี (ตามที่ใส่)</td><td>ไม่มี</td></tr>
+    <tr><td>ค่าซ้ำ</td><td>ได้</td><td>ได้</td><td>key ห้ามซ้ำ</td><td>ห้ามซ้ำ</td></tr>
+    <tr><td>แก้ไข</td><td>ได้</td><td>ไม่ได้</td><td>ได้</td><td>ได้</td></tr>
+    <tr><td>เข้าถึงด้วย</td><td>index</td><td>index</td><td>key</td><td>วน loop เท่านั้น</td></tr>
+    <tr><td>ใช้เมื่อ</td><td>ลำดับสำคัญ</td><td>ค่าคงที่</td><td>จับคู่ชื่อ→ค่า</td><td>ตัดซ้ำ / เทียบกลุ่ม</td></tr>
+  </table>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1"><code>s = {1, 2, 2, 3, 3, 3}</code> แล้ว <code>len(s)</code> เท่ากับ?</div>
+    <button class="choice">6</button>
+    <button class="choice" data-correct>3</button>
+    <button class="choice">1</button>
+    <button class="choice">เกิด error เพราะมีค่าซ้ำ</button>
+    <div class="explain">set ตัดค่าซ้ำอัตโนมัติ เหลือ {1, 2, 3}</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2"><code>type({})</code> คืออะไร?</div>
+    <button class="choice">set</button>
+    <button class="choice" data-correct>dict</button>
+    <button class="choice">list</button>
+    <button class="choice">tuple</button>
+    <div class="explain"><code>{}</code> คือ dict ว่าง — set ว่างต้องเขียน <code>set()</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>a = {1,2,3}</code>, <code>b = {2,3,4}</code> แล้ว <code>a - b</code> คือ?</div>
+    <button class="choice">{2, 3}</button>
+    <button class="choice" data-correct>{1}</button>
+    <button class="choice">{4}</button>
+    <button class="choice">{1, 4}</button>
+    <div class="explain">ผลต่าง = มีใน a แต่ไม่มีใน b → เหลือแค่ 1 (ส่วน <code>{1,4}</code> คือ <code>a ^ b</code>)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">อยากตัดค่าซ้ำใน list แล้วได้ list กลับคืน เขียนยังไงสั้นที่สุด?</div>
+    <button class="choice">list(nums.unique())</button>
+    <button class="choice" data-correct>list(set(nums))</button>
+    <button class="choice">nums.distinct()</button>
+    <button class="choice">set(list(nums))</button>
+    <div class="explain">แปลงเป็น set เพื่อตัดซ้ำ แล้วแปลงกลับเป็น list
+      (ข้อสุดท้ายได้ set ไม่ใช่ list)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5"><code>s = {"a","b","c"}</code> แล้ว <code>s[0]</code> ได้อะไร?</div>
+    <button class="choice">"a"</button>
+    <button class="choice">"c"</button>
+    <button class="choice" data-correct>TypeError</button>
+    <button class="choice">None</button>
+    <div class="explain">set ไม่มีลำดับ จึงใช้ index ไม่ได้ —
+      <span class="mono">'set' object is not subscriptable</span></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6"><code>a &amp; b</code> หมายถึงอะไร?</div>
+    <button class="choice">รวมสอง set เข้าด้วยกัน</button>
+    <button class="choice" data-correct>สมาชิกที่มีอยู่ในทั้ง a และ b</button>
+    <button class="choice">สมาชิกที่มีใน a แต่ไม่มีใน b</button>
+    <button class="choice">เช็กว่า a เท่ากับ b ไหม</button>
+    <div class="explain">intersection — ส่วนร่วม ส่วนการรวมกันใช้ <code>a | b</code></div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — ตัดค่าซ้ำ</h4>
+    <p>รับตัวเลขจากผู้ใช้ 8 ตัว (ใส่ทีละตัวด้วย for loop) แล้วบอกว่า
+    มีเลขไม่ซ้ำกี่ตัว, เลขไม่ซ้ำมีอะไรบ้าง (เรียงจากน้อยไปมาก) และเลขไหนถูกใส่ซ้ำ</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>nums = []
+for i in range(1, 9):
+    nums.append(int(input(f"เลขที่ {i}: ")))
+
+unique = set(nums)
+print("ไม่ซ้ำ", len(unique), "ตัว:", sorted(unique))
+
+dup = set()
+for n in unique:
+    if nums.count(n) &gt; 1:
+        dup.add(n)
+
+print("เลขที่ซ้ำ:", sorted(dup) if dup else "ไม่มี")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — เทียบรายชื่อวิชา</h4>
+    <p>กำหนด<br>
+    <code>python = {"ฟ้า","นล","อาร์ม","มิน"}</code><br>
+    <code>web = {"นล","มิน","เก้า","โบว์"}</code><br>
+    พิมพ์: คนที่ลงทั้งสองวิชา, คนที่ลงอย่างน้อยหนึ่งวิชา (พร้อมจำนวน),
+    คนที่ลง Python อย่างเดียว, และคนที่ลงวิชาเดียวเท่านั้น (ไม่ว่าวิชาไหน)</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>python = {"ฟ้า", "นล", "อาร์ม", "มิน"}
+web    = {"นล", "มิน", "เก้า", "โบว์"}
+
+both = python &amp; web
+all_students = python | web
+
+print("ลงทั้งสองวิชา:", sorted(both))
+print(f"ลงอย่างน้อยหนึ่งวิชา {len(all_students)} คน:", sorted(all_students))
+print("ลง Python อย่างเดียว:", sorted(python - web))
+print("ลงวิชาเดียวเท่านั้น:", sorted(python ^ web))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — คำที่ใช้ในข้อความ</h4>
+    <p>รับประโยคภาษาอังกฤษจากผู้ใช้ แล้วบอกว่ามีคำทั้งหมดกี่คำ
+    และมีคำที่ไม่ซ้ำกี่คำ (ใบ้: <code>text.lower().split()</code>)</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>text = input("ประโยค: ")
+
+words = text.lower().split()
+unique = set(words)
+
+print("คำทั้งหมด:", len(words))
+print("คำไม่ซ้ำ:", len(unique))
+print("รายการ:", sorted(unique))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย: เกมทายคำ</h4>
+    <p>โปรแกรมเก็บคำลับไว้ 1 คำ (เช่น <code>"python"</code>)
+    ให้ผู้ใช้ทายทีละตัวอักษร ใช้ set เก็บตัวที่ทายไปแล้ว
+    ถ้าทายซ้ำให้เตือน และจบเกมเมื่อทายครบทุกตัวอักษรของคำลับ
+    พร้อมบอกว่าใช้ไปกี่ตา</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>secret = "python"
+target = set(secret)      <span class="out"># ตัวอักษรที่ต้องทายให้ครบ</span>
+guessed = set()
+turn = 0
+
+while True:
+    ch = input("ทายตัวอักษร: ").lower()
+
+    if ch in guessed:
+        print("ทายตัวนี้ไปแล้ว")
+        continue
+
+    guessed.add(ch)
+    turn += 1
+
+    if ch in target:
+        print("มีอยู่!", end=" ")
+    else:
+        print("ไม่มี", end=" ")
+
+    <span class="out"># เหลือตัวที่ยังไม่ถูกทาย</span>
+    left = target - guessed
+    print("เหลืออีก", len(left), "ตัว")
+
+    if not left:
+        print(f"ครบแล้ว! คำลับคือ '{secret}' ใช้ไป {turn} ตา")
+        break</pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 11 · Function — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 11</div>
+  <h1>Function — ฟังก์ชัน</h1>
+  <p class="lead">เขียนครั้งเดียว เรียกใช้ได้ตลอด — เครื่องมือหลักที่ทำให้โปรแกรมใหญ่ ๆ ยังอ่านรู้เรื่อง</p>
+
+  <h2>11.1 ทำไมต้องมีฟังก์ชัน</h2>
+
+  <p>ถ้าต้องคำนวณเกรดเฉลี่ยหลายที่ในโปรแกรม เราคงไม่อยากก๊อบโค้ดเดิมไปวางซ้ำ ๆ
+  เพราะถ้าสูตรผิด ต้องไล่แก้ทุกที่</p>
+
+<pre>def average(nums):
+    return sum(nums) / len(nums)
+
+print(average([80, 75, 92]))     <span class="out"># 82.33...</span>
+print(average([60, 70]))         <span class="out"># 65.0</span></pre>
+
+  <p>โครงสร้างมี 4 ส่วน</p>
+
+<pre>def   greet   (name)   :
+<span class="out">#  ↑      ↑       ↑     ↑
+#  |   ชื่อฟังก์ชัน  พารามิเตอร์  อย่าลืมโคลอน</span>
+    print(f"สวัสดี {name}")     <span class="out"># ← ตัวฟังก์ชัน ต้องเยื้อง</span>
+
+greet("ฟ้าใส")      <span class="out"># เรียกใช้ → สวัสดี ฟ้าใส</span></pre>
+
+  <div class="warn">
+    <b>ต้อง <code>def</code> ก่อนเรียกเสมอ:</b> Python อ่านไฟล์จากบนลงล่าง
+    ถ้าเรียกฟังก์ชันก่อนบรรทัด <code>def</code> จะได้
+    <span class="mono">NameError: name 'greet' is not defined</span>
+  </div>
+
+  <h2>11.2 return — ส่งค่ากลับ</h2>
+
+  <p>ความต่างที่คนใหม่สับสนบ่อยที่สุด: <code>print</code> คือ<em>แสดง</em>
+  ส่วน <code>return</code> คือ<em>ส่งค่ากลับไปให้คนเรียกใช้ต่อ</em></p>
+
+<pre>def add_print(a, b):
+    print(a + b)        <span class="out"># แค่แสดงผล</span>
+
+def add_return(a, b):
+    return a + b        <span class="out"># ส่งค่ากลับ</span>
+
+x = add_print(2, 3)     <span class="out"># พิมพ์ 5 ออกมา แต่ x = None</span>
+y = add_return(2, 3)    <span class="out"># ไม่พิมพ์อะไร แต่ y = 5</span>
+
+print(y * 10)           <span class="out"># 50 ← เอาไปใช้ต่อได้</span></pre>
+
+  <div class="note">
+    <b>ฟังก์ชันที่ไม่มี <code>return</code> จะคืน <code>None</code> เสมอ</b><br>
+    และเมื่อเจอ <code>return</code> ฟังก์ชันจะจบทันที โค้ดบรรทัดหลังจากนั้นไม่ทำงาน
+  </div>
+
+<pre>def check_pass(score):
+    if score &gt;= 50:
+        return "ผ่าน"       <span class="out"># จบตรงนี้เลย</span>
+    return "ไม่ผ่าน"        <span class="out"># ทำงานเฉพาะตอนไม่เข้า if</span>
+
+print(check_pass(80))       <span class="out"># ผ่าน</span></pre>
+
+  <h2>11.3 พารามิเตอร์หลายตัวและค่า default</h2>
+
+<pre>def intro(name, age, city="กรุงเทพ"):     <span class="out"># city มีค่าสำรอง</span>
+    print(f"{name} อายุ {age} อยู่{city}")
+
+intro("ฟ้า", 20)                  <span class="out"># ฟ้า อายุ 20 อยู่กรุงเทพ</span>
+intro("นล", 21, "เชียงใหม่")       <span class="out"># นล อายุ 21 อยู่เชียงใหม่</span>
+
+<span class="out"># ระบุชื่อพารามิเตอร์ได้ ไม่ต้องเรียงตามลำดับ</span>
+intro(age=22, name="อาร์ม")</pre>
+
+  <div class="warn">
+    <b>พารามิเตอร์ที่มี default ต้องอยู่ท้ายสุด</b><br>
+    <code>def f(a=1, b):</code> → <span class="mono">SyntaxError</span>
+  </div>
+
+  <h2>11.4 คืนค่าหลายตัว</h2>
+
+  <p>ใช้ tuple ตามที่เรียนในบทที่ 5</p>
+
+<pre>def min_max_avg(nums):
+    return min(nums), max(nums), sum(nums) / len(nums)
+
+lo, hi, avg = min_max_avg([4, 9, 2, 7])
+print(lo, hi, round(avg, 2))     <span class="out"># 2 9 5.5</span></pre>
+
+  <h2>11.5 ขอบเขตตัวแปร (Scope)</h2>
+
+  <p>ตัวแปรที่สร้างในฟังก์ชันเป็น <strong>local</strong> — อยู่แค่ในฟังก์ชันนั้น
+  พอฟังก์ชันจบก็หายไป</p>
+
+<pre>def f():
+    x = 10          <span class="out"># local — มีอยู่แค่ในนี้</span>
+    print(x)
+
+f()                 <span class="out"># 10</span>
+print(x)            <span class="out"># NameError: name 'x' is not defined</span></pre>
+
+  <p>ตัวแปรข้างนอกฟังก์ชันเป็น <strong>global</strong> — อ่านได้ แต่เขียนทับไม่ได้</p>
+
+<pre>count = 0
+
+def read_it():
+    print(count)        <span class="out"># 0 ← อ่านได้ ไม่มีปัญหา</span>
+
+def try_change():
+    count = 99          <span class="out"># สร้างตัวแปร local ตัวใหม่! ไม่ได้แก้ตัวข้างนอก</span>
+
+try_change()
+print(count)            <span class="out"># 0 ← ยังเป็น 0 เหมือนเดิม</span></pre>
+
+  <div class="note">
+    <b>วิธีที่ถูกกว่าการใช้ <code>global</code>:</b> ให้ฟังก์ชัน
+    <code>return</code> ค่าออกมาแล้วรับไปเก็บเอง<br>
+    <code>count = increase(count)</code> — อ่านง่ายกว่าและตามรอย bug ได้ง่ายกว่า
+    เพราะเห็นชัดว่าค่าเปลี่ยนที่บรรทัดไหน
+  </div>
+
+<pre>def increase(n):
+    return n + 1
+
+count = 0
+count = increase(count)
+count = increase(count)
+print(count)        <span class="out"># 2</span></pre>
+
+  <h2>11.6 ระวัง: ส่ง list เข้าฟังก์ชัน</h2>
+
+  <p>ตัวเลขกับ string ส่งเข้าไปแล้วแก้ข้างในไม่กระทบข้างนอก
+  แต่ <strong>list กับ dict กระทบ</strong> (เหตุผลเดียวกับ <code>b = a</code> ในบทที่ 4)</p>
+
+<pre>def add_item(items):
+    items.append("ใหม่")      <span class="out"># แก้ list ก้อนเดิมที่ส่งเข้ามา</span>
+
+my_list = ["เก่า"]
+add_item(my_list)
+print(my_list)                <span class="out"># ['เก่า', 'ใหม่'] ← เปลี่ยนจริง</span>
+
+<span class="out"># ถ้าไม่อยากให้กระทบ ให้ทำสำเนาก่อน</span>
+def add_item_safe(items):
+    items = items[:]          <span class="out"># สำเนา</span>
+    items.append("ใหม่")
+    return items</pre>
+
+  <h2>11.7 Docstring — อธิบายฟังก์ชัน</h2>
+
+<pre>def bmi(weight, height):
+    """คำนวณดัชนีมวลกาย
+
+    weight: น้ำหนัก (กิโลกรัม)
+    height: ส่วนสูง (เมตร)
+    """
+    return weight / (height ** 2)
+
+print(bmi(60, 1.65))      <span class="out"># 22.03...</span>
+help(bmi)                 <span class="out"># แสดงคำอธิบายออกมา</span></pre>
+
+  <h2>11.8 ประกอบร่างทุกบท</h2>
+
+<pre>def grade_report(scores):
+    """รับ dict ชื่อ→คะแนน คืน dict ชื่อ→เกรด"""
+    result = {}
+    for name, s in scores.items():
+        if   s &gt;= 80: g = "A"
+        elif s &gt;= 70: g = "B"
+        elif s &gt;= 60: g = "C"
+        elif s &gt;= 50: g = "D"
+        else:         g = "F"
+        result[name] = g
+    return result
+
+scores = {"ฟ้า": 85, "นล": 72, "อาร์ม": 45}
+
+for name, g in grade_report(scores).items():
+    print(f"{name:8s} {scores[name]:3d} → {g}")</pre>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">โค้ดนี้ <code>x</code> มีค่าอะไร?<br>
+      <code>def f(a, b):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(a + b)</code><br>
+      <code>x = f(2, 3)</code></div>
+    <button class="choice">5</button>
+    <button class="choice" data-correct>None</button>
+    <button class="choice">0</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">ฟังก์ชันแค่ <code>print</code> ไม่ได้ <code>return</code>
+      จึงคืน <code>None</code> (หน้าจอจะเห็นเลข 5 แต่ <code>x</code> ไม่ใช่ 5)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">ฟังก์ชันนี้คืนค่าอะไรเมื่อเรียก <code>f(10)</code>?<br>
+      <code>def f(n):</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;return n * 2</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;return n * 3</code></div>
+    <button class="choice">30</button>
+    <button class="choice" data-correct>20</button>
+    <button class="choice">50</button>
+    <button class="choice">(20, 30)</button>
+    <div class="explain">เจอ <code>return</code> แรกฟังก์ชันจบทันที บรรทัดถัดไปไม่มีวันทำงาน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">ข้อใดเขียนผิด?</div>
+    <button class="choice">def f(a, b=2):</button>
+    <button class="choice" data-correct>def f(a=1, b):</button>
+    <button class="choice">def f(a, b):</button>
+    <button class="choice">def f():</button>
+    <div class="explain">พารามิเตอร์ที่มีค่า default ต้องอยู่หลังตัวที่ไม่มี ไม่งั้น SyntaxError</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ผลของโค้ดนี้คือ?<br>
+      <code>count = 0</code><br>
+      <code>def f():</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;count = 99</code><br>
+      <code>f()</code><br><code>print(count)</code></div>
+    <button class="choice">99</button>
+    <button class="choice" data-correct>0</button>
+    <button class="choice">None</button>
+    <button class="choice">NameError</button>
+    <div class="explain">การกำหนดค่าในฟังก์ชันสร้างตัวแปร local ตัวใหม่
+      ตัวแปร global ข้างนอกไม่ถูกแตะ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">โค้ดนี้พิมพ์อะไร?<br>
+      <code>def f(items):</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;items.append(4)</code><br>
+      <code>a = [1, 2, 3]</code><br><code>f(a)</code><br><code>print(len(a))</code></div>
+    <button class="choice">3</button>
+    <button class="choice" data-correct>4</button>
+    <button class="choice">0</button>
+    <button class="choice">None</button>
+    <div class="explain">list ส่งเข้าฟังก์ชันแบบชี้ไปก้อนเดิม แก้ข้างในจึงกระทบข้างนอกด้วย</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">ฟังก์ชันคืนค่าหลายตัวได้ยังไง?</div>
+    <button class="choice">เขียน return หลายบรรทัด</button>
+    <button class="choice" data-correct>return a, b, c แล้วรับด้วย x, y, z = f()</button>
+    <button class="choice">ทำไม่ได้ ต้องใช้ global</button>
+    <button class="choice">ใส่ return ไว้ในลูป</button>
+    <div class="explain">จริง ๆ คือคืน tuple ตัวเดียว แล้วคนเรียกใช้ unpack ออกมา</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7"><code>print</code> ต่างจาก <code>return</code> ยังไง?</div>
+    <button class="choice">เหมือนกัน เขียนแบบไหนก็ได้</button>
+    <button class="choice">return แสดงผลสวยกว่า</button>
+    <button class="choice" data-correct>print แสดงบนจอ · return ส่งค่ากลับให้เอาไปใช้ต่อ</button>
+    <button class="choice">print ใช้ได้เฉพาะนอกฟังก์ชัน</button>
+    <div class="explain">ค่าที่ <code>print</code> ออกมาเอาไปคำนวณต่อไม่ได้ แต่ค่าที่
+      <code>return</code> เก็บใส่ตัวแปรและใช้ต่อได้</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — ฟังก์ชันพื้นฐาน 3 ตัว</h4>
+    <p>เขียนฟังก์ชัน 3 ตัวพร้อมทดสอบ:</p>
+    <ol>
+      <li><code>area_circle(r)</code> — คืนพื้นที่วงกลม (ใช้ <code>3.14159</code>)</li>
+      <li><code>is_even(n)</code> — คืน <code>True</code>/<code>False</code> ว่าเป็นเลขคู่ไหม</li>
+      <li><code>celsius_to_f(c)</code> — แปลงองศาเซลเซียสเป็นฟาเรนไฮต์</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>def area_circle(r):
+    return 3.14159 * r ** 2
+
+def is_even(n):
+    return n % 2 == 0        <span class="out"># เงื่อนไขคืน True/False อยู่แล้ว</span>
+
+def celsius_to_f(c):
+    return c * 9 / 5 + 32
+
+print(area_circle(3))        <span class="out"># 28.27431</span>
+print(is_even(7))            <span class="out"># False</span>
+print(celsius_to_f(100))     <span class="out"># 212.0</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — เครื่องคิดเลขแบบฟังก์ชัน</h4>
+    <p>เขียนฟังก์ชัน <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>
+    (ตัวหารต้องกันหารด้วยศูนย์ ให้คืนข้อความเตือนแทน)
+    แล้วทำเมนู while loop ให้ผู้ใช้เลือกใช้</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>def add(a, b): return a + b
+def sub(a, b): return a - b
+def mul(a, b): return a * b
+
+def div(a, b):
+    if b == 0:
+        return "หารด้วยศูนย์ไม่ได้"
+    return a / b
+
+while True:
+    op = input("\nเลือก + - * / (q เพื่อออก): ")
+    if op == "q":
+        break
+    if op not in "+-*/":
+        print("ไม่รู้จักคำสั่งนี้")
+        continue
+
+    a = float(input("ตัวที่ 1: "))
+    b = float(input("ตัวที่ 2: "))
+
+    if   op == "+": print(add(a, b))
+    elif op == "-": print(sub(a, b))
+    elif op == "*": print(mul(a, b))
+    else:           print(div(a, b))</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — สถิติจาก list</h4>
+    <p>เขียน <code>stats(nums)</code> ที่คืน (จำนวน, ผลรวม, ค่าเฉลี่ย, ค่ามากสุด, ค่าน้อยสุด)
+    โดย<strong>ห้ามใช้</strong> <code>sum()</code>, <code>max()</code>, <code>min()</code>
+    ให้เขียน loop เอง และถ้า list ว่างให้คืน <code>None</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>def stats(nums):
+    if not nums:
+        return None
+
+    total = 0
+    hi = nums[0]
+    lo = nums[0]
+
+    for n in nums:
+        total += n
+        if n &gt; hi: hi = n
+        if n &lt; lo: lo = n
+
+    return len(nums), total, total / len(nums), hi, lo
+
+result = stats([78, 95, 62, 88])
+if result is None:
+    print("ไม่มีข้อมูล")
+else:
+    n, total, avg, hi, lo = result
+    print(f"{n} ตัว รวม {total} เฉลี่ย {avg:.2f} มากสุด {hi} น้อยสุด {lo}")
+
+print(stats([]))     <span class="out"># None</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย: ระบบเกรดแบบฟังก์ชัน</h4>
+    <p>แยกโปรแกรมออกเป็นฟังก์ชันย่อย ๆ:</p>
+    <ul>
+      <li><code>input_scores()</code> — รับคะแนนจนกว่าจะใส่ค่าว่าง คืนเป็น dict ชื่อ→คะแนน</li>
+      <li><code>to_grade(score)</code> — แปลงคะแนนเป็นเกรด A/B/C/D/F</li>
+      <li><code>summary(scores)</code> — คืน (เฉลี่ย, ชื่อคนคะแนนสูงสุด, จำนวนคนที่สอบผ่าน)</li>
+      <li><code>show_report(scores)</code> — พิมพ์ตารางรายงาน</li>
+    </ul>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>def input_scores():
+    scores = {}
+    while True:
+        name = input("ชื่อ (เว้นว่างเพื่อจบ): ").strip()
+        if name == "":
+            break
+        scores[name] = int(input(f"คะแนนของ {name}: "))
+    return scores
+
+
+def to_grade(score):
+    if   score &gt;= 80: return "A"
+    elif score &gt;= 70: return "B"
+    elif score &gt;= 60: return "C"
+    elif score &gt;= 50: return "D"
+    return "F"
+
+
+def summary(scores):
+    avg = sum(scores.values()) / len(scores)
+    top = max(scores, key=scores.get)
+    passed = 0
+    for s in scores.values():
+        if s &gt;= 50:
+            passed += 1
+    return avg, top, passed
+
+
+def show_report(scores):
+    if not scores:
+        print("ไม่มีข้อมูล")
+        return                      <span class="out"># return เปล่า = ออกจากฟังก์ชันเลย</span>
+
+    print(f"\n{'ชื่อ':&lt;12}{'คะแนน':&gt;8}{'เกรด':&gt;6}")
+    print("-" * 26)
+    for name, s in scores.items():
+        print(f"{name:&lt;12}{s:&gt;8}{to_grade(s):&gt;6}")
+
+    avg, top, passed = summary(scores)
+    print("-" * 26)
+    print(f"เฉลี่ย {avg:.2f} · สูงสุด {top} · ผ่าน {passed}/{len(scores)} คน")
+
+
+show_report(input_scores())</pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>
