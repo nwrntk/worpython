@@ -3,134 +3,188 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>บทที่ 9 · Set — Python Lab</title>
+<title>บทที่ 9 · Dictionary — Python Lab</title>
 <link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <main>
   <div class="eyebrow">Chapter 09</div>
-  <h1>Set — เซต</h1>
-  <p class="lead">กลุ่มข้อมูลที่<strong>ห้ามซ้ำ</strong> และ<strong>ไม่มีลำดับ</strong> — ตัดค่าซ้ำกับหาส่วนร่วมได้ในบรรทัดเดียว</p>
+  <h1>Dictionary — ดิกชันนารี</h1>
+  <p class="lead">เก็บข้อมูลเป็นคู่ <strong>key → value</strong> ค้นด้วยชื่อ ไม่ใช่ตัวเลขตำแหน่ง</p>
 
-  <h2>9.1 สร้าง set</h2>
+  <h2>9.1 ทำไมต้องมี dict</h2>
 
-  <p>ใช้ปีกกาเหมือน dict แต่ใส่แค่ค่า ไม่มี key</p>
+  <p>สมมติเก็บคะแนนนักเรียน ถ้าใช้ list เราต้องจำว่าใครอยู่ตำแหน่งไหน</p>
 
-<pre>fruits = {"apple", "banana", "cherry"}
-nums   = {1, 2, 3, 4}
+<pre>names  = ["ฟ้า", "นล", "อาร์ม"]
+scores = [85, 92, 78]
 
-print(fruits)      <span class="out"># {'banana', 'cherry', 'apple'} ← ลำดับไม่แน่นอน</span></pre>
+<span class="out"># อยากรู้คะแนนของ "นล" ต้องหา index ก่อน แล้วค่อยไปเปิดอีก list</span>
+i = names.index("นล")
+print(scores[i])       <span class="out"># 92</span></pre>
 
-  <div class="warn">
-    <b>set ว่างต้องใช้ <code>set()</code>:</b> เพราะ <code>{}</code> ถูกจองไว้ให้ dict ว่างไปแล้ว<br>
-    <code>type({})</code> → <span class="mono">dict</span> ·
-    <code>type(set())</code> → <span class="mono">set</span>
-  </div>
+  <p>ด้วย dict เราค้นด้วยชื่อได้ตรง ๆ</p>
 
-  <p>ค่าซ้ำจะถูกตัดทิ้งอัตโนมัติ</p>
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
 
-<pre>s = {1, 2, 2, 3, 3, 3}
-print(s)           <span class="out"># {1, 2, 3}</span>
-print(len(s))      <span class="out"># 3 ไม่ใช่ 6</span></pre>
+print(scores["นล"])    <span class="out"># 92</span></pre>
 
-  <h2>9.2 ใช้งานจริงที่พบบ่อยที่สุด — ตัดค่าซ้ำ</h2>
+  <p>ใช้ปีกกา <code>{ }</code> เขียนเป็น <code>key: value</code> คั่นด้วยจุลภาค</p>
 
-<pre>nums = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+<pre>student = {
+    "name": "ฟ้าใส",
+    "age": 20,
+    "gpa": 3.45,
+    "subjects": ["Python", "Calculus"]     <span class="out"># value เป็นอะไรก็ได้</span>
+}
 
-unique = set(nums)
-print(unique)              <span class="out"># {1, 2, 3, 4, 5, 6, 9}</span>
-print(len(unique))         <span class="out"># 7 → มีค่าไม่ซ้ำ 7 ตัว</span>
-
-<span class="out"># อยากได้ list กลับคืน (และเรียงด้วย)</span>
-print(sorted(set(nums)))   <span class="out"># [1, 2, 3, 4, 5, 6, 9]</span></pre>
-
-  <p>เทียบกับการเขียนเองด้วย list — set สั้นกว่ามาก</p>
-
-<pre><span class="out"># วิธีเดิม</span>
-unique = []
-for n in nums:
-    if n not in unique:
-        unique.append(n)
-
-<span class="out"># วิธี set</span>
-unique = list(set(nums))</pre>
-
-  <h2>9.3 เพิ่ม ลบ เช็ก</h2>
-
-<pre>s = {1, 2, 3}
-
-s.add(4)           <span class="out"># {1, 2, 3, 4}</span>
-s.add(2)           <span class="out"># {1, 2, 3, 4} ← มีอยู่แล้ว ไม่มีอะไรเกิดขึ้น</span>
-s.remove(1)        <span class="out"># {2, 3, 4} ← ถ้าไม่มีจะเกิด KeyError</span>
-s.discard(99)      <span class="out"># ไม่มีก็ไม่ error (ปลอดภัยกว่า)</span>
-s.update([7, 8])   <span class="out"># เพิ่มทีละหลายตัว</span>
-
-print(3 in s)      <span class="out"># True</span>
-print(len(s))</pre>
+empty = {}      <span class="out"># dict ว่าง</span></pre>
 
   <div class="note">
-    <b>set เช็ก <code>in</code> เร็วมาก:</b> list ต้องไล่ดูทีละตัวจนเจอ
-    แต่ set กระโดดไปหาได้เลย ถ้าต้องเช็ก "มีค่านี้ไหม" กับข้อมูลหลักหมื่นตัว
-    set เร็วกว่า list หลายร้อยเท่า
+    <b>key ต้องเป็นชนิดที่แก้ไม่ได้:</b> ใช้ <code>str</code>, <code>int</code>,
+    <code>tuple</code> ได้ แต่ใช้ <code>list</code> เป็น key ไม่ได้
+    (นี่คือเหตุผลหนึ่งที่ tuple มีอยู่)<br>
+    ส่วน <b>value</b> เป็นอะไรก็ได้ รวมถึง list หรือ dict ซ้อนอีกที
   </div>
 
-  <h2>9.4 การดำเนินการแบบเซต</h2>
+  <h2>9.2 อ่าน เพิ่ม แก้ ลบ</h2>
 
-<pre>a = {1, 2, 3, 4}
-b = {3, 4, 5, 6}
+<pre>student = {"name": "ฟ้าใส", "age": 20}
 
-print(a | b)    <span class="out"># {1,2,3,4,5,6}  union         — รวมทั้งสอง</span>
-print(a &amp; b)    <span class="out"># {3, 4}         intersection  — เฉพาะที่มีทั้งคู่</span>
-print(a - b)    <span class="out"># {1, 2}         difference    — มีใน a แต่ไม่มีใน b</span>
-print(a ^ b)    <span class="out"># {1,2,5,6}      symmetric diff— มีข้างเดียวเท่านั้น</span></pre>
+<span class="out"># อ่าน</span>
+print(student["name"])       <span class="out"># ฟ้าใส</span>
 
-  <p>เขียนเป็นชื่อเต็มก็ได้ ความหมายเดียวกัน</p>
+<span class="out"># เพิ่ม key ใหม่ — แค่กำหนดค่าให้ key ที่ยังไม่มี</span>
+student["gpa"] = 3.45
+print(student)   <span class="out"># {'name': 'ฟ้าใส', 'age': 20, 'gpa': 3.45}</span>
+
+<span class="out"># แก้ค่าเดิม — เขียนแบบเดียวกันเป๊ะ</span>
+student["age"] = 21
+
+<span class="out"># ลบ</span>
+del student["gpa"]
+gpa = student.pop("age")     <span class="out"># ลบพร้อมเอาค่าออกมา</span></pre>
+
+  <div class="warn">
+    <b>KeyError:</b> เรียก key ที่ไม่มีจะพังทันที —
+    <code>student["email"]</code> → <span class="mono">KeyError: 'email'</span>
+  </div>
+
+  <h2>9.3 .get() — อ่านแบบไม่พัง</h2>
+
+<pre>student = {"name": "ฟ้าใส", "age": 20}
+
+print(student.get("email"))              <span class="out"># None (ไม่ error)</span>
+print(student.get("email", "ไม่ระบุ"))    <span class="out"># ไม่ระบุ  ← ค่าสำรอง</span>
+
+<span class="out"># เช็กก่อนใช้ก็ได้</span>
+if "email" in student:
+    print(student["email"])
+else:
+    print("ยังไม่มีอีเมล")</pre>
+
+  <p><code>in</code> กับ dict เช็ก<strong>ที่ key</strong> ไม่ใช่ value</p>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92}
+
+print("ฟ้า" in scores)          <span class="out"># True  → เช็ก key</span>
+print(85 in scores)             <span class="out"># False → 85 เป็น value ไม่ใช่ key</span>
+print(85 in scores.values())    <span class="out"># True  → ถ้าจะเช็ก value ต้องแบบนี้</span></pre>
+
+  <h2>9.4 วน loop บน dict</h2>
+
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+
+<span class="out"># วนธรรมดา = ได้ key</span>
+for name in scores:
+    print(name, scores[name])
+
+<span class="out"># วิธีที่นิยมที่สุด: .items() ได้ทั้ง key และ value</span>
+for name, score in scores.items():
+    print(f"{name} ได้ {score} คะแนน")
+
+<span class="out"># เอาเฉพาะ key หรือเฉพาะ value</span>
+print(list(scores.keys()))      <span class="out"># ['ฟ้า', 'นล', 'อาร์ม']</span>
+print(list(scores.values()))    <span class="out"># [85, 92, 78]</span>
+print(sum(scores.values()))     <span class="out"># 255</span>
+print(max(scores.values()))     <span class="out"># 92</span></pre>
+
+  <p><code>.items()</code> คืนคู่ <code>(key, value)</code> เป็น tuple ทุกรอบ —
+  ที่เขียน <code>for name, score in ...</code> ได้ก็เพราะเป็นการ unpack tuple
+  แบบเดียวกับบทที่ 5</p>
+
+  <h2>9.5 นับของด้วย dict</h2>
+
+  <p>งานคลาสสิกที่ dict ทำได้ดีที่สุด — นับว่าอะไรปรากฏกี่ครั้ง</p>
+
+<pre>text = "banana"
+count = {}
+
+for ch in text:
+    if ch in count:
+        count[ch] += 1
+    else:
+        count[ch] = 1
+
+print(count)     <span class="out"># {'b': 1, 'a': 3, 'n': 2}</span>
+
+<span class="out"># เขียนสั้นลงด้วย .get() ค่าสำรอง 0</span>
+count = {}
+for ch in text:
+    count[ch] = count.get(ch, 0) + 1</pre>
+
+  <h2>9.6 คำสั่งอื่นที่ใช้บ่อย</h2>
 
   <table>
-    <tr><th>สัญลักษณ์</th><th>เมธอด</th><th>ความหมาย</th></tr>
-    <tr><td><code>a | b</code></td><td><code>a.union(b)</code></td><td>รวมกัน</td></tr>
-    <tr><td><code>a &amp; b</code></td><td><code>a.intersection(b)</code></td><td>ส่วนร่วม</td></tr>
-    <tr><td><code>a - b</code></td><td><code>a.difference(b)</code></td><td>ผลต่าง</td></tr>
-    <tr><td><code>a ^ b</code></td><td><code>a.symmetric_difference(b)</code></td><td>ต่างสมมาตร</td></tr>
-    <tr><td><code>a &lt;= b</code></td><td><code>a.issubset(b)</code></td><td>a เป็นสับเซตของ b</td></tr>
+    <tr><th>คำสั่ง</th><th>ความหมาย</th></tr>
+    <tr><td><code>len(d)</code></td><td>จำนวนคู่ key-value</td></tr>
+    <tr><td><code>d.keys()</code></td><td>key ทั้งหมด</td></tr>
+    <tr><td><code>d.values()</code></td><td>value ทั้งหมด</td></tr>
+    <tr><td><code>d.items()</code></td><td>คู่ (key, value) ทั้งหมด</td></tr>
+    <tr><td><code>d.get(k, ค่าสำรอง)</code></td><td>อ่านแบบไม่ error</td></tr>
+    <tr><td><code>d.pop(k)</code></td><td>ลบ k พร้อมคืนค่า</td></tr>
+    <tr><td><code>d.update(d2)</code></td><td>รวม d2 เข้า d (key ซ้ำจะทับของเดิม)</td></tr>
+    <tr><td><code>d.clear()</code></td><td>ล้างทั้งหมด</td></tr>
+    <tr><td><code>dict(a=1, b=2)</code></td><td>สร้าง dict อีกแบบ</td></tr>
   </table>
 
-  <p>ตัวอย่างใช้จริง — เทียบรายชื่อสองวิชา</p>
+  <h2>9.7 dict ซ้อน dict</h2>
 
-<pre>python = {"ฟ้า", "นล", "อาร์ม", "มิน"}
-calculus = {"นล", "มิน", "เก้า"}
+  <p>ข้อมูลจริงมักซับซ้อนกว่าคู่เดียว — ซ้อนกันได้เรื่อย ๆ</p>
 
-print("ลงทั้งสองวิชา:", python &amp; calculus)     <span class="out"># {'นล', 'มิน'}</span>
-print("ลงอย่างน้อยหนึ่ง:", python | calculus)
-print("ลง Python อย่างเดียว:", python - calculus)  <span class="out"># {'ฟ้า', 'อาร์ม'}</span></pre>
+<pre>students = {
+    "6510123": {"name": "ฟ้าใส", "gpa": 3.45},
+    "6510124": {"name": "นล",    "gpa": 3.10},
+}
 
-  <h2>9.5 set ไม่มีลำดับ</h2>
+print(students["6510123"]["name"])     <span class="out"># ฟ้าใส  → ไล่เข้าไปทีละชั้น</span>
 
-<pre>s = {"c", "a", "b"}
+for sid, info in students.items():
+    print(f"{sid} {info['name']} เกรด {info['gpa']}")</pre>
 
-print(s[0])        <span class="out"># TypeError: 'set' object is not subscriptable</span></pre>
+  <div class="note">
+    <b>สังเกตเครื่องหมายคำพูดใน f-string:</b> ข้างนอกใช้ <code>"</code>
+    ข้างในต้องใช้ <code>'</code> สลับกัน ไม่งั้น Python จะงงว่า string จบตรงไหน
+  </div>
 
-  <p>เข้าถึงด้วย index ไม่ได้ เพราะไม่มีความคิดเรื่อง "ตัวแรก ตัวที่สอง"
-  แต่วน loop ได้ตามปกติ</p>
+  <h2>9.8 เรียงลำดับ dict</h2>
 
-<pre>for x in s:
-    print(x)       <span class="out"># ลำดับไม่รับประกัน</span>
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
 
-for x in sorted(s):
-    print(x)       <span class="out"># a b c ← ถ้าต้องการลำดับ ให้ sorted ก่อน</span></pre>
+<span class="out"># เรียงตาม key</span>
+for name in sorted(scores):
+    print(name, scores[name])
 
-  <h2>9.6 เลือกใช้ตัวไหนดี</h2>
+<span class="out"># เรียงตาม value จากมากไปน้อย</span>
+for name, score in sorted(scores.items(), key=lambda x: x[1], reverse=True):
+    print(name, score)
+<span class="out"># นล 92
+# ฟ้า 85
+# อาร์ม 78</span>
 
-  <table>
-    <tr><th></th><th>list</th><th>tuple</th><th>dict</th><th>set</th></tr>
-    <tr><td>เขียน</td><td><code>[1,2]</code></td><td><code>(1,2)</code></td><td><code>{"a":1}</code></td><td><code>{1,2}</code></td></tr>
-    <tr><td>มีลำดับ</td><td>มี</td><td>มี</td><td>มี (ตามที่ใส่)</td><td>ไม่มี</td></tr>
-    <tr><td>ค่าซ้ำ</td><td>ได้</td><td>ได้</td><td>key ห้ามซ้ำ</td><td>ห้ามซ้ำ</td></tr>
-    <tr><td>แก้ไข</td><td>ได้</td><td>ไม่ได้</td><td>ได้</td><td>ได้</td></tr>
-    <tr><td>เข้าถึงด้วย</td><td>index</td><td>index</td><td>key</td><td>วน loop เท่านั้น</td></tr>
-    <tr><td>ใช้เมื่อ</td><td>ลำดับสำคัญ</td><td>ค่าคงที่</td><td>จับคู่ชื่อ→ค่า</td><td>ตัดซ้ำ / เทียบกลุ่ม</td></tr>
-  </table>
+<span class="out"># หา key ที่ value สูงสุด</span>
+print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
 
   <hr>
 
@@ -138,159 +192,169 @@ for x in sorted(s):
   <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
 
   <div class="quiz">
-    <div class="q" data-n="Q1"><code>s = {1, 2, 2, 3, 3, 3}</code> แล้ว <code>len(s)</code> เท่ากับ?</div>
-    <button class="choice">6</button>
-    <button class="choice" data-correct>3</button>
-    <button class="choice">1</button>
-    <button class="choice">เกิด error เพราะมีค่าซ้ำ</button>
-    <div class="explain">set ตัดค่าซ้ำอัตโนมัติ เหลือ {1, 2, 3}</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q2"><code>type({})</code> คืออะไร?</div>
-    <button class="choice">set</button>
-    <button class="choice" data-correct>dict</button>
-    <button class="choice">list</button>
-    <button class="choice">tuple</button>
-    <div class="explain"><code>{}</code> คือ dict ว่าง — set ว่างต้องเขียน <code>set()</code></div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q3"><code>a = {1,2,3}</code>, <code>b = {2,3,4}</code> แล้ว <code>a - b</code> คือ?</div>
-    <button class="choice">{2, 3}</button>
-    <button class="choice" data-correct>{1}</button>
-    <button class="choice">{4}</button>
-    <button class="choice">{1, 4}</button>
-    <div class="explain">ผลต่าง = มีใน a แต่ไม่มีใน b → เหลือแค่ 1 (ส่วน <code>{1,4}</code> คือ <code>a ^ b</code>)</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q4">อยากตัดค่าซ้ำใน list แล้วได้ list กลับคืน เขียนยังไงสั้นที่สุด?</div>
-    <button class="choice">list(nums.unique())</button>
-    <button class="choice" data-correct>list(set(nums))</button>
-    <button class="choice">nums.distinct()</button>
-    <button class="choice">set(list(nums))</button>
-    <div class="explain">แปลงเป็น set เพื่อตัดซ้ำ แล้วแปลงกลับเป็น list
-      (ข้อสุดท้ายได้ set ไม่ใช่ list)</div>
-  </div>
-
-  <div class="quiz">
-    <div class="q" data-n="Q5"><code>s = {"a","b","c"}</code> แล้ว <code>s[0]</code> ได้อะไร?</div>
-    <button class="choice">"a"</button>
-    <button class="choice">"c"</button>
-    <button class="choice" data-correct>TypeError</button>
+    <div class="q" data-n="Q1"><code>d = {"a": 1, "b": 2}</code> แล้ว <code>d["c"]</code> ได้อะไร?</div>
     <button class="choice">None</button>
-    <div class="explain">set ไม่มีลำดับ จึงใช้ index ไม่ได้ —
-      <span class="mono">'set' object is not subscriptable</span></div>
+    <button class="choice">0</button>
+    <button class="choice" data-correct>KeyError</button>
+    <button class="choice">เพิ่ม key "c" ให้อัตโนมัติ</button>
+    <div class="explain">อ่าน key ที่ไม่มีด้วย <code>[ ]</code> จะพัง ถ้าไม่อยากพังใช้
+      <code>d.get("c")</code> ซึ่งคืน <code>None</code></div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q6"><code>a &amp; b</code> หมายถึงอะไร?</div>
-    <button class="choice">รวมสอง set เข้าด้วยกัน</button>
-    <button class="choice" data-correct>สมาชิกที่มีอยู่ในทั้ง a และ b</button>
-    <button class="choice">สมาชิกที่มีใน a แต่ไม่มีใน b</button>
-    <button class="choice">เช็กว่า a เท่ากับ b ไหม</button>
-    <div class="explain">intersection — ส่วนร่วม ส่วนการรวมกันใช้ <code>a | b</code></div>
+    <div class="q" data-n="Q2">อยากวนเอาทั้งชื่อและคะแนนพร้อมกัน เขียนยังไง?</div>
+    <button class="choice">for k in d:</button>
+    <button class="choice">for k, v in d:</button>
+    <button class="choice" data-correct>for k, v in d.items():</button>
+    <button class="choice">for k, v in d.values():</button>
+    <div class="explain"><code>.items()</code> คืนคู่ (key, value) — วน dict เฉย ๆ จะได้แค่ key</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>scores = {"ฟ้า": 85}</code> แล้ว <code>85 in scores</code> ได้อะไร?</div>
+    <button class="choice">True</button>
+    <button class="choice" data-correct>False</button>
+    <button class="choice">KeyError</button>
+    <button class="choice">TypeError</button>
+    <div class="explain"><code>in</code> เช็กที่ key เท่านั้น ถ้าจะเช็ก value ต้อง
+      <code>85 in scores.values()</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ข้อใดใช้เป็น key ของ dict <strong>ไม่ได้</strong>?</div>
+    <button class="choice">"name"</button>
+    <button class="choice">42</button>
+    <button class="choice">(1, 2)</button>
+    <button class="choice" data-correct>[1, 2]</button>
+    <div class="explain">key ต้องเป็นชนิดที่แก้ไม่ได้ — list แก้ได้จึงใช้ไม่ได้ แต่ tuple ใช้ได้</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">โค้ดนี้ได้ผลอะไร?<br>
+      <code>d = {"a": 1}</code><br><code>d["a"] = 5</code><br><code>print(d)</code></div>
+    <button class="choice">{'a': 1, 'a': 5}</button>
+    <button class="choice" data-correct>{'a': 5}</button>
+    <button class="choice">{'a': 1}</button>
+    <button class="choice">KeyError</button>
+    <div class="explain">key ห้ามซ้ำ — กำหนดค่าให้ key เดิมคือการแก้ค่า ไม่ใช่เพิ่มคู่ใหม่</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6"><code>d.get("x", 0)</code> ต่างจาก <code>d["x"]</code> ยังไง?</div>
+    <button class="choice">เหมือนกันทุกอย่าง</button>
+    <button class="choice" data-correct>ถ้าไม่มี key "x" จะคืน 0 แทนที่จะ error</button>
+    <button class="choice">get จะสร้าง key "x" ให้ด้วย</button>
+    <button class="choice">get ใช้ได้เฉพาะกับ value ที่เป็นตัวเลข</button>
+    <div class="explain">พารามิเตอร์ตัวที่ 2 คือค่าสำรองเมื่อไม่เจอ key (ถ้าไม่ใส่จะได้ <code>None</code>)</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
-    <h4>โจทย์ 1 — ตัดค่าซ้ำ</h4>
-    <p>รับตัวเลขจากผู้ใช้ 8 ตัว (ใส่ทีละตัวด้วย for loop) แล้วบอกว่า
-    มีเลขไม่ซ้ำกี่ตัว, เลขไม่ซ้ำมีอะไรบ้าง (เรียงจากน้อยไปมาก) และเลขไหนถูกใส่ซ้ำ</p>
+    <h4>โจทย์ 1 — สมุดโทรศัพท์</h4>
+    <p>สร้าง dict เก็บชื่อกับเบอร์โทร 3 คน แล้ว: เพิ่มคนที่ 4, แก้เบอร์ของคนแรก,
+    ลบคนที่ 2, และพิมพ์ทุกคู่ด้วย <code>.items()</code></p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>nums = []
-for i in range(1, 9):
-    nums.append(int(input(f"เลขที่ {i}: ")))
+<pre>phone = {"ฟ้า": "081-1111111", "นล": "082-2222222", "อาร์ม": "083-3333333"}
 
-unique = set(nums)
-print("ไม่ซ้ำ", len(unique), "ตัว:", sorted(unique))
+phone["มิน"] = "084-4444444"
+phone["ฟ้า"] = "089-9999999"
+del phone["นล"]
 
-dup = set()
-for n in unique:
-    if nums.count(n) &gt; 1:
-        dup.add(n)
-
-print("เลขที่ซ้ำ:", sorted(dup) if dup else "ไม่มี")</pre>
+for name, num in phone.items():
+    print(f"{name:6s} {num}")</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 2 — เทียบรายชื่อวิชา</h4>
-    <p>กำหนด<br>
-    <code>python = {"ฟ้า","นล","อาร์ม","มิน"}</code><br>
-    <code>web = {"นล","มิน","เก้า","โบว์"}</code><br>
-    พิมพ์: คนที่ลงทั้งสองวิชา, คนที่ลงอย่างน้อยหนึ่งวิชา (พร้อมจำนวน),
-    คนที่ลง Python อย่างเดียว, และคนที่ลงวิชาเดียวเท่านั้น (ไม่ว่าวิชาไหน)</p>
+    <h4>โจทย์ 2 — นับตัวอักษร</h4>
+    <p>รับข้อความจากผู้ใช้ แล้วนับว่าตัวอักษรแต่ละตัวปรากฏกี่ครั้ง
+    (ไม่ต้องนับช่องว่าง) พิมพ์ผลเรียงจากตัวที่เจอบ่อยที่สุด</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>python = {"ฟ้า", "นล", "อาร์ม", "มิน"}
-web    = {"นล", "มิน", "เก้า", "โบว์"}
+<pre>text = input("ข้อความ: ")
 
-both = python &amp; web
-all_students = python | web
+count = {}
+for ch in text:
+    if ch == " ":
+        continue
+    count[ch] = count.get(ch, 0) + 1
 
-print("ลงทั้งสองวิชา:", sorted(both))
-print(f"ลงอย่างน้อยหนึ่งวิชา {len(all_students)} คน:", sorted(all_students))
-print("ลง Python อย่างเดียว:", sorted(python - web))
-print("ลงวิชาเดียวเท่านั้น:", sorted(python ^ web))</pre>
+for ch, n in sorted(count.items(), key=lambda x: x[1], reverse=True):
+    print(f"{ch} : {n}")</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 3 — คำที่ใช้ในข้อความ</h4>
-    <p>รับประโยคภาษาอังกฤษจากผู้ใช้ แล้วบอกว่ามีคำทั้งหมดกี่คำ
-    และมีคำที่ไม่ซ้ำกี่คำ (ใบ้: <code>text.lower().split()</code>)</p>
+    <h4>โจทย์ 3 — สรุปคะแนน</h4>
+    <p>กำหนด <code>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}</code><br>
+    พิมพ์: จำนวนคน, คะแนนเฉลี่ย, ชื่อคนที่ได้คะแนนสูงสุด, และรายชื่อคนที่ได้ต่ำกว่าค่าเฉลี่ย</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>text = input("ประโยค: ")
+<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}
 
-words = text.lower().split()
-unique = set(words)
+avg = sum(scores.values()) / len(scores)
 
-print("คำทั้งหมด:", len(words))
-print("คำไม่ซ้ำ:", len(unique))
-print("รายการ:", sorted(unique))</pre>
+print("จำนวนคน:", len(scores))
+print("เฉลี่ย:", round(avg, 2))
+print("สูงสุด:", max(scores, key=scores.get))
+
+print("ต่ำกว่าเฉลี่ย:")
+for name, s in scores.items():
+    if s &lt; avg:
+        print(" -", name, s)</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 4 — ท้าทาย: เกมทายคำ</h4>
-    <p>โปรแกรมเก็บคำลับไว้ 1 คำ (เช่น <code>"python"</code>)
-    ให้ผู้ใช้ทายทีละตัวอักษร ใช้ set เก็บตัวที่ทายไปแล้ว
-    ถ้าทายซ้ำให้เตือน และจบเกมเมื่อทายครบทุกตัวอักษรของคำลับ
-    พร้อมบอกว่าใช้ไปกี่ตา</p>
+    <h4>โจทย์ 4 — ท้าทาย: ระบบสต๊อกสินค้า</h4>
+    <p>ทำโปรแกรมเมนูวนซ้ำ (ใช้ while + dict ซ้อน dict):<br>
+    1) เพิ่มสินค้า (ชื่อ, ราคา, จำนวน) &nbsp; 2) ขายสินค้า (ลดจำนวน) &nbsp;
+    3) แสดงสต๊อกทั้งหมดพร้อมมูลค่ารวม &nbsp; 4) ออก</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>secret = "python"
-target = set(secret)      <span class="out"># ตัวอักษรที่ต้องทายให้ครบ</span>
-guessed = set()
-turn = 0
+<pre>stock = {}
 
 while True:
-    ch = input("ทายตัวอักษร: ").lower()
+    print("\n1) เพิ่ม  2) ขาย  3) แสดง  4) ออก")
+    c = input("เลือก: ")
 
-    if ch in guessed:
-        print("ทายตัวนี้ไปแล้ว")
-        continue
+    if c == "1":
+        name = input("ชื่อสินค้า: ")
+        stock[name] = {
+            "price": float(input("ราคา: ")),
+            "qty":   int(input("จำนวน: ")),
+        }
+        print("เพิ่มแล้ว")
 
-    guessed.add(ch)
-    turn += 1
+    elif c == "2":
+        name = input("ขายสินค้า: ")
+        if name not in stock:
+            print("ไม่มีสินค้านี้")
+        else:
+            n = int(input("ขายกี่ชิ้น: "))
+            if n &gt; stock[name]["qty"]:
+                print("ของไม่พอ เหลือ", stock[name]["qty"])
+            else:
+                stock[name]["qty"] -= n
+                print("ขายแล้ว เหลือ", stock[name]["qty"])
 
-    if ch in target:
-        print("มีอยู่!", end=" ")
+    elif c == "3":
+        if not stock:
+            print("ยังไม่มีสินค้า")
+        total = 0
+        for name, info in stock.items():
+            value = info["price"] * info["qty"]
+            total += value
+            print(f"{name:12s} {info['price']:8.2f} x {info['qty']:3d} = {value:9.2f}")
+        print(f"{'มูลค่ารวม':12s} {total:24.2f}")
+
+    elif c == "4":
+        break
+
     else:
-        print("ไม่มี", end=" ")
-
-    <span class="out"># เหลือตัวที่ยังไม่ถูกทาย</span>
-    left = target - guessed
-    print("เหลืออีก", len(left), "ตัว")
-
-    if not left:
-        print(f"ครบแล้ว! คำลับคือ '{secret}' ใช้ไป {turn} ตา")
-        break</pre>
+        print("เลือก 1-4 เท่านั้น")</pre>
     </details>
   </div>
 </main>

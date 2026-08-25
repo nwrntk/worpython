@@ -10,11 +10,12 @@ const PAGES = [
   { group: 'III · ข้อมูลชุด',         file: 'ch5.html',   num: '5',  title: 'Tuple — ทูเพิล' },
   { group: 'IV · การวนซ้ำ',           file: 'ch6.html',   num: '6',  title: 'for loop' },
   { group: 'IV · การวนซ้ำ',           file: 'ch7.html',   num: '7',  title: 'while loop' },
-  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch8.html',   num: '8',  title: 'Dictionary' },
-  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch9.html',   num: '9',  title: 'Set — เซต' },
-  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch10.html',  num: '10', title: 'String — ข้อความ' },
-  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch11.html',  num: '11', title: 'Function' },
-  { group: 'VII · ไฟล์และข้อผิดพลาด', file: 'ch12.html',  num: '12', title: 'File I/O & Exception' },
+  { group: 'IV · การวนซ้ำ',           file: 'ch8.html',   num: '8',  title: 'Loop Patterns' },
+  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch9.html',   num: '9',  title: 'Dictionary' },
+  { group: 'V · ข้อมูลแบบกลุ่ม',      file: 'ch10.html',  num: '10', title: 'Set — เซต' },
+  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch11.html',  num: '11', title: 'String — ข้อความ' },
+  { group: 'VI · ข้อความและฟังก์ชัน', file: 'ch12.html',  num: '12', title: 'Function' },
+  { group: 'VII · ไฟล์และข้อผิดพลาด', file: 'ch13.html',  num: '13', title: 'File I/O & Exception' },
 ];
 
 const here = location.pathname.split('/').pop() || 'index.html';

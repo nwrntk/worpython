@@ -3,188 +3,345 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>บทที่ 8 · Dictionary — Python Lab</title>
+<title>บทที่ 8 · Loop Patterns — Python Lab</title>
 <link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <main>
   <div class="eyebrow">Chapter 08</div>
-  <h1>Dictionary — ดิกชันนารี</h1>
-  <p class="lead">เก็บข้อมูลเป็นคู่ <strong>key → value</strong> ค้นด้วยชื่อ ไม่ใช่ตัวเลขตำแหน่ง</p>
+  <h1>Loop Patterns — รูปแบบการวนซ้ำ</h1>
+  <p class="lead">7 รูปแบบที่ใช้ซ้ำ ๆ ในทุกโปรแกรม — นับ, รวม, เฉลี่ย, กรอง, ค้นหา, หาค่ามากสุด, หาค่าน้อยสุด</p>
 
-  <h2>8.1 ทำไมต้องมี dict</h2>
+  <h2>8.1 Definite vs Indefinite Loops</h2>
 
-  <p>สมมติเก็บคะแนนนักเรียน ถ้าใช้ list เราต้องจำว่าใครอยู่ตำแหน่งไหน</p>
-
-<pre>names  = ["ฟ้า", "นล", "อาร์ม"]
-scores = [85, 92, 78]
-
-<span class="out"># อยากรู้คะแนนของ "นล" ต้องหา index ก่อน แล้วค่อยไปเปิดอีก list</span>
-i = names.index("นล")
-print(scores[i])       <span class="out"># 92</span></pre>
-
-  <p>ด้วย dict เราค้นด้วยชื่อได้ตรง ๆ</p>
-
-<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
-
-print(scores["นล"])    <span class="out"># 92</span></pre>
-
-  <p>ใช้ปีกกา <code>{ }</code> เขียนเป็น <code>key: value</code> คั่นด้วยจุลภาค</p>
-
-<pre>student = {
-    "name": "ฟ้าใส",
-    "age": 20,
-    "gpa": 3.45,
-    "subjects": ["Python", "Calculus"]     <span class="out"># value เป็นอะไรก็ได้</span>
-}
-
-empty = {}      <span class="out"># dict ว่าง</span></pre>
-
-  <div class="note">
-    <b>key ต้องเป็นชนิดที่แก้ไม่ได้:</b> ใช้ <code>str</code>, <code>int</code>,
-    <code>tuple</code> ได้ แต่ใช้ <code>list</code> เป็น key ไม่ได้
-    (นี่คือเหตุผลหนึ่งที่ tuple มีอยู่)<br>
-    ส่วน <b>value</b> เป็นอะไรก็ได้ รวมถึง list หรือ dict ซ้อนอีกที
-  </div>
-
-  <h2>8.2 อ่าน เพิ่ม แก้ ลบ</h2>
-
-<pre>student = {"name": "ฟ้าใส", "age": 20}
-
-<span class="out"># อ่าน</span>
-print(student["name"])       <span class="out"># ฟ้าใส</span>
-
-<span class="out"># เพิ่ม key ใหม่ — แค่กำหนดค่าให้ key ที่ยังไม่มี</span>
-student["gpa"] = 3.45
-print(student)   <span class="out"># {'name': 'ฟ้าใส', 'age': 20, 'gpa': 3.45}</span>
-
-<span class="out"># แก้ค่าเดิม — เขียนแบบเดียวกันเป๊ะ</span>
-student["age"] = 21
-
-<span class="out"># ลบ</span>
-del student["gpa"]
-gpa = student.pop("age")     <span class="out"># ลบพร้อมเอาค่าออกมา</span></pre>
-
-  <div class="warn">
-    <b>KeyError:</b> เรียก key ที่ไม่มีจะพังทันที —
-    <code>student["email"]</code> → <span class="mono">KeyError: 'email'</span>
-  </div>
-
-  <h2>8.3 .get() — อ่านแบบไม่พัง</h2>
-
-<pre>student = {"name": "ฟ้าใส", "age": 20}
-
-print(student.get("email"))              <span class="out"># None (ไม่ error)</span>
-print(student.get("email", "ไม่ระบุ"))    <span class="out"># ไม่ระบุ  ← ค่าสำรอง</span>
-
-<span class="out"># เช็กก่อนใช้ก็ได้</span>
-if "email" in student:
-    print(student["email"])
-else:
-    print("ยังไม่มีอีเมล")</pre>
-
-  <p><code>in</code> กับ dict เช็ก<strong>ที่ key</strong> ไม่ใช่ value</p>
-
-<pre>scores = {"ฟ้า": 85, "นล": 92}
-
-print("ฟ้า" in scores)          <span class="out"># True  → เช็ก key</span>
-print(85 in scores)             <span class="out"># False → 85 เป็น value ไม่ใช่ key</span>
-print(85 in scores.values())    <span class="out"># True  → ถ้าจะเช็ก value ต้องแบบนี้</span></pre>
-
-  <h2>8.4 วน loop บน dict</h2>
-
-<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
-
-<span class="out"># วนธรรมดา = ได้ key</span>
-for name in scores:
-    print(name, scores[name])
-
-<span class="out"># วิธีที่นิยมที่สุด: .items() ได้ทั้ง key และ value</span>
-for name, score in scores.items():
-    print(f"{name} ได้ {score} คะแนน")
-
-<span class="out"># เอาเฉพาะ key หรือเฉพาะ value</span>
-print(list(scores.keys()))      <span class="out"># ['ฟ้า', 'นล', 'อาร์ม']</span>
-print(list(scores.values()))    <span class="out"># [85, 92, 78]</span>
-print(sum(scores.values()))     <span class="out"># 255</span>
-print(max(scores.values()))     <span class="out"># 92</span></pre>
-
-  <p><code>.items()</code> คืนคู่ <code>(key, value)</code> เป็น tuple ทุกรอบ —
-  ที่เขียน <code>for name, score in ...</code> ได้ก็เพราะเป็นการ unpack tuple
-  แบบเดียวกับบทที่ 5</p>
-
-  <h2>8.5 นับของด้วย dict</h2>
-
-  <p>งานคลาสสิกที่ dict ทำได้ดีที่สุด — นับว่าอะไรปรากฏกี่ครั้ง</p>
-
-<pre>text = "banana"
-count = {}
-
-for ch in text:
-    if ch in count:
-        count[ch] += 1
-    else:
-        count[ch] = 1
-
-print(count)     <span class="out"># {'b': 1, 'a': 3, 'n': 2}</span>
-
-<span class="out"># เขียนสั้นลงด้วย .get() ค่าสำรอง 0</span>
-count = {}
-for ch in text:
-    count[ch] = count.get(ch, 0) + 1</pre>
-
-  <h2>8.6 คำสั่งอื่นที่ใช้บ่อย</h2>
+  <p>วิธีเรียก loop สองแบบตามศัพท์ทางการ</p>
 
   <table>
-    <tr><th>คำสั่ง</th><th>ความหมาย</th></tr>
-    <tr><td><code>len(d)</code></td><td>จำนวนคู่ key-value</td></tr>
-    <tr><td><code>d.keys()</code></td><td>key ทั้งหมด</td></tr>
-    <tr><td><code>d.values()</code></td><td>value ทั้งหมด</td></tr>
-    <tr><td><code>d.items()</code></td><td>คู่ (key, value) ทั้งหมด</td></tr>
-    <tr><td><code>d.get(k, ค่าสำรอง)</code></td><td>อ่านแบบไม่ error</td></tr>
-    <tr><td><code>d.pop(k)</code></td><td>ลบ k พร้อมคืนค่า</td></tr>
-    <tr><td><code>d.update(d2)</code></td><td>รวม d2 เข้า d (key ซ้ำจะทับของเดิม)</td></tr>
-    <tr><td><code>d.clear()</code></td><td>ล้างทั้งหมด</td></tr>
-    <tr><td><code>dict(a=1, b=2)</code></td><td>สร้าง dict อีกแบบ</td></tr>
+    <tr><th></th><th>Indefinite loop</th><th>Definite loop</th></tr>
+    <tr><td>คำสั่ง</td><td><code>while</code></td><td><code>for</code></td></tr>
+    <tr><td>หยุดเมื่อ</td><td>เงื่อนไขเป็น <code>False</code></td><td>ไล่ครบทุกสมาชิกใน sequence</td></tr>
+    <tr><td>รู้จำนวนรอบล่วงหน้า</td><td>ไม่รู้</td><td>รู้แน่นอน</td></tr>
+    <tr><td>เสี่ยงวนไม่จบ</td><td>เสี่ยง</td><td>ไม่เสี่ยง</td></tr>
   </table>
 
-  <h2>8.7 dict ซ้อน dict</h2>
+  <p><code>for</code> มี <strong>iteration variable</strong> ที่ Python เลื่อนค่าให้เองทุกรอบ
+  โดยไล่ผ่านสมาชิกของ sequence ทีละตัว</p>
 
-  <p>ข้อมูลจริงมักซับซ้อนกว่าคู่เดียว — ซ้อนกันได้เรื่อย ๆ</p>
+<pre>for i in [5, 4, 3, 2, 1] :
+<span class="out">#   ↑        ↑
+#   |     sequence 5 สมาชิก
+#   iteration variable — เปลี่ยนค่าเองทุกรอบ</span>
+    print(i)
+print('Blastoff!')
 
-<pre>students = {
-    "6510123": {"name": "ฟ้าใส", "gpa": 3.45},
-    "6510124": {"name": "นล",    "gpa": 3.10},
-}
+<span class="out"># 5
+# 4
+# 3
+# 2
+# 1
+# Blastoff!</span></pre>
 
-print(students["6510123"]["name"])     <span class="out"># ฟ้าใส  → ไล่เข้าไปทีละชั้น</span>
+  <h2>8.2 ไล่การทำงานทีละรอบ</h2>
 
-for sid, info in students.items():
-    print(f"{sid} {info['name']} เกรด {info['gpa']}")</pre>
+  <p>เวลาอ่าน loop ไม่ออก ให้จดค่าตัวแปรทุกรอบลงกระดาษ</p>
+
+<pre>n = 5
+while n &gt; 0 :
+    print(n)
+    n = n - 1
+print('Blastoff!')
+print(n)</pre>
+
+  <table>
+    <tr><th>รอบที่</th><th><code>n</code> ก่อนเช็ก</th><th><code>n &gt; 0</code></th><th>พิมพ์</th><th><code>n</code> หลัง <code>n-1</code></th></tr>
+    <tr><td>1</td><td>5</td><td>True</td><td>5</td><td>4</td></tr>
+    <tr><td>2</td><td>4</td><td>True</td><td>4</td><td>3</td></tr>
+    <tr><td>3</td><td>3</td><td>True</td><td>3</td><td>2</td></tr>
+    <tr><td>4</td><td>2</td><td>True</td><td>2</td><td>1</td></tr>
+    <tr><td>5</td><td>1</td><td>True</td><td>1</td><td>0</td></tr>
+    <tr><td>6</td><td>0</td><td><strong>False</strong></td><td>— ออกจาก loop</td><td>0</td></tr>
+  </table>
+
+  <p>ผลลัพธ์จึงเป็น <code>5 4 3 2 1 Blastoff! 0</code> — บรรทัดสุดท้ายพิมพ์ <code>0</code>
+  เพราะ <code>n</code> ถูกลดจนเป็น 0 แล้วเงื่อนไขถึงเป็นเท็จ</p>
+
+  <p>เทียบกับ loop 2 อันที่ผิดพลาดคนละแบบ</p>
+
+<pre><span class="out"># แบบที่ 1: วนไม่มีวันจบ — ไม่มีบรรทัดที่ทำให้ n เปลี่ยน</span>
+n = 5
+while n &gt; 0 :
+    print('Lather')
+    print('Rinse')
+print('Dry off!')     <span class="out"># ← ไม่มีวันได้ทำงาน</span>
+
+<span class="out"># แบบที่ 2: ไม่ทำงานเลยสักรอบ — เงื่อนไขเป็นเท็จตั้งแต่แรก</span>
+n = 0
+while n &gt; 0 :         <span class="out"># 0 &gt; 0 เป็น False ทันที</span>
+    print('Lather')
+    print('Rinse')
+print('Dry off!')     <span class="out"># ← พิมพ์อันเดียว</span></pre>
 
   <div class="note">
-    <b>สังเกตเครื่องหมายคำพูดใน f-string:</b> ข้างนอกใช้ <code>"</code>
-    ข้างในต้องใช้ <code>'</code> สลับกัน ไม่งั้น Python จะงงว่า string จบตรงไหน
+    <b>while loop มี 3 สถานะที่ต้องตรวจเสมอ:</b> วนแล้วจบ · วนไม่จบ (ลืมเปลี่ยนค่า) ·
+    ไม่วนเลย (เงื่อนไขเท็จตั้งแต่รอบแรก)
   </div>
 
-  <h2>8.8 เรียงลำดับ dict</h2>
+  <hr>
 
-<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+  <h2>8.3 Counting — นับจำนวนรอบ</h2>
 
-<span class="out"># เรียงตาม key</span>
-for name in sorted(scores):
-    print(name, scores[name])
+  <p>เตรียมตัวแปรนับไว้ที่ <code>0</code> ก่อน loop แล้วบวก 1 ทุกรอบ</p>
 
-<span class="out"># เรียงตาม value จากมากไปน้อย</span>
-for name, score in sorted(scores.items(), key=lambda x: x[1], reverse=True):
-    print(name, score)
-<span class="out"># นล 92
-# ฟ้า 85
-# อาร์ม 78</span>
+<pre>count = 0
+print('Before :', count)
 
-<span class="out"># หา key ที่ value สูงสุด</span>
-print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
+for thing in [9, 41, 12, 3, 74, 15] :
+    count = count + 1
+    print('count -', count, "thing -", thing)
+
+print('After :', count)
+
+<span class="out"># Before : 0
+# count - 1 thing - 9
+# count - 2 thing - 41
+# count - 3 thing - 12
+# count - 4 thing - 3
+# count - 5 thing - 74
+# count - 6 thing - 15
+# After : 6</span></pre>
+
+  <h2>8.4 Summing — หาผลรวม</h2>
+
+  <p>โครงเดียวกับการนับ แต่บวก<em>ค่า</em>แทนที่จะบวก 1</p>
+
+<pre>total = 0
+print('total Before :', total)
+
+for thing in [9, 41, 12, 3, 74, 15] :
+    total = total + thing
+    print('total -', total, 'thing -', thing)
+
+print('total After :', total)
+
+<span class="out"># total Before : 0
+# total - 9   thing - 9
+# total - 50  thing - 41
+# total - 62  thing - 12
+# total - 65  thing - 3
+# total - 139 thing - 74
+# total - 154 thing - 15
+# total After : 154</span></pre>
+
+  <div class="warn">
+    <b>ตัวแปรสะสมต้องอยู่นอก loop</b> — ถ้าเขียน <code>total = 0</code> ไว้ข้างใน
+    มันจะถูกล้างเป็น 0 ทุกรอบ ผลลัพธ์จะได้แค่ค่าตัวสุดท้าย
+  </div>
+
+  <h2>8.5 Average — หาค่าเฉลี่ย</h2>
+
+  <p>รวมสองรูปแบบข้างบนเข้าด้วยกัน แล้วหารตอน loop จบ</p>
+
+<pre>count = 0
+sum = 0
+print('Before :', count, sum)
+
+for value in [9, 41, 12, 3, 74, 15] :
+    count = count + 1
+    sum = sum + value
+    print("count:", count, "sum:", sum, "value:", value)
+
+print("After :", count, sum, "Average :", sum / count)
+
+<span class="out"># Before : 0 0
+# count: 1 sum: 9   value: 9
+# count: 2 sum: 50  value: 41
+# count: 3 sum: 62  value: 12
+# count: 4 sum: 65  value: 3
+# count: 5 sum: 139 value: 74
+# count: 6 sum: 154 value: 15
+# After : 6 154 Average : 25.666666666666668</span></pre>
+
+  <div class="warn">
+    <b>การหารต้องอยู่นอก loop</b> — ถ้าหารข้างใน จะได้ค่าเฉลี่ยระหว่างทางที่ยังไม่ครบ<br>
+    และถ้า list ว่าง <code>count</code> จะเป็น 0 → <span class="mono">ZeroDivisionError</span>
+    ต้องเช็กก่อนหาร
+  </div>
+
+  <h2>8.6 Filtering — คัดเฉพาะที่ต้องการ</h2>
+
+  <p>ใส่ <code>if</code> ไว้ใน loop เพื่อกรองค่าที่สนใจ</p>
+
+<pre>print('Before')
+
+for value in [9, 41, 12, 3, 74, 15] :
+    if value &gt; 20:
+        print('Large number', value)
+
+print('After')
+
+<span class="out"># Before
+# Large number 41
+# Large number 74
+# After</span></pre>
+
+  <h2>8.7 Search — ค้นหาด้วยตัวแปร Boolean</h2>
+
+  <p>ถ้าแค่อยากรู้ว่า "มีไหม" ให้เริ่มที่ <code>False</code>
+  แล้วเปลี่ยนเป็น <code>True</code> เมื่อเจอ</p>
+
+<pre>found = False
+print('Before:', found)
+
+for value in [9, 41, 12, 3, 74, 15] :
+    if value == 3 :
+        found = True
+    print(found, value)
+
+print('After', found)
+
+<span class="out"># Before: False
+# False 9
+# False 41
+# False 12
+# True 3     ← เจอตรงนี้
+# True 74
+# True 15
+# After True</span></pre>
+
+  <div class="note">
+    <b>ถ้าไม่ต้องดูค่าที่เหลือแล้ว ใส่ <code>break</code> ได้เลย</b> —
+    เจอแล้วหยุดทันที ประหยัดเวลาเมื่อข้อมูลยาวมาก
+  </div>
+
+  <h2>8.8 Largest — หาค่ามากที่สุด</h2>
+
+  <p>เก็บ "ตัวที่มากที่สุดเท่าที่เจอมา" ไว้ในตัวแปร แล้วเทียบกับตัวใหม่ทุกรอบ</p>
+
+<pre>largest = -1
+print('Before', largest)
+
+for num in [3, 41, 12, 9, 74, 15] :
+    if num &gt; largest :
+        largest = num
+    print(largest, num)
+
+print('After', largest)
+
+<span class="out"># Before -1
+# 3  3     ← 3 &gt; -1 จริง เปลี่ยนเป็น 3
+# 41 41    ← 41 &gt; 3 จริง เปลี่ยนเป็น 41
+# 41 12    ← 12 &gt; 41 เท็จ ไม่เปลี่ยน
+# 41 9
+# 74 74
+# 74 15
+# After 74</span></pre>
+
+  <div class="warn">
+    <b><code>largest = -1</code> ใช้ได้เฉพาะกับข้อมูลที่ไม่ติดลบ</b><br>
+    ถ้าข้อมูลเป็น <code>[-5, -3, -9]</code> คำตอบจะออกมาเป็น <code>-1</code> ซึ่งผิด
+    เพราะ <code>-1</code> ไม่ได้อยู่ในข้อมูลเลย — วิธีที่ถูกต้องคือใช้ <code>None</code> (หัวข้อถัดไป)
+  </div>
+
+  <h2>8.9 Smallest — หาค่าน้อยที่สุด และ None</h2>
+
+  <p>คนมักคิดว่าแค่กลับเครื่องหมายจาก <code>&gt;</code> เป็น <code>&lt;</code> ก็พอ แต่จะพังทันที</p>
+
+<pre><span class="out"># ผิด!</span>
+largest = -1
+for num in [3, 41, 12, 9, 74, 15] :
+    if num &lt; largest :        <span class="out"># ไม่มีตัวไหนน้อยกว่า -1 เลย</span>
+        largest = num
+    print(largest, num)
+print('After', largest)
+
+<span class="out"># -1 3
+# -1 41
+# ...
+# After -1     ← ค่าเริ่มต้นไม่เคยถูกแทนที่</span></pre>
+
+  <p>ทางแก้คือเริ่มด้วย <code>None</code> แล้วรับค่าแรกที่เจอมาเป็นค่าตั้งต้น</p>
+
+<pre>smallest = None
+print('Before')
+
+for value in [9, 41, 12, 3, 74, 15] :
+    if smallest is None :
+        smallest = value          <span class="out"># รอบแรก: รับค่าแรกมาเลย</span>
+    elif value &lt; smallest :
+        smallest = value
+    print("smallest -", smallest, "value -", value)
+
+print('After', smallest)
+
+<span class="out"># Before
+# smallest - 9 value - 9
+# smallest - 9 value - 41
+# smallest - 9 value - 12
+# smallest - 3 value - 3
+# smallest - 3 value - 74
+# smallest - 3 value - 15
+# After 3</span></pre>
+
+  <div class="note">
+    <b><code>None</code> คือค่าพิเศษที่แปลว่า "ยังไม่มีค่า"</b> ต่างจาก <code>0</code>
+    หรือ <code>""</code> ตรงที่ไม่ใช่ข้อมูลจริงเลย จึงเหมาะเป็นค่าตั้งต้นที่บอกว่า
+    "ยังไม่เคยเจออะไร"<br>
+    วิธีนี้ทำงานถูกต้องกับข้อมูลทุกแบบ รวมถึงเลขติดลบ
+  </div>
+
+  <h2>8.10 is และ is not</h2>
+
+  <p>สังเกตว่าโค้ดข้างบนเขียน <code>if smallest is None</code> ไม่ใช่
+  <code>== None</code></p>
+
+  <table>
+    <tr><th>ตัวดำเนินการ</th><th>ถามว่า</th><th>ใช้กับ</th></tr>
+    <tr><td><code>==</code></td><td>ค่า<em>เท่ากัน</em>ไหม</td><td>ตัวเลข, ข้อความ, list ทั่วไป</td></tr>
+    <tr><td><code>is</code></td><td>เป็น<em>ตัวเดียวกัน</em>เลยไหม</td><td><code>None</code>, <code>True</code>, <code>False</code></td></tr>
+    <tr><td><code>is not</code></td><td>ไม่ใช่ตัวเดียวกัน</td><td>เหมือนกัน แค่กลับผล</td></tr>
+  </table>
+
+<pre>x = None
+
+print(x is None)        <span class="out"># True   ← วิธีที่ถูกต้อง</span>
+print(x is not None)    <span class="out"># False</span>
+
+<span class="out"># กับตัวเลข ให้ใช้ == เสมอ</span>
+a = 1000
+b = 1000
+print(a == b)           <span class="out"># True  ← ค่าเท่ากัน</span>
+print(a is b)           <span class="out"># อาจได้ False! เพราะเป็นคนละก้อนในหน่วยความจำ</span></pre>
+
+  <div class="warn">
+    <b>กฎง่าย ๆ:</b> ใช้ <code>is</code> เฉพาะกับ <code>None</code>, <code>True</code>,
+    <code>False</code> เท่านั้น · เทียบค่าอื่นทั้งหมดใช้ <code>==</code>
+  </div>
+
+  <h2>8.11 สรุปทั้ง 7 รูปแบบ</h2>
+
+  <table>
+    <tr><th>รูปแบบ</th><th>ค่าตั้งต้นก่อน loop</th><th>ทำอะไรใน loop</th></tr>
+    <tr><td>นับ</td><td><code>count = 0</code></td><td><code>count = count + 1</code></td></tr>
+    <tr><td>รวม</td><td><code>total = 0</code></td><td><code>total = total + value</code></td></tr>
+    <tr><td>เฉลี่ย</td><td><code>count = 0</code> · <code>sum = 0</code></td><td>ทำทั้งสองอย่าง แล้วหารตอนจบ</td></tr>
+    <tr><td>กรอง</td><td>ไม่ต้องมี</td><td><code>if</code> ตามเงื่อนไข</td></tr>
+    <tr><td>ค้นหา</td><td><code>found = False</code></td><td><code>if เจอ: found = True</code></td></tr>
+    <tr><td>มากสุด</td><td><code>largest = None</code></td><td><code>if largest is None or value &gt; largest</code></td></tr>
+    <tr><td>น้อยสุด</td><td><code>smallest = None</code></td><td><code>if smallest is None or value &lt; smallest</code></td></tr>
+  </table>
+
+  <p>ทั้งหมดนี้ Python มีฟังก์ชันสำเร็จรูปให้อยู่แล้ว — แต่ต้องเขียนเองให้เป็นก่อน
+  เพราะของจริงมักซับซ้อนกว่าที่ฟังก์ชันสำเร็จรูปรับได้</p>
+
+<pre>nums = [9, 41, 12, 3, 74, 15]
+
+print(len(nums))               <span class="out"># 6      ← นับ</span>
+print(sum(nums))               <span class="out"># 154    ← รวม</span>
+print(sum(nums) / len(nums))   <span class="out"># 25.67  ← เฉลี่ย</span>
+print(3 in nums)               <span class="out"># True   ← ค้นหา</span>
+print(max(nums))               <span class="out"># 74     ← มากสุด</span>
+print(min(nums))               <span class="out"># 3      ← น้อยสุด</span></pre>
 
   <hr>
 
@@ -192,170 +349,250 @@ print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
   <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
 
   <div class="quiz">
-    <div class="q" data-n="Q1"><code>d = {"a": 1, "b": 2}</code> แล้ว <code>d["c"]</code> ได้อะไร?</div>
-    <button class="choice">None</button>
-    <button class="choice">0</button>
-    <button class="choice" data-correct>KeyError</button>
-    <button class="choice">เพิ่ม key "c" ให้อัตโนมัติ</button>
-    <div class="explain">อ่าน key ที่ไม่มีด้วย <code>[ ]</code> จะพัง ถ้าไม่อยากพังใช้
-      <code>d.get("c")</code> ซึ่งคืน <code>None</code></div>
+    <div class="q" data-n="Q1">โค้ดนี้พิมพ์บรรทัดสุดท้ายว่าอะไร?<br>
+      <code>n = 5</code><br><code>while n &gt; 0 :</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(n)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;n = n - 1</code><br>
+      <code>print('Blastoff!')</code><br><code>print(n)</code></div>
+    <button class="choice">1</button>
+    <button class="choice" data-correct>0</button>
+    <button class="choice">-1</button>
+    <button class="choice">5</button>
+    <div class="explain">loop จบเมื่อ <code>n</code> เป็น 0 (เพราะ <code>0 &gt; 0</code> เป็นเท็จ)
+      ค่าที่เหลืออยู่ในตัวแปรจึงเป็น 0</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q2">อยากวนเอาทั้งชื่อและคะแนนพร้อมกัน เขียนยังไง?</div>
-    <button class="choice">for k in d:</button>
-    <button class="choice">for k, v in d:</button>
-    <button class="choice" data-correct>for k, v in d.items():</button>
-    <button class="choice">for k, v in d.values():</button>
-    <div class="explain"><code>.items()</code> คืนคู่ (key, value) — วน dict เฉย ๆ จะได้แค่ key</div>
+    <div class="q" data-n="Q2">โค้ดนี้มีอะไรผิด?<br>
+      <code>n = 5</code><br><code>while n &gt; 0 :</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print('Lather')</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;print('Rinse')</code><br>
+      <code>print('Dry off!')</code></div>
+    <button class="choice">ลืมใส่ : ท้าย while</button>
+    <button class="choice" data-correct>ไม่มีบรรทัดที่ทำให้ n เปลี่ยน จึงวนไม่มีวันจบ</button>
+    <button class="choice">n ควรเป็น 0</button>
+    <button class="choice">ไม่ผิดอะไร ทำงานได้ปกติ</button>
+    <div class="explain"><code>n</code> เป็น 5 ตลอด เงื่อนไขจริงตลอด →
+      <code>print('Dry off!')</code> ไม่มีวันได้ทำงาน</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q3"><code>scores = {"ฟ้า": 85}</code> แล้ว <code>85 in scores</code> ได้อะไร?</div>
-    <button class="choice">True</button>
-    <button class="choice" data-correct>False</button>
-    <button class="choice">KeyError</button>
-    <button class="choice">TypeError</button>
-    <div class="explain"><code>in</code> เช็กที่ key เท่านั้น ถ้าจะเช็ก value ต้อง
-      <code>85 in scores.values()</code></div>
+    <div class="q" data-n="Q3"><code>n = 0</code> แล้ว <code>while n &gt; 0 :</code>
+      — โค้ดข้างใน loop ทำงานกี่รอบ?</div>
+    <button class="choice" data-correct>0 รอบ</button>
+    <button class="choice">1 รอบ</button>
+    <button class="choice">วนไม่จบ</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain"><code>while</code> เช็กเงื่อนไข<em>ก่อน</em>เข้ารอบแรกเสมอ —
+      <code>0 &gt; 0</code> เป็นเท็จ จึงข้ามทั้ง loop ไปเลย</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q4">ข้อใดใช้เป็น key ของ dict <strong>ไม่ได้</strong>?</div>
-    <button class="choice">"name"</button>
-    <button class="choice">42</button>
-    <button class="choice">(1, 2)</button>
-    <button class="choice" data-correct>[1, 2]</button>
-    <div class="explain">key ต้องเป็นชนิดที่แก้ไม่ได้ — list แก้ได้จึงใช้ไม่ได้ แต่ tuple ใช้ได้</div>
+    <div class="q" data-n="Q4">ถ้าย้าย <code>total = 0</code> เข้าไปไว้<em>ใน</em> loop จะเกิดอะไรขึ้น?</div>
+    <button class="choice">ผลลัพธ์เหมือนเดิม</button>
+    <button class="choice" data-correct>total ถูกล้างทุกรอบ สุดท้ายได้แค่ค่าตัวสุดท้าย</button>
+    <button class="choice">เกิด NameError</button>
+    <button class="choice">total กลายเป็น 0 เสมอ</button>
+    <div class="explain">ตัวแปรสะสมต้องตั้งค่าครั้งเดียวก่อนเข้า loop เท่านั้น</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q5">โค้ดนี้ได้ผลอะไร?<br>
-      <code>d = {"a": 1}</code><br><code>d["a"] = 5</code><br><code>print(d)</code></div>
-    <button class="choice">{'a': 1, 'a': 5}</button>
-    <button class="choice" data-correct>{'a': 5}</button>
-    <button class="choice">{'a': 1}</button>
-    <button class="choice">KeyError</button>
-    <div class="explain">key ห้ามซ้ำ — กำหนดค่าให้ key เดิมคือการแก้ค่า ไม่ใช่เพิ่มคู่ใหม่</div>
+    <div class="q" data-n="Q5"><code>largest = -1</code> แล้ววนหาค่ามากสุดใน
+      <code>[-5, -3, -9]</code> จะได้อะไร?</div>
+    <button class="choice">-3 (ถูกต้อง)</button>
+    <button class="choice">-9</button>
+    <button class="choice" data-correct>-1 ซึ่งผิด เพราะไม่มีอยู่ในข้อมูล</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">ไม่มีตัวไหนมากกว่า -1 เลย ค่าเริ่มต้นจึงไม่ถูกแทนที่ —
+      ต้องเริ่มด้วย <code>None</code> แทน</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q6"><code>d.get("x", 0)</code> ต่างจาก <code>d["x"]</code> ยังไง?</div>
-    <button class="choice">เหมือนกันทุกอย่าง</button>
-    <button class="choice" data-correct>ถ้าไม่มี key "x" จะคืน 0 แทนที่จะ error</button>
-    <button class="choice">get จะสร้าง key "x" ให้ด้วย</button>
-    <button class="choice">get ใช้ได้เฉพาะกับ value ที่เป็นตัวเลข</button>
-    <div class="explain">พารามิเตอร์ตัวที่ 2 คือค่าสำรองเมื่อไม่เจอ key (ถ้าไม่ใส่จะได้ <code>None</code>)</div>
+    <div class="q" data-n="Q6">ทำไมโค้ดหาค่าน้อยสุดถึงเขียน <code>if smallest is None</code>
+      ไว้เป็นเงื่อนไขแรก?</div>
+    <button class="choice">เพื่อความสวยงามของโค้ด</button>
+    <button class="choice" data-correct>เพื่อรับค่าแรกที่เจอมาเป็นค่าตั้งต้น จะได้ไม่ต้องเดาค่าเริ่มต้น</button>
+    <button class="choice">เพื่อกัน list ว่าง</button>
+    <button class="choice">เพราะ Python บังคับให้ใส่</button>
+    <div class="explain">รอบแรก <code>smallest</code> ยังไม่มีค่า จึงเอาตัวแรกในข้อมูลมาใช้เลย
+      ทำให้ใช้ได้กับข้อมูลทุกช่วงค่า</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ควรใช้ <code>is</code> แทน <code>==</code> เมื่อไร?</div>
+    <button class="choice">ใช้แทนกันได้ตลอด</button>
+    <button class="choice">ใช้กับตัวเลขเท่านั้น</button>
+    <button class="choice" data-correct>ใช้กับ None, True, False เท่านั้น</button>
+    <button class="choice">ใช้กับข้อความเท่านั้น</button>
+    <div class="explain"><code>is</code> ถามว่า "เป็นวัตถุตัวเดียวกันไหม" ไม่ใช่ "ค่าเท่ากันไหม" —
+      กับตัวเลขหรือข้อความอาจให้ผลไม่ตรงที่คิด</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8"><code>while</code> กับ <code>for</code> เรียกว่าอะไรตามศัพท์ทางการ?</div>
+    <button class="choice">while = definite · for = indefinite</button>
+    <button class="choice" data-correct>while = indefinite · for = definite</button>
+    <button class="choice">ทั้งคู่เป็น definite</button>
+    <button class="choice">ทั้งคู่เป็น indefinite</button>
+    <div class="explain"><code>for</code> รู้จำนวนรอบแน่นอน (definite) ส่วน <code>while</code>
+      วนจนกว่าเงื่อนไขจะเป็นเท็จ ไม่รู้ล่วงหน้า (indefinite)</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
-    <h4>โจทย์ 1 — สมุดโทรศัพท์</h4>
-    <p>สร้าง dict เก็บชื่อกับเบอร์โทร 3 คน แล้ว: เพิ่มคนที่ 4, แก้เบอร์ของคนแรก,
-    ลบคนที่ 2, และพิมพ์ทุกคู่ด้วย <code>.items()</code></p>
+    <h4>โจทย์ 1 — Filter only even number</h4>
+    <p>รับตัวเลขหลายตัวคั่นด้วยช่องว่างในบรรทัดเดียว แล้วแสดงเฉพาะเลขคู่<br>
+    ใบ้: <code>input("Enter some numbers : ").split()</code> คืน list ของ<strong>ข้อความ</strong>
+    ต้อง <code>int()</code> ก่อนเช็ก <code>% 2</code></p>
+<pre><span class="out">*** Filter only even number ***
+Enter some numbers: 1 2 3 4 5 6 7 8
+['1', '2', '3', '4', '5', '6', '7', '8']
+2 4 6 8</span></pre>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>phone = {"ฟ้า": "081-1111111", "นล": "082-2222222", "อาร์ม": "083-3333333"}
+<pre>print("*** Filter only even number ***")
 
-phone["มิน"] = "084-4444444"
-phone["ฟ้า"] = "089-9999999"
-del phone["นล"]
+items = input("Enter some numbers: ").split()
+print(items)
 
-for name, num in phone.items():
-    print(f"{name:6s} {num}")</pre>
+for s in items:
+    n = int(s)
+    if n % 2 == 0:
+        print(n, end=" ")
+print()</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 2 — นับตัวอักษร</h4>
-    <p>รับข้อความจากผู้ใช้ แล้วนับว่าตัวอักษรแต่ละตัวปรากฏกี่ครั้ง
-    (ไม่ต้องนับช่องว่าง) พิมพ์ผลเรียงจากตัวที่เจอบ่อยที่สุด</p>
+    <h4>โจทย์ 2 — Show Hello</h4>
+    <p>รับจำนวนรอบ แล้วพิมพ์คำว่า <code>Hello</code> ตามจำนวนนั้นในบรรทัดเดียวกัน
+    ถ้าค่าที่รับมาน้อยกว่าหรือเท่ากับ 0 ให้แสดง <code>Input Error</code></p>
+<pre><span class="out">*** Show Hello ***
+How many time you want to print Hello : 5
+Hello Hello Hello Hello Hello
+
+*** Show Hello ***
+How many time you want to print Hello : 0
+Input Error</span></pre>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>text = input("ข้อความ: ")
+<pre>print("*** Show Hello ***")
 
-count = {}
-for ch in text:
-    if ch == " ":
-        continue
-    count[ch] = count.get(ch, 0) + 1
+n = int(input("How many time you want to print Hello : "))
 
-for ch, n in sorted(count.items(), key=lambda x: x[1], reverse=True):
-    print(f"{ch} : {n}")</pre>
+if n &lt;= 0:
+    print("Input Error")
+else:
+    for i in range(n):
+        print("Hello", end=" ")
+    print()</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 3 — สรุปคะแนน</h4>
-    <p>กำหนด <code>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}</code><br>
-    พิมพ์: จำนวนคน, คะแนนเฉลี่ย, ชื่อคนที่ได้คะแนนสูงสุด, และรายชื่อคนที่ได้ต่ำกว่าค่าเฉลี่ย</p>
+    <h4>โจทย์ 3 — Sum from 1 to n</h4>
+    <p>รับตัวเลข n แล้วแสดงผลรวมของ 1 + 2 + ... + n<br>
+    ถ้า n น้อยกว่า 1 ให้แสดง <code>Input Error</code></p>
+<pre><span class="out">Sum from 1 to : 10
+Sum from 1 to 10 is 55
+
+Sum from 1 to : 0
+Input Error</span></pre>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78, "มิน": 95, "เก้า": 66}
+<pre>n = int(input("Sum from 1 to : "))
 
-avg = sum(scores.values()) / len(scores)
+if n &lt; 1:
+    print("Input Error")
+else:
+    total = 0
+    for i in range(1, n + 1):
+        total = total + i
+    print(f"Sum from 1 to {n} is {total}")
 
-print("จำนวนคน:", len(scores))
-print("เฉลี่ย:", round(avg, 2))
-print("สูงสุด:", max(scores, key=scores.get))
-
-print("ต่ำกว่าเฉลี่ย:")
-for name, s in scores.items():
-    if s &lt; avg:
-        print(" -", name, s)</pre>
+<span class="out"># ตรวจคำตอบด้วยสูตร: n(n+1)/2 → 10*11/2 = 55 ✓</span></pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 4 — ท้าทาย: ระบบสต๊อกสินค้า</h4>
-    <p>ทำโปรแกรมเมนูวนซ้ำ (ใช้ while + dict ซ้อน dict):<br>
-    1) เพิ่มสินค้า (ชื่อ, ราคา, จำนวน) &nbsp; 2) ขายสินค้า (ลดจำนวน) &nbsp;
-    3) แสดงสต๊อกทั้งหมดพร้อมมูลค่ารวม &nbsp; 4) ออก</p>
+    <h4>โจทย์ 4 — Minimum value</h4>
+    <p>รับตัวเลขหลายตัวคั่นด้วยช่องว่าง แล้วหาค่าที่น้อยที่สุด
+    โดยใช้รูปแบบ <code>smallest = None</code> (ห้ามใช้ <code>min()</code>)<br>
+    ต้องรองรับเลขติดลบและทศนิยมด้วย</p>
+<pre><span class="out">*** Minimum value ***
+Enter some numbers: 20 30 45 50 0 1 2 3 4 5 -2
+Min value = -2
+
+*** Minimum value ***
+Enter some numbers: 2.5 6.5
+Min value = 2.5</span></pre>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>stock = {}
+<pre>print("*** Minimum value ***")
 
-while True:
-    print("\n1) เพิ่ม  2) ขาย  3) แสดง  4) ออก")
-    c = input("เลือก: ")
+ip = input("Enter some numbers: ").split()
 
-    if c == "1":
-        name = input("ชื่อสินค้า: ")
-        stock[name] = {
-            "price": float(input("ราคา: ")),
-            "qty":   int(input("จำนวน: ")),
-        }
-        print("เพิ่มแล้ว")
+smallest = None
+for s in ip:
+    number = float(s)
+    if smallest is None:
+        smallest = number
+    elif number &lt; smallest:
+        smallest = number
 
-    elif c == "2":
-        name = input("ขายสินค้า: ")
-        if name not in stock:
-            print("ไม่มีสินค้านี้")
-        else:
-            n = int(input("ขายกี่ชิ้น: "))
-            if n &gt; stock[name]["qty"]:
-                print("ของไม่พอ เหลือ", stock[name]["qty"])
-            else:
-                stock[name]["qty"] -= n
-                print("ขายแล้ว เหลือ", stock[name]["qty"])
-
-    elif c == "3":
-        if not stock:
-            print("ยังไม่มีสินค้า")
-        total = 0
-        for name, info in stock.items():
-            value = info["price"] * info["qty"]
-            total += value
-            print(f"{name:12s} {info['price']:8.2f} x {info['qty']:3d} = {value:9.2f}")
-        print(f"{'มูลค่ารวม':12s} {total:24.2f}")
-
-    elif c == "4":
-        break
-
-    else:
-        print("เลือก 1-4 เท่านั้น")</pre>
+if smallest is None:
+    print("No input")
+else:
+    <span class="out"># ถ้าเป็นจำนวนเต็มพอดี ให้แสดงแบบไม่มี .0</span>
+    if smallest == int(smallest):
+        smallest = int(smallest)
+    print("Min value =", smallest)</pre>
     </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — ท้าทาย: Shift Cipher</h4>
+    <p>รับข้อความและตัวเลข 1-26 ในบรรทัดเดียว แล้วถอดรหัสโดย<strong>เลื่อนตัวอักษรลง</strong>
+    ตามเลขที่รับมา แสดงผลเป็นตัวพิมพ์ใหญ่ทั้งหมด</p>
+    <ul>
+      <li><code>dEF 3</code> → <code>ABC</code> &nbsp;(d ถอย 3 ตัวได้ a)</li>
+      <li><code>ifMMp 1</code> → <code>HELLO</code></li>
+      <li>ถอยเลย A แล้วให้วนกลับไปที่ Z — เช่น <code>a 3</code> → <code>X</code></li>
+      <li>ถ้าเลขไม่อยู่ในช่วง 1-26 ให้แสดง <code>Number must be between 1-26</code></li>
+    </ul>
+    <p>ใบ้: <code>ord('A')</code> ได้ 65 · <code>chr(65)</code> ได้ <code>'A'</code>
+    · ใช้ <code>% 26</code> จัดการการวนกลับ</p>
+<pre><span class="out">Enter a word and a number: WHVWFLSKHU 3
+TESTCIPHER
+
+Enter a word and a number: testcipher 0
+Number must be between 1-26</span></pre>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>data = input("Enter a word and a number: ").split()
+word = data[0]
+key = int(data[1])
+
+if key &lt; 1 or key &gt; 26:
+    print("Number must be between 1-26")
+else:
+    result = ""
+    for ch in word.upper():
+        <span class="out"># A=0, B=1, ... Z=25 แล้วถอยตาม key</span>
+        pos = ord(ch) - ord('A')
+        new_pos = (pos - key) % 26      <span class="out"># % 26 ทำให้วนกลับเองเมื่อติดลบ</span>
+        result = result + chr(new_pos + ord('A'))
+    print(result)
+
+<span class="out"># ไล่ตรวจ 'a' กับ key 3:
+#   pos = 0 ; (0 - 3) % 26 = 23 ; chr(23 + 65) = 'X'  ✓</span></pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>ต่อไป:</b> ทั้ง 7 รูปแบบนี้จะกลับมาใช้อีกในบทถัด ๆ ไป —
+    ตอนนับคำด้วย <code>dict</code> (บทที่ 9) และตอนสรุปข้อมูลจากไฟล์ (บทที่ 13)
   </div>
 </main>
 

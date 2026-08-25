@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 13 · File &amp; Exception — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 13</div>
+  <h1>File I/O &amp; Exception</h1>
+  <p class="lead">เก็บข้อมูลลงไฟล์ให้ไม่หายตอนปิดโปรแกรม และกันโปรแกรมพังเวลาเจอเรื่องไม่คาดคิด</p>
+
+  <h2>13.1 อ่านไฟล์</h2>
+
+  <p>ใช้ <code>with open(...)</code> เสมอ — Python จะปิดไฟล์ให้อัตโนมัติเมื่อจบบล็อก
+  แม้โปรแกรมจะ error กลางทาง</p>
+
+<pre>with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()          <span class="out"># อ่านทั้งไฟล์เป็น string เดียว</span>
+
+print(content)</pre>
+
+  <div class="warn">
+    <b>ภาษาไทยต้องใส่ <code>encoding="utf-8"</code> เสมอ</b><br>
+    ถ้าไม่ใส่ Windows จะเดา encoding เอง แล้วภาษาไทยจะกลายเป็นตัวประหลาด
+    หรือเกิด <span class="mono">UnicodeDecodeError</span>
+  </div>
+
+  <p>3 วิธีอ่าน เลือกตามงาน</p>
+
+<pre><span class="out"># 1) ทั้งไฟล์เป็น string เดียว</span>
+with open("data.txt", encoding="utf-8") as f:
+    text = f.read()
+
+<span class="out"># 2) เป็น list ทีละบรรทัด (ติด \n ท้ายมาด้วย)</span>
+with open("data.txt", encoding="utf-8") as f:
+    lines = f.readlines()
+
+<span class="out"># 3) วนทีละบรรทัด — ประหยัดหน่วยความจำที่สุด ใช้บ่อยที่สุด</span>
+with open("data.txt", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())     <span class="out"># strip() ตัด \n ท้ายบรรทัดทิ้ง</span></pre>
+
+  <h2>13.2 เขียนไฟล์</h2>
+
+  <table>
+    <tr><th>โหมด</th><th>ความหมาย</th></tr>
+    <tr><td><code>"r"</code></td><td>อ่าน (ค่าเริ่มต้น) — ถ้าไม่มีไฟล์จะ error</td></tr>
+    <tr><td><code>"w"</code></td><td>เขียนใหม่ — <strong>ลบข้อมูลเดิมทั้งหมด</strong></td></tr>
+    <tr><td><code>"a"</code></td><td>เขียนต่อท้าย — ของเดิมยังอยู่</td></tr>
+    <tr><td><code>"x"</code></td><td>สร้างใหม่ — ถ้ามีไฟล์อยู่แล้วจะ error</td></tr>
+  </table>
+
+<pre><span class="out"># เขียนทับ</span>
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("บรรทัดแรก\n")           <span class="out"># ต้องใส่ \n เอง</span>
+    f.write("บรรทัดที่สอง\n")
+
+<span class="out"># เขียนต่อท้าย</span>
+with open("output.txt", "a", encoding="utf-8") as f:
+    f.write("บรรทัดที่สาม\n")
+
+<span class="out"># เขียน list ทีเดียว</span>
+names = ["ฟ้า", "นล", "อาร์ม"]
+with open("names.txt", "w", encoding="utf-8") as f:
+    for n in names:
+        f.write(n + "\n")</pre>
+
+  <div class="warn">
+    <b>โหมด <code>"w"</code> ลบของเดิมทันทีที่เปิดไฟล์</b> — ก่อนที่จะเขียนอะไรด้วยซ้ำ
+    ถ้าไม่ได้ตั้งใจลบ ให้ใช้ <code>"a"</code>
+  </div>
+
+  <h2>13.3 อ่าน-เขียนข้อมูลแบบตาราง</h2>
+
+<pre><span class="out"># เขียน: ชื่อ,คะแนน บรรทัดละคน</span>
+scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
+
+with open("scores.csv", "w", encoding="utf-8") as f:
+    for name, s in scores.items():
+        f.write(f"{name},{s}\n")
+
+<span class="out"># อ่านกลับเข้ามาเป็น dict</span>
+loaded = {}
+with open("scores.csv", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if not line:                 <span class="out"># ข้ามบรรทัดว่าง</span>
+            continue
+        name, s = line.split(",")
+        loaded[name] = int(s)        <span class="out"># ที่อ่านมาเป็น str ต้องแปลง</span>
+
+print(loaded)      <span class="out"># {'ฟ้า': 85, 'นล': 92, 'อาร์ม': 78}</span></pre>
+
+  <div class="note">
+    <b>ข้อมูลจากไฟล์เป็น string เสมอ</b> — เลข 85 ที่อ่านมาคือ <code>"85"</code>
+    ต้อง <code>int()</code> หรือ <code>float()</code> ก่อนเอาไปคำนวณ
+  </div>
+
+  <h2>13.4 try-except — กันโปรแกรมพัง</h2>
+
+<pre>try:
+    n = int(input("ใส่ตัวเลข: "))
+    print(100 / n)
+except ValueError:
+    print("นั่นไม่ใช่ตัวเลข")
+except ZeroDivisionError:
+    print("หารด้วยศูนย์ไม่ได้")</pre>
+
+  <p>โค้ดใน <code>try</code> ถ้าพังตรงไหน จะกระโดดไปหา <code>except</code>
+  ที่ตรงกับชนิดของ error ทันที ส่วนที่เหลือใน <code>try</code> ไม่ทำงาน</p>
+
+  <table>
+    <tr><th>Exception</th><th>เกิดเมื่อ</th></tr>
+    <tr><td><code>ValueError</code></td><td><code>int("abc")</code> — ชนิดถูกแต่ค่าใช้ไม่ได้</td></tr>
+    <tr><td><code>TypeError</code></td><td><code>"a" + 1</code> — ชนิดข้อมูลผิด</td></tr>
+    <tr><td><code>ZeroDivisionError</code></td><td>หารด้วย 0</td></tr>
+    <tr><td><code>IndexError</code></td><td><code>a[99]</code> — index เกินขอบ</td></tr>
+    <tr><td><code>KeyError</code></td><td><code>d["ไม่มี"]</code> — key ไม่มีใน dict</td></tr>
+    <tr><td><code>FileNotFoundError</code></td><td>เปิดไฟล์ที่ไม่มีอยู่</td></tr>
+  </table>
+
+  <h2>13.5 โครงสร้างเต็ม</h2>
+
+<pre>try:
+    f = open("data.txt", encoding="utf-8")
+    data = f.read()
+except FileNotFoundError:
+    print("ไม่พบไฟล์")
+else:
+    print("อ่านสำเร็จ", len(data), "ตัวอักษร")   <span class="out"># ทำเมื่อไม่มี error</span>
+finally:
+    print("จบการทำงาน")                          <span class="out"># ทำทุกกรณี</span></pre>
+
+  <table>
+    <tr><th>ส่วน</th><th>ทำงานเมื่อ</th></tr>
+    <tr><td><code>try</code></td><td>เสมอ — เป็นโค้ดที่เสี่ยงพัง</td></tr>
+    <tr><td><code>except</code></td><td>เกิด error ชนิดที่ระบุ</td></tr>
+    <tr><td><code>else</code></td><td>ไม่เกิด error เลย</td></tr>
+    <tr><td><code>finally</code></td><td>ทุกกรณี ทั้งพังและไม่พัง</td></tr>
+  </table>
+
+  <p>ดักหลายชนิดพร้อมกัน และดูรายละเอียด error ได้</p>
+
+<pre>try:
+    n = int(input("ตัวเลข: "))
+    print(10 / n)
+except (ValueError, ZeroDivisionError) as e:
+    print("ผิดพลาด:", e)</pre>
+
+  <div class="warn">
+    <b>อย่าเขียน <code>except:</code> เปล่า ๆ</b> เพราะมันกลืน error ทุกชนิด
+    รวมถึง bug ที่เราเขียนผิดเอง ทำให้หาปัญหาไม่เจอ — ระบุชนิดที่คาดไว้เสมอ
+  </div>
+
+  <h2>13.6 รูปแบบที่ใช้จริง</h2>
+
+<pre>def read_scores(filename):
+    """อ่านไฟล์คะแนน คืน dict — ถ้าไม่มีไฟล์คืน dict ว่าง"""
+    scores = {}
+    try:
+        with open(filename, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                name, s = line.split(",")
+                scores[name] = int(s)
+    except FileNotFoundError:
+        print(f"ยังไม่มีไฟล์ {filename} เริ่มจากข้อมูลว่าง")
+    except ValueError:
+        print("รูปแบบไฟล์ผิด ข้ามข้อมูลที่เสีย")
+    return scores
+
+
+def save_scores(filename, scores):
+    with open(filename, "w", encoding="utf-8") as f:
+        for name, s in scores.items():
+            f.write(f"{name},{s}\n")
+
+
+scores = read_scores("scores.csv")
+scores["มิน"] = 95
+save_scores("scores.csv", scores)</pre>
+
+  <p>รับ input แบบวนจนกว่าจะถูก — รวม while + try</p>
+
+<pre>while True:
+    try:
+        age = int(input("อายุ: "))
+        break
+    except ValueError:
+        print("ใส่เป็นตัวเลขเท่านั้น")
+
+print("อายุของคุณคือ", age)</pre>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">เปิดไฟล์ด้วยโหมด <code>"w"</code> ทั้งที่ไฟล์นั้นมีข้อมูลอยู่แล้ว จะเกิดอะไรขึ้น?</div>
+    <button class="choice">เขียนต่อท้ายข้อมูลเดิม</button>
+    <button class="choice" data-correct>ข้อมูลเดิมถูกลบทั้งหมด</button>
+    <button class="choice">เกิด error เพราะไฟล์มีอยู่แล้ว</button>
+    <button class="choice">Python สร้างไฟล์สำรองให้ก่อน</button>
+    <div class="explain"><code>"w"</code> ล้างไฟล์ทันทีที่เปิด ถ้าจะเขียนต่อท้ายต้องใช้ <code>"a"</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">ทำไมถึงควรใช้ <code>with open(...)</code> แทน <code>open(...)</code> เฉย ๆ?</div>
+    <button class="choice">เขียนสั้นกว่า</button>
+    <button class="choice" data-correct>ปิดไฟล์ให้อัตโนมัติ แม้โปรแกรมจะ error กลางทาง</button>
+    <button class="choice">อ่านไฟล์ได้เร็วกว่า</button>
+    <button class="choice">รองรับภาษาไทยได้</button>
+    <div class="explain">ไฟล์ที่ไม่ปิดอาจทำให้ข้อมูลที่เขียนยังไม่ถูกบันทึกลงดิสก์จริง</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3"><code>int("สวัสดี")</code> ทำให้เกิด exception ชนิดใด?</div>
+    <button class="choice">TypeError</button>
+    <button class="choice" data-correct>ValueError</button>
+    <button class="choice">KeyError</button>
+    <button class="choice">SyntaxError</button>
+    <div class="explain">ชนิดข้อมูล (str) ถูกต้อง แต่ค่าข้างในแปลงเป็นเลขไม่ได้ → ValueError</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4"><code>finally</code> ทำงานเมื่อไร?</div>
+    <button class="choice">เฉพาะตอนเกิด error</button>
+    <button class="choice">เฉพาะตอนไม่เกิด error</button>
+    <button class="choice" data-correct>ทุกกรณี ทั้งเกิดและไม่เกิด error</button>
+    <button class="choice">เฉพาะตอนมี except ตรงชนิด</button>
+    <div class="explain">ใช้เก็บงานปิดท้ายที่ต้องทำแน่ ๆ — ส่วน <code>else</code>
+      ต่างหากที่ทำเฉพาะตอนไม่เกิด error</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">อ่านตัวเลขจากไฟล์มาได้ <code>line = "85"</code>
+      แล้วทำ <code>line + 5</code> จะเกิดอะไรขึ้น?</div>
+    <button class="choice">ได้ 90</button>
+    <button class="choice">ได้ "855"</button>
+    <button class="choice" data-correct>TypeError</button>
+    <button class="choice">ValueError</button>
+    <div class="explain">ข้อมูลจากไฟล์เป็น str เสมอ — ต่อ str กับ int ไม่ได้
+      ต้อง <code>int(line) + 5</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">ทำไมไม่ควรเขียน <code>except:</code> เปล่า ๆ?</div>
+    <button class="choice">เขียนแบบนั้นไม่ได้ ผิดไวยากรณ์</button>
+    <button class="choice" data-correct>มันกลืน error ทุกชนิดรวมถึง bug ของเราเอง ทำให้หาปัญหาไม่เจอ</button>
+    <button class="choice">ทำให้โปรแกรมช้าลงมาก</button>
+    <button class="choice">ใช้ได้เฉพาะกับไฟล์</button>
+    <div class="explain">ระบุชนิดที่คาดไว้เสมอ เพื่อให้ error ที่ไม่ได้คาดยังแสดงออกมาให้เห็น</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ไฟล์ภาษาไทยควรเปิดยังไง?</div>
+    <button class="choice">open("f.txt", "r")</button>
+    <button class="choice" data-correct>open("f.txt", "r", encoding="utf-8")</button>
+    <button class="choice">open("f.txt", "thai")</button>
+    <button class="choice">open("f.txt", "rb")</button>
+    <div class="explain">ไม่ระบุ encoding แล้ว Windows จะเดาเอง ทำให้ภาษาไทยเพี้ยนหรือ error</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — เขียนและอ่านไฟล์</h4>
+    <p>รับชื่อจากผู้ใช้ไปเรื่อย ๆ จนกว่าจะใส่ค่าว่าง บันทึกลง <code>names.txt</code>
+    บรรทัดละชื่อ แล้วอ่านกลับขึ้นมาพิมพ์พร้อมเลขลำดับ</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>names = []
+while True:
+    n = input("ชื่อ (เว้นว่างเพื่อจบ): ").strip()
+    if n == "":
+        break
+    names.append(n)
+
+with open("names.txt", "w", encoding="utf-8") as f:
+    for n in names:
+        f.write(n + "\n")
+
+print("\n--- อ่านกลับจากไฟล์ ---")
+with open("names.txt", encoding="utf-8") as f:
+    for i, line in enumerate(f, start=1):
+        print(f"{i}. {line.strip()}")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — รับตัวเลขแบบไม่พัง</h4>
+    <p>เขียนฟังก์ชัน <code>input_int(prompt)</code> ที่วนถามจนกว่าผู้ใช้จะใส่จำนวนเต็มจริง ๆ
+    แล้วคืนค่านั้น (ใช้ try-except) จากนั้นใช้ฟังก์ชันนี้รับเลข 2 ตัวมาหารกัน
+    พร้อมดักหารด้วยศูนย์</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>def input_int(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("ใส่เป็นจำนวนเต็มเท่านั้น")
+
+a = input_int("ตัวตั้ง: ")
+b = input_int("ตัวหาร: ")
+
+try:
+    print(f"{a} / {b} = {a / b:.4f}")
+except ZeroDivisionError:
+    print("หารด้วยศูนย์ไม่ได้")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — สรุปคะแนนจากไฟล์</h4>
+    <p>สร้างไฟล์ <code>scores.csv</code> ที่มีข้อมูล <code>ชื่อ,คะแนน</code> บรรทัดละคน (อย่างน้อย 5 คน)
+    แล้วเขียนโปรแกรมอ่านมาสรุป: จำนวนคน, คะแนนเฉลี่ย, คนที่ได้สูงสุด
+    โดยต้องดัก <code>FileNotFoundError</code> และข้ามบรรทัดที่รูปแบบผิดได้</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>scores = {}
+
+try:
+    with open("scores.csv", encoding="utf-8") as f:
+        for i, line in enumerate(f, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                name, s = line.split(",")
+                scores[name] = int(s)
+            except ValueError:
+                print(f"ข้ามบรรทัดที่ {i} (รูปแบบผิด): {line}")
+
+except FileNotFoundError:
+    print("ไม่พบไฟล์ scores.csv")
+
+if scores:
+    print("จำนวนคน:", len(scores))
+    print("เฉลี่ย:", round(sum(scores.values()) / len(scores), 2))
+    print("สูงสุด:", max(scores, key=scores.get))
+else:
+    print("ไม่มีข้อมูลให้สรุป")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย: สมุดบันทึกที่ไม่หาย</h4>
+    <p>ทำโปรแกรมจดบันทึกที่ข้อมูลอยู่ครบแม้ปิดโปรแกรมไปแล้ว —
+    รวมทุกอย่างที่เรียนมา 13 บท:</p>
+    <ol>
+      <li>ตอนเปิดโปรแกรม อ่านบันทึกเดิมจาก <code>notes.txt</code> (ถ้ายังไม่มีไฟล์ให้เริ่มจากว่าง)</li>
+      <li>เมนู: 1) เพิ่มบันทึก 2) ลบตามเลขลำดับ 3) ค้นหาคำ 4) แสดงทั้งหมด 5) ออก</li>
+      <li>ทุกครั้งที่แก้ไข ให้บันทึกลงไฟล์ทันที</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>FILENAME = "notes.txt"
+
+
+def load():
+    try:
+        with open(FILENAME, encoding="utf-8") as f:
+            return [line.strip() for line in f if line.strip()]
+    except FileNotFoundError:
+        return []
+
+
+def save(notes):
+    with open(FILENAME, "w", encoding="utf-8") as f:
+        for n in notes:
+            f.write(n + "\n")
+
+
+def show(notes):
+    if not notes:
+        print("ยังไม่มีบันทึก")
+        return
+    for i, n in enumerate(notes, start=1):
+        print(f"{i}. {n}")
+
+
+notes = load()
+print(f"โหลดบันทึกเดิม {len(notes)} รายการ")
+
+while True:
+    print("\n1) เพิ่ม  2) ลบ  3) ค้นหา  4) แสดง  5) ออก")
+    c = input("เลือก: ").strip()
+
+    if c == "1":
+        notes.append(input("บันทึก: ").strip())
+        save(notes)
+        print("บันทึกแล้ว")
+
+    elif c == "2":
+        show(notes)
+        try:
+            i = int(input("ลบลำดับที่: "))
+            removed = notes.pop(i - 1)      <span class="out"># ผู้ใช้นับจาก 1</span>
+            save(notes)
+            print("ลบแล้ว:", removed)
+        except ValueError:
+            print("ใส่เป็นตัวเลข")
+        except IndexError:
+            print("ไม่มีลำดับนั้น")
+
+    elif c == "3":
+        word = input("ค้นหาคำ: ").lower()
+        found = [n for n in notes if word in n.lower()]
+        if found:
+            show(found)
+        else:
+            print("ไม่พบ")
+
+    elif c == "4":
+        show(notes)
+
+    elif c == "5":
+        print("บันทึกไว้เรียบร้อย บ๊ายบาย")
+        break
+
+    else:
+        print("เลือก 1-5 เท่านั้น")</pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>จบครบ 13 บทแล้ว</b> — ตอนนี้เขียนโปรแกรมที่รับข้อมูล ประมวลผล
+    และเก็บลงไฟล์ได้ครบวงจรแล้ว ขั้นต่อไปคือ module, class (OOP)
+    และไลบรารีภายนอกอย่าง <code>requests</code> หรือ <code>pandas</code>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

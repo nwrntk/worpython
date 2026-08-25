@@ -3,185 +3,159 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>บทที่ 11 · Function — Python Lab</title>
+<title>บทที่ 11 · String — Python Lab</title>
 <link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <main>
   <div class="eyebrow">Chapter 11</div>
-  <h1>Function — ฟังก์ชัน</h1>
-  <p class="lead">เขียนครั้งเดียว เรียกใช้ได้ตลอด — เครื่องมือหลักที่ทำให้โปรแกรมใหญ่ ๆ ยังอ่านรู้เรื่อง</p>
+  <h1>String — ข้อความ</h1>
+  <p class="lead">ตัด ต่อ ค้น แปลง และจัดรูปแบบข้อความ — งานที่โปรแกรมเกือบทุกตัวต้องทำ</p>
 
-  <h2>11.1 ทำไมต้องมีฟังก์ชัน</h2>
+  <h2>11.1 String คือลำดับของตัวอักษร</h2>
 
-  <p>ถ้าต้องคำนวณเกรดเฉลี่ยหลายที่ในโปรแกรม เราคงไม่อยากก๊อบโค้ดเดิมไปวางซ้ำ ๆ
-  เพราะถ้าสูตรผิด ต้องไล่แก้ทุกที่</p>
+  <p>ทุกอย่างที่ทำกับ list ในบทที่ 4 ใช้กับ string ได้เกือบหมด</p>
 
-<pre>def average(nums):
-    return sum(nums) / len(nums)
+<pre>s = "Python"
+<span class="out">#     P  y  t  h  o  n
+#     0  1  2  3  4  5
+#    -6 -5 -4 -3 -2 -1</span>
 
-print(average([80, 75, 92]))     <span class="out"># 82.33...</span>
-print(average([60, 70]))         <span class="out"># 65.0</span></pre>
+print(s[0])       <span class="out"># P</span>
+print(s[-1])      <span class="out"># n</span>
+print(s[0:3])     <span class="out"># Pyt</span>
+print(s[::-1])    <span class="out"># nohtyP  ← กลับด้าน</span>
+print(len(s))     <span class="out"># 6</span>
+print("th" in s)  <span class="out"># True</span>
 
-  <p>โครงสร้างมี 4 ส่วน</p>
-
-<pre>def   greet   (name)   :
-<span class="out">#  ↑      ↑       ↑     ↑
-#  |   ชื่อฟังก์ชัน  พารามิเตอร์  อย่าลืมโคลอน</span>
-    print(f"สวัสดี {name}")     <span class="out"># ← ตัวฟังก์ชัน ต้องเยื้อง</span>
-
-greet("ฟ้าใส")      <span class="out"># เรียกใช้ → สวัสดี ฟ้าใส</span></pre>
-
-  <div class="warn">
-    <b>ต้อง <code>def</code> ก่อนเรียกเสมอ:</b> Python อ่านไฟล์จากบนลงล่าง
-    ถ้าเรียกฟังก์ชันก่อนบรรทัด <code>def</code> จะได้
-    <span class="mono">NameError: name 'greet' is not defined</span>
-  </div>
-
-  <h2>11.2 return — ส่งค่ากลับ</h2>
-
-  <p>ความต่างที่คนใหม่สับสนบ่อยที่สุด: <code>print</code> คือ<em>แสดง</em>
-  ส่วน <code>return</code> คือ<em>ส่งค่ากลับไปให้คนเรียกใช้ต่อ</em></p>
-
-<pre>def add_print(a, b):
-    print(a + b)        <span class="out"># แค่แสดงผล</span>
-
-def add_return(a, b):
-    return a + b        <span class="out"># ส่งค่ากลับ</span>
-
-x = add_print(2, 3)     <span class="out"># พิมพ์ 5 ออกมา แต่ x = None</span>
-y = add_return(2, 3)    <span class="out"># ไม่พิมพ์อะไร แต่ y = 5</span>
-
-print(y * 10)           <span class="out"># 50 ← เอาไปใช้ต่อได้</span></pre>
-
-  <div class="note">
-    <b>ฟังก์ชันที่ไม่มี <code>return</code> จะคืน <code>None</code> เสมอ</b><br>
-    และเมื่อเจอ <code>return</code> ฟังก์ชันจะจบทันที โค้ดบรรทัดหลังจากนั้นไม่ทำงาน
-  </div>
-
-<pre>def check_pass(score):
-    if score &gt;= 50:
-        return "ผ่าน"       <span class="out"># จบตรงนี้เลย</span>
-    return "ไม่ผ่าน"        <span class="out"># ทำงานเฉพาะตอนไม่เข้า if</span>
-
-print(check_pass(80))       <span class="out"># ผ่าน</span></pre>
-
-  <h2>11.3 พารามิเตอร์หลายตัวและค่า default</h2>
-
-<pre>def intro(name, age, city="กรุงเทพ"):     <span class="out"># city มีค่าสำรอง</span>
-    print(f"{name} อายุ {age} อยู่{city}")
-
-intro("ฟ้า", 20)                  <span class="out"># ฟ้า อายุ 20 อยู่กรุงเทพ</span>
-intro("นล", 21, "เชียงใหม่")       <span class="out"># นล อายุ 21 อยู่เชียงใหม่</span>
-
-<span class="out"># ระบุชื่อพารามิเตอร์ได้ ไม่ต้องเรียงตามลำดับ</span>
-intro(age=22, name="อาร์ม")</pre>
+for ch in s:
+    print(ch, end=".")     <span class="out"># P.y.t.h.o.n.</span></pre>
 
   <div class="warn">
-    <b>พารามิเตอร์ที่มี default ต้องอยู่ท้ายสุด</b><br>
-    <code>def f(a=1, b):</code> → <span class="mono">SyntaxError</span>
+    <b>String แก้ไม่ได้ (immutable) เหมือน tuple:</b><br>
+    <code>s[0] = "J"</code> → <span class="mono">TypeError</span><br>
+    ทุกคำสั่งที่ "เปลี่ยน" string จริง ๆ แล้วสร้าง string ใหม่เสมอ —
+    ต้องรับค่ากลับมาเก็บ <code>s = s.upper()</code> ไม่ใช่แค่ <code>s.upper()</code> เฉย ๆ
   </div>
 
-  <h2>11.4 คืนค่าหลายตัว</h2>
+  <h2>11.2 ต่อและทำซ้ำ</h2>
 
-  <p>ใช้ tuple ตามที่เรียนในบทที่ 5</p>
+<pre>first = "ฟ้า"
+last  = "ใส"
 
-<pre>def min_max_avg(nums):
-    return min(nums), max(nums), sum(nums) / len(nums)
+print(first + last)          <span class="out"># ฟ้าใส</span>
+print(first + " " + last)    <span class="out"># ฟ้า ใส</span>
+print("-" * 20)              <span class="out"># --------------------</span>
+print("ab" * 3)              <span class="out"># ababab</span>
 
-lo, hi, avg = min_max_avg([4, 9, 2, 7])
-print(lo, hi, round(avg, 2))     <span class="out"># 2 9 5.5</span></pre>
+<span class="out"># ต่อกับตัวเลขตรง ๆ ไม่ได้</span>
+age = 20
+print("อายุ " + age)         <span class="out"># TypeError!</span>
+print("อายุ " + str(age))    <span class="out"># ต้องแปลงเป็น str ก่อน</span></pre>
 
-  <h2>11.5 ขอบเขตตัวแปร (Scope)</h2>
+  <h2>11.3 f-string — วิธีที่ควรใช้</h2>
 
-  <p>ตัวแปรที่สร้างในฟังก์ชันเป็น <strong>local</strong> — อยู่แค่ในฟังก์ชันนั้น
-  พอฟังก์ชันจบก็หายไป</p>
+<pre>name = "ฟ้าใส"
+age = 20
+gpa = 3.456
 
-<pre>def f():
-    x = 10          <span class="out"># local — มีอยู่แค่ในนี้</span>
-    print(x)
+print(f"{name} อายุ {age} ปี เกรด {gpa}")
+<span class="out"># ฟ้าใส อายุ 20 ปี เกรด 3.456</span>
 
-f()                 <span class="out"># 10</span>
-print(x)            <span class="out"># NameError: name 'x' is not defined</span></pre>
+<span class="out"># ใส่นิพจน์ข้างในได้เลย</span>
+print(f"ปีหน้าอายุ {age + 1}")
+print(f"ชื่อยาว {len(name)} ตัวอักษร")</pre>
 
-  <p>ตัวแปรข้างนอกฟังก์ชันเป็น <strong>global</strong> — อ่านได้ แต่เขียนทับไม่ได้</p>
+  <p>จัดรูปแบบตัวเลขและความกว้าง — ใช้บ่อยมากตอนทำตาราง</p>
 
-<pre>count = 0
+  <table>
+    <tr><th>เขียน</th><th>ผลลัพธ์</th><th>ความหมาย</th></tr>
+    <tr><td><code>f"{gpa:.2f}"</code></td><td><code>3.46</code></td><td>ทศนิยม 2 ตำแหน่ง</td></tr>
+    <tr><td><code>f"{42:5d}"</code></td><td><code>&nbsp;&nbsp;&nbsp;42</code></td><td>เลขจำนวนเต็ม กว้าง 5 ชิดขวา</td></tr>
+    <tr><td><code>f"{'ฟ้า':10s}"</code></td><td><code>ฟ้า&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></td><td>ข้อความ กว้าง 10 ชิดซ้าย</td></tr>
+    <tr><td><code>f"{'ฟ้า':&gt;10}"</code></td><td>ชิดขวา</td><td><code>&gt;</code> ขวา <code>&lt;</code> ซ้าย <code>^</code> กลาง</td></tr>
+    <tr><td><code>f"{1234567:,}"</code></td><td><code>1,234,567</code></td><td>ใส่จุลภาคคั่นหลักพัน</td></tr>
+    <tr><td><code>f"{0.256:.1%}"</code></td><td><code>25.6%</code></td><td>เปอร์เซ็นต์</td></tr>
+  </table>
 
-def read_it():
-    print(count)        <span class="out"># 0 ← อ่านได้ ไม่มีปัญหา</span>
+<pre>items = [("ข้าวผัด", 50), ("ชาเย็นพิเศษ", 25)]
 
-def try_change():
-    count = 99          <span class="out"># สร้างตัวแปร local ตัวใหม่! ไม่ได้แก้ตัวข้างนอก</span>
+for name, price in items:
+    print(f"{name:&lt;15s}{price:&gt;8,.2f} บาท")
 
-try_change()
-print(count)            <span class="out"># 0 ← ยังเป็น 0 เหมือนเดิม</span></pre>
+<span class="out"># ข้าวผัด            50.00 บาท
+# ชาเย็นพิเศษ        25.00 บาท</span></pre>
+
+  <h2>11.4 เมธอดที่ใช้บ่อยที่สุด</h2>
+
+  <table>
+    <tr><th>เมธอด</th><th>ทำอะไร</th><th>ตัวอย่าง</th></tr>
+    <tr><td><code>.upper()</code> <code>.lower()</code></td><td>เปลี่ยนตัวพิมพ์</td><td><code>"Hi".upper()</code> → <code>HI</code></td></tr>
+    <tr><td><code>.strip()</code></td><td>ตัดช่องว่างหัวท้าย</td><td><code>"  hi  ".strip()</code> → <code>hi</code></td></tr>
+    <tr><td><code>.split(sep)</code></td><td>แยกเป็น list</td><td><code>"a,b".split(",")</code> → <code>['a','b']</code></td></tr>
+    <tr><td><code>sep.join(list)</code></td><td>รวม list เป็น string</td><td><code>",".join(['a','b'])</code> → <code>a,b</code></td></tr>
+    <tr><td><code>.replace(a, b)</code></td><td>แทนที่ข้อความ</td><td><code>"cat".replace("c","b")</code> → <code>bat</code></td></tr>
+    <tr><td><code>.find(x)</code></td><td>ตำแหน่งที่เจอ (ไม่เจอ = -1)</td><td><code>"hello".find("ll")</code> → <code>2</code></td></tr>
+    <tr><td><code>.count(x)</code></td><td>นับจำนวนที่เจอ</td><td><code>"banana".count("a")</code> → <code>3</code></td></tr>
+    <tr><td><code>.startswith(x)</code></td><td>ขึ้นต้นด้วย x ไหม</td><td><code>"file.py".endswith(".py")</code></td></tr>
+    <tr><td><code>.isdigit()</code></td><td>เป็นตัวเลขล้วนไหม</td><td><code>"123".isdigit()</code> → <code>True</code></td></tr>
+    <tr><td><code>.title()</code></td><td>ขึ้นต้นคำด้วยตัวใหญ่</td><td><code>"a b".title()</code> → <code>A B</code></td></tr>
+  </table>
+
+  <h2>11.5 split และ join — คู่หูที่ใช้บ่อย</h2>
+
+<pre>line = "ฟ้าใส,20,3.45"
+
+parts = line.split(",")
+print(parts)              <span class="out"># ['ฟ้าใส', '20', '3.45']</span>
+
+name, age, gpa = parts    <span class="out"># unpack ได้เลย</span>
+print(f"{name} อายุ {int(age)} เกรด {float(gpa):.2f}")
+
+<span class="out"># split ไม่ใส่อะไร = แยกตามช่องว่าง (และตัดช่องว่างซ้ำให้ด้วย)</span>
+print("  hello   world  ".split())     <span class="out"># ['hello', 'world']</span>
+
+<span class="out"># join = ทำกลับด้าน</span>
+words = ["Python", "is", "fun"]
+print(" ".join(words))    <span class="out"># Python is fun</span>
+print("-".join(words))    <span class="out"># Python-is-fun</span></pre>
 
   <div class="note">
-    <b>วิธีที่ถูกกว่าการใช้ <code>global</code>:</b> ให้ฟังก์ชัน
-    <code>return</code> ค่าออกมาแล้วรับไปเก็บเอง<br>
-    <code>count = increase(count)</code> — อ่านง่ายกว่าและตามรอย bug ได้ง่ายกว่า
-    เพราะเห็นชัดว่าค่าเปลี่ยนที่บรรทัดไหน
+    <b>join ใช้ได้กับ list ของ string เท่านั้น:</b>
+    <code>",".join([1, 2, 3])</code> จะ error<br>
+    ถ้าเป็นตัวเลขต้องแปลงก่อน:
+    <code>",".join(str(n) for n in [1, 2, 3])</code> → <code>1,2,3</code>
   </div>
 
-<pre>def increase(n):
-    return n + 1
+  <h2>11.6 ตรวจสอบและทำความสะอาดข้อมูล</h2>
 
-count = 0
-count = increase(count)
-count = increase(count)
-print(count)        <span class="out"># 2</span></pre>
+<pre>raw = "  Fern@Example.COM  "
 
-  <h2>11.6 ระวัง: ส่ง list เข้าฟังก์ชัน</h2>
+email = raw.strip().lower()
+print(email)                       <span class="out"># fern@example.com</span>
+print(email.endswith(".com"))      <span class="out"># True</span>
+print("@" in email)                <span class="out"># True</span>
 
-  <p>ตัวเลขกับ string ส่งเข้าไปแล้วแก้ข้างในไม่กระทบข้างนอก
-  แต่ <strong>list กับ dict กระทบ</strong> (เหตุผลเดียวกับ <code>b = a</code> ในบทที่ 4)</p>
+<span class="out"># รับตัวเลขอย่างปลอดภัย (จากบทที่ 7)</span>
+s = input("อายุ: ").strip()
+if s.isdigit():
+    age = int(s)
+else:
+    print("ต้องเป็นตัวเลขเท่านั้น")</pre>
 
-<pre>def add_item(items):
-    items.append("ใหม่")      <span class="out"># แก้ list ก้อนเดิมที่ส่งเข้ามา</span>
+  <h2>11.7 อักขระพิเศษ</h2>
 
-my_list = ["เก่า"]
-add_item(my_list)
-print(my_list)                <span class="out"># ['เก่า', 'ใหม่'] ← เปลี่ยนจริง</span>
+<pre>print("บรรทัดแรก\nบรรทัดที่สอง")   <span class="out"># \n = ขึ้นบรรทัดใหม่</span>
+print("ชื่อ\tคะแนน")               <span class="out"># \t = tab</span>
+print("เขาบอกว่า \"สวัสดี\"")       <span class="out"># \" = เครื่องหมายคำพูด</span>
+print("C:\\Users\\fern")           <span class="out"># \\ = backslash ตัวจริง</span>
 
-<span class="out"># ถ้าไม่อยากให้กระทบ ให้ทำสำเนาก่อน</span>
-def add_item_safe(items):
-    items = items[:]          <span class="out"># สำเนา</span>
-    items.append("ใหม่")
-    return items</pre>
-
-  <h2>11.7 Docstring — อธิบายฟังก์ชัน</h2>
-
-<pre>def bmi(weight, height):
-    """คำนวณดัชนีมวลกาย
-
-    weight: น้ำหนัก (กิโลกรัม)
-    height: ส่วนสูง (เมตร)
-    """
-    return weight / (height ** 2)
-
-print(bmi(60, 1.65))      <span class="out"># 22.03...</span>
-help(bmi)                 <span class="out"># แสดงคำอธิบายออกมา</span></pre>
-
-  <h2>11.8 ประกอบร่างทุกบท</h2>
-
-<pre>def grade_report(scores):
-    """รับ dict ชื่อ→คะแนน คืน dict ชื่อ→เกรด"""
-    result = {}
-    for name, s in scores.items():
-        if   s &gt;= 80: g = "A"
-        elif s &gt;= 70: g = "B"
-        elif s &gt;= 60: g = "C"
-        elif s &gt;= 50: g = "D"
-        else:         g = "F"
-        result[name] = g
-    return result
-
-scores = {"ฟ้า": 85, "นล": 72, "อาร์ม": 45}
-
-for name, g in grade_report(scores).items():
-    print(f"{name:8s} {scores[name]:3d} → {g}")</pre>
+<span class="out"># string หลายบรรทัด ใช้ """ ครอบ</span>
+text = """บรรทัดที่ 1
+บรรทัดที่ 2
+บรรทัดที่ 3"""
+print(text)</pre>
 
   <hr>
 
@@ -189,232 +163,175 @@ for name, g in grade_report(scores).items():
   <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
 
   <div class="quiz">
-    <div class="q" data-n="Q1">โค้ดนี้ <code>x</code> มีค่าอะไร?<br>
-      <code>def f(a, b):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(a + b)</code><br>
-      <code>x = f(2, 3)</code></div>
-    <button class="choice">5</button>
-    <button class="choice" data-correct>None</button>
-    <button class="choice">0</button>
-    <button class="choice">เกิด error</button>
-    <div class="explain">ฟังก์ชันแค่ <code>print</code> ไม่ได้ <code>return</code>
-      จึงคืน <code>None</code> (หน้าจอจะเห็นเลข 5 แต่ <code>x</code> ไม่ใช่ 5)</div>
+    <div class="q" data-n="Q1"><code>s = "Python"</code> แล้ว <code>s[1:4]</code> ได้อะไร?</div>
+    <button class="choice">Pyt</button>
+    <button class="choice" data-correct>yth</button>
+    <button class="choice">ytho</button>
+    <button class="choice">tho</button>
+    <div class="explain">index 1, 2, 3 (ไม่รวม 4) → y, t, h — กฎเดียวกับ slice ของ list</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q2">ฟังก์ชันนี้คืนค่าอะไรเมื่อเรียก <code>f(10)</code>?<br>
-      <code>def f(n):</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;return n * 2</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;return n * 3</code></div>
-    <button class="choice">30</button>
-    <button class="choice" data-correct>20</button>
-    <button class="choice">50</button>
-    <button class="choice">(20, 30)</button>
-    <div class="explain">เจอ <code>return</code> แรกฟังก์ชันจบทันที บรรทัดถัดไปไม่มีวันทำงาน</div>
+    <div class="q" data-n="Q2">โค้ดนี้พิมพ์อะไร?<br>
+      <code>s = "hello"</code><br><code>s.upper()</code><br><code>print(s)</code></div>
+    <button class="choice">HELLO</button>
+    <button class="choice" data-correct>hello</button>
+    <button class="choice">Hello</button>
+    <button class="choice">TypeError</button>
+    <div class="explain">string แก้ไม่ได้ — <code>.upper()</code> สร้างตัวใหม่คืนมา
+      ถ้าไม่รับค่าไว้ (<code>s = s.upper()</code>) ตัวเดิมก็ไม่เปลี่ยน</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q3">ข้อใดเขียนผิด?</div>
-    <button class="choice">def f(a, b=2):</button>
-    <button class="choice" data-correct>def f(a=1, b):</button>
-    <button class="choice">def f(a, b):</button>
-    <button class="choice">def f():</button>
-    <div class="explain">พารามิเตอร์ที่มีค่า default ต้องอยู่หลังตัวที่ไม่มี ไม่งั้น SyntaxError</div>
+    <div class="q" data-n="Q3"><code>"a,b,c".split(",")</code> ได้อะไร?</div>
+    <button class="choice">"abc"</button>
+    <button class="choice">('a', 'b', 'c')</button>
+    <button class="choice" data-correct>['a', 'b', 'c']</button>
+    <button class="choice">{'a', 'b', 'c'}</button>
+    <div class="explain"><code>split()</code> คืน <strong>list</strong> ของ string เสมอ</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q4">ผลของโค้ดนี้คือ?<br>
-      <code>count = 0</code><br>
-      <code>def f():</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;count = 99</code><br>
-      <code>f()</code><br><code>print(count)</code></div>
-    <button class="choice">99</button>
-    <button class="choice" data-correct>0</button>
-    <button class="choice">None</button>
-    <button class="choice">NameError</button>
-    <div class="explain">การกำหนดค่าในฟังก์ชันสร้างตัวแปร local ตัวใหม่
-      ตัวแปร global ข้างนอกไม่ถูกแตะ</div>
+    <div class="q" data-n="Q4"><code>age = 20</code> แล้ว <code>print("อายุ " + age)</code> เกิดอะไรขึ้น?</div>
+    <button class="choice">พิมพ์ "อายุ 20"</button>
+    <button class="choice">พิมพ์ "อายุ "</button>
+    <button class="choice" data-correct>TypeError</button>
+    <button class="choice">พิมพ์ "อายุ20"</button>
+    <div class="explain">ต่อ str กับ int ตรง ๆ ไม่ได้ — ใช้ <code>str(age)</code>
+      หรือ f-string <code>f"อายุ {age}"</code></div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q5">โค้ดนี้พิมพ์อะไร?<br>
-      <code>def f(items):</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;items.append(4)</code><br>
-      <code>a = [1, 2, 3]</code><br><code>f(a)</code><br><code>print(len(a))</code></div>
+    <div class="q" data-n="Q5"><code>f"{3.14159:.2f}"</code> ได้อะไร?</div>
+    <button class="choice">3.14159</button>
+    <button class="choice" data-correct>3.14</button>
+    <button class="choice">3.142</button>
     <button class="choice">3</button>
-    <button class="choice" data-correct>4</button>
-    <button class="choice">0</button>
-    <button class="choice">None</button>
-    <div class="explain">list ส่งเข้าฟังก์ชันแบบชี้ไปก้อนเดิม แก้ข้างในจึงกระทบข้างนอกด้วย</div>
+    <div class="explain"><code>.2f</code> = ทศนิยม 2 ตำแหน่ง (ปัดเศษให้ด้วย)</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q6">ฟังก์ชันคืนค่าหลายตัวได้ยังไง?</div>
-    <button class="choice">เขียน return หลายบรรทัด</button>
-    <button class="choice" data-correct>return a, b, c แล้วรับด้วย x, y, z = f()</button>
-    <button class="choice">ทำไม่ได้ ต้องใช้ global</button>
-    <button class="choice">ใส่ return ไว้ในลูป</button>
-    <div class="explain">จริง ๆ คือคืน tuple ตัวเดียว แล้วคนเรียกใช้ unpack ออกมา</div>
+    <div class="q" data-n="Q6">อยากรวม <code>["a","b","c"]</code> เป็น <code>"a-b-c"</code> ใช้อะไร?</div>
+    <button class="choice">"-".split(list)</button>
+    <button class="choice" data-correct>"-".join(list)</button>
+    <button class="choice">list.join("-")</button>
+    <button class="choice">list + "-"</button>
+    <div class="explain">ตัวคั่นอยู่ข้างหน้า list อยู่ในวงเล็บ — สลับกับที่หลายคนคิด</div>
   </div>
 
   <div class="quiz">
-    <div class="q" data-n="Q7"><code>print</code> ต่างจาก <code>return</code> ยังไง?</div>
-    <button class="choice">เหมือนกัน เขียนแบบไหนก็ได้</button>
-    <button class="choice">return แสดงผลสวยกว่า</button>
-    <button class="choice" data-correct>print แสดงบนจอ · return ส่งค่ากลับให้เอาไปใช้ต่อ</button>
-    <button class="choice">print ใช้ได้เฉพาะนอกฟังก์ชัน</button>
-    <div class="explain">ค่าที่ <code>print</code> ออกมาเอาไปคำนวณต่อไม่ได้ แต่ค่าที่
-      <code>return</code> เก็บใส่ตัวแปรและใช้ต่อได้</div>
+    <div class="q" data-n="Q7"><code>"  hi  ".strip()</code> ได้อะไร?</div>
+    <button class="choice">"hi  "</button>
+    <button class="choice">"  hi"</button>
+    <button class="choice" data-correct>"hi"</button>
+    <button class="choice">"h i"</button>
+    <div class="explain">ตัดช่องว่างทั้งหัวและท้าย แต่ไม่ยุ่งกับช่องว่างตรงกลาง</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
-    <h4>โจทย์ 1 — ฟังก์ชันพื้นฐาน 3 ตัว</h4>
-    <p>เขียนฟังก์ชัน 3 ตัวพร้อมทดสอบ:</p>
-    <ol>
-      <li><code>area_circle(r)</code> — คืนพื้นที่วงกลม (ใช้ <code>3.14159</code>)</li>
-      <li><code>is_even(n)</code> — คืน <code>True</code>/<code>False</code> ว่าเป็นเลขคู่ไหม</li>
-      <li><code>celsius_to_f(c)</code> — แปลงองศาเซลเซียสเป็นฟาเรนไฮต์</li>
-    </ol>
+    <h4>โจทย์ 1 — วิเคราะห์ข้อความ</h4>
+    <p>รับประโยคจากผู้ใช้ แล้วพิมพ์: จำนวนตัวอักษรทั้งหมด, จำนวนคำ,
+    ข้อความตัวพิมพ์ใหญ่ทั้งหมด, ข้อความกลับด้าน และจำนวนสระ (a, e, i, o, u)</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>def area_circle(r):
-    return 3.14159 * r ** 2
+<pre>text = input("ประโยค: ").strip()
 
-def is_even(n):
-    return n % 2 == 0        <span class="out"># เงื่อนไขคืน True/False อยู่แล้ว</span>
+vowels = 0
+for ch in text.lower():
+    if ch in "aeiou":
+        vowels += 1
 
-def celsius_to_f(c):
-    return c * 9 / 5 + 32
-
-print(area_circle(3))        <span class="out"># 28.27431</span>
-print(is_even(7))            <span class="out"># False</span>
-print(celsius_to_f(100))     <span class="out"># 212.0</span></pre>
+print("ตัวอักษร:", len(text))
+print("จำนวนคำ:", len(text.split()))
+print("ตัวใหญ่:", text.upper())
+print("กลับด้าน:", text[::-1])
+print("สระ:", vowels)</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 2 — เครื่องคิดเลขแบบฟังก์ชัน</h4>
-    <p>เขียนฟังก์ชัน <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>
-    (ตัวหารต้องกันหารด้วยศูนย์ ให้คืนข้อความเตือนแทน)
-    แล้วทำเมนู while loop ให้ผู้ใช้เลือกใช้</p>
+    <h4>โจทย์ 2 — แยกข้อมูล CSV</h4>
+    <p>มีข้อมูลนักศึกษาเป็น list ของ string:<br>
+    <code>data = ["ฟ้าใส,20,3.45", "นล,21,3.10", "อาร์ม,20,2.85"]</code><br>
+    แยกแต่ละบรรทัดแล้วพิมพ์เป็นตารางจัดคอลัมน์สวย ๆ พร้อมบอกเกรดเฉลี่ยรวมของทุกคน</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>def add(a, b): return a + b
-def sub(a, b): return a - b
-def mul(a, b): return a * b
+<pre>data = ["ฟ้าใส,20,3.45", "นล,21,3.10", "อาร์ม,20,2.85"]
 
-def div(a, b):
-    if b == 0:
-        return "หารด้วยศูนย์ไม่ได้"
-    return a / b
+print(f"{'ชื่อ':&lt;10}{'อายุ':&gt;6}{'เกรด':&gt;8}")
+print("-" * 24)
 
-while True:
-    op = input("\nเลือก + - * / (q เพื่อออก): ")
-    if op == "q":
+total = 0
+for line in data:
+    name, age, gpa = line.split(",")
+    total += float(gpa)
+    print(f"{name:&lt;10}{int(age):&gt;6}{float(gpa):&gt;8.2f}")
+
+print("-" * 24)
+print(f"{'เฉลี่ยรวม':&lt;10}{total / len(data):&gt;14.2f}")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — ตรวจรหัสผ่าน</h4>
+    <p>รับรหัสผ่านจากผู้ใช้ แล้วตรวจว่าผ่านเกณฑ์ครบไหม:
+    ยาวอย่างน้อย 8 ตัว, มีตัวพิมพ์ใหญ่, มีตัวพิมพ์เล็ก, และมีตัวเลข
+    ถ้าไม่ผ่านให้บอกว่าขาดข้อไหน แล้ววนถามใหม่จนกว่าจะผ่าน</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>while True:
+    pw = input("ตั้งรหัสผ่าน: ")
+
+    has_upper = False
+    has_lower = False
+    has_digit = False
+
+    for ch in pw:
+        if ch.isupper():
+            has_upper = True
+        elif ch.islower():
+            has_lower = True
+        elif ch.isdigit():
+            has_digit = True
+
+    problems = []
+    if len(pw) &lt; 8:   problems.append("ต้องยาวอย่างน้อย 8 ตัว")
+    if not has_upper: problems.append("ต้องมีตัวพิมพ์ใหญ่")
+    if not has_lower: problems.append("ต้องมีตัวพิมพ์เล็ก")
+    if not has_digit: problems.append("ต้องมีตัวเลข")
+
+    if not problems:
+        print("รหัสผ่านผ่านเกณฑ์")
         break
-    if op not in "+-*/":
-        print("ไม่รู้จักคำสั่งนี้")
-        continue
 
-    a = float(input("ตัวที่ 1: "))
-    b = float(input("ตัวที่ 2: "))
-
-    if   op == "+": print(add(a, b))
-    elif op == "-": print(sub(a, b))
-    elif op == "*": print(mul(a, b))
-    else:           print(div(a, b))</pre>
+    for p in problems:
+        print(" -", p)</pre>
     </details>
   </div>
 
   <div class="lab">
-    <h4>โจทย์ 3 — สถิติจาก list</h4>
-    <p>เขียน <code>stats(nums)</code> ที่คืน (จำนวน, ผลรวม, ค่าเฉลี่ย, ค่ามากสุด, ค่าน้อยสุด)
-    โดย<strong>ห้ามใช้</strong> <code>sum()</code>, <code>max()</code>, <code>min()</code>
-    ให้เขียน loop เอง และถ้า list ว่างให้คืน <code>None</code></p>
+    <h4>โจทย์ 4 — ท้าทาย: ตรวจ palindrome</h4>
+    <p>รับข้อความ แล้วบอกว่าเป็น palindrome ไหม (อ่านหน้าหลังเหมือนกัน)
+    โดยต้อง<strong>ไม่สนใจ</strong>ตัวพิมพ์เล็กใหญ่ ช่องว่าง และเครื่องหมายวรรคตอน<br>
+    เช่น <code>"A man, a plan, a canal: Panama"</code> → เป็น palindrome</p>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre>def stats(nums):
-    if not nums:
-        return None
+<pre>text = input("ข้อความ: ")
 
-    total = 0
-    hi = nums[0]
-    lo = nums[0]
+<span class="out"># เก็บเฉพาะตัวอักษรกับตัวเลข แปลงเป็นตัวเล็กให้หมด</span>
+clean = ""
+for ch in text.lower():
+    if ch.isalnum():
+        clean += ch
 
-    for n in nums:
-        total += n
-        if n &gt; hi: hi = n
-        if n &lt; lo: lo = n
+print("หลังทำความสะอาด:", clean)
 
-    return len(nums), total, total / len(nums), hi, lo
-
-result = stats([78, 95, 62, 88])
-if result is None:
-    print("ไม่มีข้อมูล")
+if clean == clean[::-1]:
+    print("เป็น palindrome")
 else:
-    n, total, avg, hi, lo = result
-    print(f"{n} ตัว รวม {total} เฉลี่ย {avg:.2f} มากสุด {hi} น้อยสุด {lo}")
-
-print(stats([]))     <span class="out"># None</span></pre>
-    </details>
-  </div>
-
-  <div class="lab">
-    <h4>โจทย์ 4 — ท้าทาย: ระบบเกรดแบบฟังก์ชัน</h4>
-    <p>แยกโปรแกรมออกเป็นฟังก์ชันย่อย ๆ:</p>
-    <ul>
-      <li><code>input_scores()</code> — รับคะแนนจนกว่าจะใส่ค่าว่าง คืนเป็น dict ชื่อ→คะแนน</li>
-      <li><code>to_grade(score)</code> — แปลงคะแนนเป็นเกรด A/B/C/D/F</li>
-      <li><code>summary(scores)</code> — คืน (เฉลี่ย, ชื่อคนคะแนนสูงสุด, จำนวนคนที่สอบผ่าน)</li>
-      <li><code>show_report(scores)</code> — พิมพ์ตารางรายงาน</li>
-    </ul>
-    <details>
-      <summary>▸ ดูเฉลย</summary>
-<pre>def input_scores():
-    scores = {}
-    while True:
-        name = input("ชื่อ (เว้นว่างเพื่อจบ): ").strip()
-        if name == "":
-            break
-        scores[name] = int(input(f"คะแนนของ {name}: "))
-    return scores
-
-
-def to_grade(score):
-    if   score &gt;= 80: return "A"
-    elif score &gt;= 70: return "B"
-    elif score &gt;= 60: return "C"
-    elif score &gt;= 50: return "D"
-    return "F"
-
-
-def summary(scores):
-    avg = sum(scores.values()) / len(scores)
-    top = max(scores, key=scores.get)
-    passed = 0
-    for s in scores.values():
-        if s &gt;= 50:
-            passed += 1
-    return avg, top, passed
-
-
-def show_report(scores):
-    if not scores:
-        print("ไม่มีข้อมูล")
-        return                      <span class="out"># return เปล่า = ออกจากฟังก์ชันเลย</span>
-
-    print(f"\n{'ชื่อ':&lt;12}{'คะแนน':&gt;8}{'เกรด':&gt;6}")
-    print("-" * 26)
-    for name, s in scores.items():
-        print(f"{name:&lt;12}{s:&gt;8}{to_grade(s):&gt;6}")
-
-    avg, top, passed = summary(scores)
-    print("-" * 26)
-    print(f"เฉลี่ย {avg:.2f} · สูงสุด {top} · ผ่าน {passed}/{len(scores)} คน")
-
-
-show_report(input_scores())</pre>
+    print("ไม่เป็น palindrome")</pre>
     </details>
   </div>
 </main>
