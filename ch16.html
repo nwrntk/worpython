@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 16 · Matplotlib — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 16</div>
+  <h1>Matplotlib — พล็อตกราฟ</h1>
+  <p class="lead">ตัวเลขเป็นแถวยาว ๆ ดูยังไงก็ไม่เห็นอะไร พอวาดเป็นกราฟปุ๊บ
+  แนวโน้มกับค่าผิดปกติโผล่มาให้เห็นทันที</p>
+
+  <h2>16.1 ติดตั้งและ import</h2>
+
+<pre>pip install matplotlib</pre>
+
+<pre>import matplotlib.pyplot as plt      <span class="out"># ทุกคนเขียนย่อว่า plt เหมือนกันหมด</span></pre>
+
+  <div class="note">
+    <b>ทำไมต้อง <code>.pyplot</code></b> — matplotlib เป็นก้อนใหญ่ ส่วนที่เราใช้วาดกราฟคือ
+    <code>pyplot</code> เท่านั้น การ import แบบนี้จึงเป็นมาตรฐานที่เจอในโค้ดทุกที่
+  </div>
+
+  <h2>16.2 กราฟแรก</h2>
+
+<pre>import matplotlib.pyplot as plt
+
+days   = [1, 2, 3, 4, 5]
+scores = [55, 62, 60, 78, 85]
+
+plt.plot(days, scores)      <span class="out"># เตรียมกราฟไว้ในหน่วยความจำ</span>
+plt.show()                  <span class="out"># เปิดหน้าต่างแสดงผล</span></pre>
+
+  <p>ใส่ชื่อและป้ายกำกับให้ครบ กราฟถึงจะอ่านรู้เรื่อง</p>
+
+<pre>plt.plot(days, scores, marker="o")     <span class="out"># marker = จุดตรงข้อมูลจริง</span>
+
+plt.title("Score by day")
+plt.xlabel("Day")
+plt.ylabel("Score")
+plt.grid(True)                         <span class="out"># เส้นตารางช่วยกะค่า</span>
+
+plt.show()</pre>
+
+  <div class="warn">
+    <b>ลืม <code>plt.show()</code> = ไม่มีอะไรขึ้นเลย</b> — คำสั่ง <code>plot</code> แค่เตรียมกราฟไว้เฉย ๆ
+    ต้องสั่ง <code>show()</code> ปิดท้ายทุกครั้ง
+  </div>
+
+  <h2>16.3 ส่วนประกอบของกราฟ</h2>
+
+  <figure class="fig">
+    <svg viewBox="0 0 380 210" role="img" aria-label="ผังส่วนประกอบของกราฟเส้น">
+      <text x="150" y="18" class="lbl" style="font-size:11px;fill:var(--ink);font-weight:600">Score by day</text>
+      <text x="196" y="16" class="lbl" fill="var(--accent-hot)">← title()</text>
+
+      <g stroke="var(--rule)" stroke-width=".7" fill="none">
+        <path d="M50 40 H180 M50 70 H180 M50 100 H180 M50 130 H180"/>
+      </g>
+      <text x="196" y="103" class="lbl" fill="var(--accent-hot)">← grid(True)</text>
+
+      <path d="M50 30 V160 H180" stroke="var(--ink-soft)" stroke-width="1.2" fill="none"/>
+
+      <polyline points="60,140 90,118 120,124 150,72 175,48"
+                fill="none" stroke="var(--accent)" stroke-width="2"/>
+      <g fill="var(--accent-hot)">
+        <circle cx="60" cy="140" r="3.5"/><circle cx="90" cy="118" r="3.5"/>
+        <circle cx="120" cy="124" r="3.5"/><circle cx="150" cy="72" r="3.5"/>
+        <circle cx="175" cy="48" r="3.5"/>
+      </g>
+      <text x="196" y="52" class="lbl" fill="var(--accent-hot)">← marker="o"</text>
+
+      <text x="90" y="180" class="lbl" style="fill:var(--ink)">Day</text>
+      <text x="120" y="180" class="lbl" fill="var(--accent-hot)">← xlabel()</text>
+
+      <text x="26" y="100" class="lbl" style="fill:var(--ink)"
+            transform="rotate(-90 26 100)">Score</text>
+      <text x="10" y="196" class="lbl" fill="var(--accent-hot)">↑ ylabel() — หมุนตั้งให้เอง</text>
+
+      <g>
+        <rect x="286" y="120" width="84" height="34" fill="var(--paper)" stroke="var(--rule-2)"/>
+        <path d="M294 132 H310" stroke="var(--accent)" stroke-width="2"/>
+        <text x="316" y="135" class="lbl">ห้อง ก</text>
+        <path d="M294 146 H310" stroke="var(--wrong)" stroke-width="2"/>
+        <text x="316" y="149" class="lbl">ห้อง ข</text>
+        <text x="286" y="112" class="lbl" fill="var(--accent-hot)">legend()</text>
+      </g>
+    </svg>
+    <figcaption>ทุกคำสั่งตกแต่งกราฟจะไปเกาะกับส่วนใดส่วนหนึ่งในภาพนี้
+      ถ้าจำผังนี้ได้ ก็เดาชื่อคำสั่งที่ต้องใช้ได้เองเกือบหมด</figcaption>
+  </figure>
+
+  <h2>16.4 ชนิดกราฟที่ใช้บ่อย</h2>
+
+  <table>
+    <tr><th>คำสั่ง</th><th>กราฟแบบ</th><th>ใช้ตอบคำถามว่า</th></tr>
+    <tr><td><code>plt.plot()</code></td><td>เส้น</td><td>เปลี่ยนแปลงยังไงตามเวลา</td></tr>
+    <tr><td><code>plt.bar()</code></td><td>แท่ง</td><td>กลุ่มไหนมากกว่ากัน</td></tr>
+    <tr><td><code>plt.scatter()</code></td><td>จุดกระจาย</td><td>สองค่านี้เกี่ยวกันไหม</td></tr>
+    <tr><td><code>plt.hist()</code></td><td>ฮิสโทแกรม</td><td>ข้อมูลกองอยู่ช่วงไหน</td></tr>
+    <tr><td><code>plt.pie()</code></td><td>วงกลม</td><td>แต่ละส่วนคิดเป็นกี่เปอร์เซ็นต์</td></tr>
+  </table>
+
+<pre><span class="out"># แท่ง — เทียบกลุ่ม</span>
+subjects = ["Math", "Thai", "Sci", "Eng"]
+scores   = [72, 85, 66, 90]
+plt.bar(subjects, scores)
+plt.show()
+
+<span class="out"># จุดกระจาย — ดูความสัมพันธ์</span>
+hours = [1, 2, 3, 4, 5, 6, 7]
+score = [40, 45, 55, 58, 70, 76, 88]
+plt.scatter(hours, score)
+plt.show()
+
+<span class="out"># ฮิสโทแกรม — ดูการกระจาย (bins = จำนวนช่อง)</span>
+ages = [12, 13, 13, 14, 14, 14, 15, 15, 16, 18, 18, 19]
+plt.hist(ages, bins=8)
+plt.show()
+
+<span class="out"># วงกลม — สัดส่วน</span>
+plt.pie([45, 30, 25], labels=["A", "B", "C"], autopct="%1.0f%%")
+plt.show()</pre>
+
+  <div class="note">
+    <b><code>hist()</code> ต่างจาก <code>bar()</code></b> — <code>bar</code> เราบอกความสูงของแต่ละแท่งเอง
+    ส่วน <code>hist</code> รับข้อมูลดิบมาแล้ว<b>นับให้เอง</b>ว่าแต่ละช่วงมีกี่ตัว
+  </div>
+
+  <h2>16.5 แต่งกราฟและบันทึกเป็นไฟล์</h2>
+
+<pre>plt.figure(figsize=(8, 4))             <span class="out"># ขนาดภาพเป็นนิ้ว (กว้าง, สูง)</span>
+
+plt.plot(days, a, color="tomato", linestyle="--", marker="o", label="ห้อง ก")
+plt.plot(days, b, color="steelblue", linewidth=2, label="ห้อง ข")
+
+plt.legend()                           <span class="out"># ต้องมี label ก่อน legend ถึงจะขึ้น</span>
+plt.ylim(0, 100)                       <span class="out"># บังคับช่วงแกน y</span>
+
+plt.savefig("chart.png", dpi=150)      <span class="out"># บันทึกก่อน</span>
+plt.show()                             <span class="out"># แล้วค่อยแสดง</span></pre>
+
+  <div class="warn">
+    <b><code>savefig</code> ต้องมาก่อน <code>show</code></b> — เพราะ <code>show()</code>
+    จะล้างกราฟทิ้งหลังปิดหน้าต่าง ถ้าสลับลำดับจะได้ไฟล์ภาพ<b>ว่างเปล่า</b>
+  </div>
+
+  <table>
+    <tr><th>พารามิเตอร์</th><th>ตัวอย่างค่า</th></tr>
+    <tr><td><code>color</code></td><td><code>"red"</code>, <code>"tomato"</code>, <code>"#4e6d86"</code></td></tr>
+    <tr><td><code>linestyle</code></td><td><code>"-"</code> ทึบ · <code>"--"</code> ประ · <code>":"</code> จุด</td></tr>
+    <tr><td><code>marker</code></td><td><code>"o"</code> วงกลม · <code>"s"</code> สี่เหลี่ยม · <code>"^"</code> สามเหลี่ยม</td></tr>
+    <tr><td><code>label</code></td><td>ชื่อที่จะไปโผล่ใน <code>legend()</code></td></tr>
+  </table>
+
+  <h2>16.6 ภาษาไทยในกราฟ</h2>
+
+  <p>ค่าเริ่มต้นของ matplotlib ไม่มีฟอนต์ไทย ข้อความไทยจะกลายเป็น<b>สี่เหลี่ยมเปล่า</b>
+  แก้ด้วยการตั้งฟอนต์ก่อนวาด</p>
+
+<pre>import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = "Tahoma"        <span class="out"># Windows มีอยู่แล้ว</span>
+plt.rcParams["axes.unicode_minus"] = False    <span class="out"># กันเครื่องหมายลบเพี้ยน</span>
+
+plt.bar(["คณิต", "ไทย", "วิทย์"], [72, 85, 66])
+plt.title("คะแนนรายวิชา")
+plt.show()</pre>
+
+  <div class="note">
+    <b>ฟอนต์ไทยที่มักมีติดเครื่อง</b> — Windows ใช้ <code>"Tahoma"</code> ·
+    macOS ใช้ <code>"Thonburi"</code> · Linux ลอง <code>"Noto Sans Thai"</code>
+    ตั้งครั้งเดียวบนสุดของไฟล์ ใช้ได้ทั้งโปรแกรม
+  </div>
+
+  <h2>16.7 หลายกราฟในภาพเดียว</h2>
+
+<pre>fig, ax = plt.subplots(1, 2, figsize=(10, 4))   <span class="out"># 1 แถว 2 คอลัมน์</span>
+
+ax[0].plot(days, scores, marker="o")
+ax[0].set_title("Line")                          <span class="out"># ในโหมดนี้ใช้ set_ นำหน้า</span>
+
+ax[1].bar(subjects, scores)
+ax[1].set_title("Bar")
+
+plt.tight_layout()                               <span class="out"># กันตัวหนังสือทับกัน</span>
+plt.show()</pre>
+
+  <div class="warn">
+    <b>ชื่อคำสั่งเปลี่ยนไปนิดนึง</b> — พอวาดผ่าน <code>ax</code> ต้องเติม <code>set_</code>
+    ข้างหน้า เช่น <code>plt.title()</code> กลายเป็น <code>ax.set_title()</code>
+    และ <code>plt.xlabel()</code> กลายเป็น <code>ax.set_xlabel()</code>
+  </div>
+
+  <h2>16.8 ใช้คู่กับ OpenCV</h2>
+
+  <p>เรื่องที่ต้องคำนวณเองในบทที่ 15 พอมี matplotlib ก็เห็นเป็นภาพได้ทันที</p>
+
+<pre>import cv2
+import matplotlib.pyplot as plt
+
+img  = cv2.imread("cat.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+<span class="out"># แสดงภาพ — ต้องแปลง BGR เป็น RGB ก่อน ไม่งั้นสีเพี้ยน</span>
+plt.subplot(1, 2, 1)
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.title("image")
+plt.axis("off")                       <span class="out"># ภาพไม่ต้องมีแกน</span>
+
+<span class="out"># ฮิสโทแกรมของภาพเดียวกัน</span>
+plt.subplot(1, 2, 2)
+hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
+plt.plot(hist)
+plt.title("histogram")
+plt.xlim(0, 255)
+
+plt.tight_layout()
+plt.show()</pre>
+
+  <div class="warn">
+    <b>ลืม <code>cvtColor</code> = ภาพสีเพี้ยน</b> — OpenCV เก็บสีเป็น BGR
+    แต่ matplotlib อ่านเป็น RGB ฟ้าจะกลายเป็นส้ม (ดูบทที่ <a href="ch14.html">14</a>)<br>
+    ส่วนภาพเทาต้องบอกด้วยว่าให้ใช้โทนเทา: <code>plt.imshow(gray, cmap="gray")</code>
+  </div>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">เขียน <code>import matplotlib.pyplot as plt</code> แล้ว เวลาวาดกราฟเส้นต้องเรียกอะไร?</div>
+    <button class="choice">matplotlib.plot()</button>
+    <button class="choice" data-correct>plt.plot()</button>
+    <button class="choice">pyplot.line()</button>
+    <button class="choice">plt.graph()</button>
+    <div class="explain"><code>as plt</code> คือการตั้งชื่อเล่นให้สั้นลง เวลาใช้จึงเรียกผ่าน <code>plt</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">เขียน <code>plt.plot(x, y)</code> แล้วรันโปรแกรม แต่ไม่มีหน้าต่างกราฟขึ้นมา น่าจะลืมอะไร?</div>
+    <button class="choice">plt.save()</button>
+    <button class="choice">plt.draw()</button>
+    <button class="choice" data-correct>plt.show()</button>
+    <button class="choice">plt.open()</button>
+    <div class="explain"><code>plot</code> แค่เตรียมกราฟไว้ ต้อง <code>show()</code> ถึงจะเปิดหน้าต่าง</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">อยากเทียบคะแนนของ 4 วิชาว่าวิชาไหนสูงกว่ากัน ควรใช้กราฟแบบไหน?</div>
+    <button class="choice" data-correct>กราฟแท่ง — plt.bar()</button>
+    <button class="choice">กราฟวงกลม — plt.pie()</button>
+    <button class="choice">จุดกระจาย — plt.scatter()</button>
+    <button class="choice">ฮิสโทแกรม — plt.hist()</button>
+    <div class="explain">แท่งเทียบกลุ่มกันง่ายที่สุด ส่วนวงกลมเหมาะกับการดูสัดส่วนของทั้งหมด</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ใส่ชื่อแกนนอนของกราฟด้วยคำสั่งอะไร?</div>
+    <button class="choice">plt.title()</button>
+    <button class="choice" data-correct>plt.xlabel()</button>
+    <button class="choice">plt.ylabel()</button>
+    <button class="choice">plt.legend()</button>
+    <div class="explain">x คือแกนนอน y คือแกนตั้ง ส่วน <code>title()</code> คือชื่อกราฟด้านบน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">ใส่ข้อความภาษาไทยในกราฟแล้วออกมาเป็นสี่เหลี่ยมเปล่า เพราะอะไร?</div>
+    <button class="choice">ต้องเขียนภาษาไทยเป็น Unicode เอง</button>
+    <button class="choice" data-correct>ฟอนต์เริ่มต้นของ matplotlib ไม่มีตัวอักษรไทย</button>
+    <button class="choice">matplotlib รองรับแค่ภาษาอังกฤษ ทำไม่ได้</button>
+    <button class="choice">ต้องบันทึกไฟล์เป็น .py แบบ UTF-8 ก่อน</button>
+    <div class="explain">ตั้ง <code>plt.rcParams["font.family"] = "Tahoma"</code> บนสุดของไฟล์ก็แก้ได้</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">อยากให้ <code>legend()</code> แสดงชื่อเส้น ต้องทำอะไรตอนวาด?</div>
+    <button class="choice">ใส่ <code>title=</code> ในคำสั่ง plot</button>
+    <button class="choice" data-correct>ใส่ <code>label=</code> ในคำสั่ง plot</button>
+    <button class="choice">ใส่ <code>name=</code> ในคำสั่ง plot</button>
+    <button class="choice">ไม่ต้องทำอะไร มันขึ้นเอง</button>
+    <div class="explain"><code>legend()</code> ไปเก็บค่า <code>label</code> ของแต่ละเส้นมาแสดง ถ้าไม่ใส่ก็ไม่มีอะไรให้แสดง</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">เอาภาพจาก OpenCV มา <code>plt.imshow()</code> ตรง ๆ แล้วสีเพี้ยน แก้ยังไง?</div>
+    <button class="choice">ย่อภาพให้เล็กลงก่อน</button>
+    <button class="choice">ใช้ <code>plt.axis("off")</code></button>
+    <button class="choice" data-correct>แปลง BGR เป็น RGB ด้วย <code>cv2.cvtColor()</code> ก่อน</button>
+    <button class="choice">บันทึกเป็นไฟล์ก่อนแล้วค่อยเปิด</button>
+    <div class="explain">OpenCV เรียงสีเป็น BGR แต่ matplotlib อ่านเป็น RGB จึงต้องแปลงก่อน</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — กราฟเส้นอันแรก</h4>
+    <p>สร้าง list วัน 1-7 กับอุณหภูมิ 7 ค่า แล้ววาดกราฟเส้นพร้อมจุด (<code>marker="o"</code>)
+    ใส่ชื่อกราฟ ชื่อแกนทั้งสอง และเปิดเส้นตาราง</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import matplotlib.pyplot as plt
+
+days = [1, 2, 3, 4, 5, 6, 7]
+temp = [31, 33, 30, 29, 34, 35, 32]
+
+plt.plot(days, temp, marker="o")
+plt.title("Temperature")
+plt.xlabel("Day")
+plt.ylabel("Celsius")
+plt.grid(True)
+plt.show()</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — กราฟแท่งคะแนนวิชา</h4>
+    <p>เก็บคะแนนไว้ใน <code>dict</code> (วิชา → คะแนน) แล้ววาดกราฟแท่ง
+    พร้อมพิมพ์ชื่อวิชาที่ได้คะแนนสูงสุดออกทางจอด้วย</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import matplotlib.pyplot as plt
+
+scores = {"Math": 72, "Thai": 85, "Sci": 66, "Eng": 90}
+
+plt.bar(list(scores.keys()), list(scores.values()))
+plt.title("Score by subject")
+plt.ylabel("Score")
+plt.ylim(0, 100)
+
+best = max(scores, key=scores.get)
+print("สูงสุด:", best, scores[best])
+
+plt.show()</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — สองเส้นในกราฟเดียว</h4>
+    <p>วาดคะแนนของนักเรียน 2 คนใน 5 สัปดาห์ลงกราฟเดียวกัน ให้คนละสีคนละแบบเส้น
+    ใส่ <code>label</code> แล้วเรียก <code>legend()</code> และบันทึกเป็น <code>compare.png</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import matplotlib.pyplot as plt
+
+weeks = [1, 2, 3, 4, 5]
+fern  = [60, 65, 70, 68, 80]
+nell  = [55, 70, 66, 78, 85]
+
+plt.plot(weeks, fern, color="tomato",    marker="o", label="Fern")
+plt.plot(weeks, nell, color="steelblue", marker="s", linestyle="--", label="Nell")
+
+plt.title("Weekly score")
+plt.xlabel("Week")
+plt.ylabel("Score")
+plt.legend()
+plt.grid(True)
+
+plt.savefig("compare.png", dpi=150)      <span class="out"># บันทึกก่อน show เสมอ</span>
+plt.show()</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ฮิสโทแกรมของรูปจริง</h4>
+    <p>อ่านรูปด้วย OpenCV แปลงเป็นเทา แล้วแสดง 2 ช่องในภาพเดียว —
+    ซ้ายเป็นตัวรูป ขวาเป็นฮิสโทแกรมของรูปนั้น</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+import matplotlib.pyplot as plt
+
+img = cv2.imread("cat.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+plt.subplot(1, 2, 1)
+plt.imshow(gray, cmap="gray")       <span class="out"># ภาพเทาต้องบอก cmap ด้วย</span>
+plt.title("image")
+plt.axis("off")
+
+plt.subplot(1, 2, 2)
+hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
+plt.plot(hist)
+plt.title("histogram")
+plt.xlim(0, 255)
+
+plt.tight_layout()
+plt.show()</pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>กราฟที่ดีไม่ได้แปลว่ากราฟสวย</b> — แต่คือกราฟที่คนอ่านเข้าใจได้เองโดยไม่ต้องถาม
+    ใส่ชื่อกราฟ ชื่อแกน และหน่วยให้ครบทุกครั้ง แค่นี้ก็ดีกว่ากราฟหลากสีที่ไม่มีป้ายอะไรเลย
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

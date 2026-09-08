@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 14 · OpenCV — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 14</div>
+  <h1>OpenCV — ประมวลผลภาพ</h1>
+  <p class="lead">ให้โปรแกรมมองเห็นภาพและวิดีโอ — ทุกอย่างที่เรียนมา 13 บท (list, loop, function, if)
+  เอามาใช้กับรูปภาพได้ตรง ๆ เพราะรูปก็คือตัวเลขกองใหญ่กองหนึ่ง</p>
+
+  <h2>14.1 ติดตั้งและ import</h2>
+
+  <p>OpenCV ไม่ได้มาพร้อม Python ต้องติดตั้งเพิ่มเอง พิมพ์ใน Terminal / Command Prompt</p>
+
+<pre>pip install opencv-python numpy</pre>
+
+<pre>import cv2                <span class="out"># ชื่อ package คือ opencv-python แต่ import ว่า cv2</span>
+import numpy as np
+
+print(cv2.__version__)   <span class="out"># เช็กว่าติดตั้งสำเร็จ เช่น 4.10.0</span></pre>
+
+  <div class="note">
+    <b>ติดตั้งชื่อหนึ่ง import อีกชื่อหนึ่ง</b> — <code>pip install opencv-python</code>
+    แต่เวลาใช้เขียน <code>import cv2</code> เสมอ (cv = Computer Vision)
+  </div>
+
+  <h2>14.2 อ่าน · แสดง · บันทึกรูป</h2>
+
+<pre>img = cv2.imread("cat.jpg")        <span class="out"># อ่านรูปเข้ามา</span>
+
+if img is None:                    <span class="out"># เช็กก่อนใช้ทุกครั้ง</span>
+    print("เปิดรูปไม่ได้ — เช็กชื่อไฟล์กับที่อยู่")
+else:
+    cv2.imshow("cat", img)         <span class="out"># เปิดหน้าต่างแสดงรูป</span>
+    cv2.waitKey(0)                 <span class="out"># รอจนกดปุ่มอะไรก็ได้</span>
+    cv2.destroyAllWindows()        <span class="out"># ปิดหน้าต่างทิ้ง</span>
+    cv2.imwrite("copy.jpg", img)   <span class="out"># บันทึกเป็นไฟล์ใหม่</span></pre>
+
+  <div class="warn">
+    <b><code>imread</code> หาไฟล์ไม่เจอแล้วไม่ error</b> — มันคืน <code>None</code> เงียบ ๆ
+    แล้วโปรแกรมจะไปพังบรรทัดถัดไปแทนด้วย
+    <span class="mono">AttributeError: 'NoneType' object has no attribute 'shape'</span><br>
+    เช็ก <code>if img is None:</code> ทุกครั้งหลังอ่านรูป
+  </div>
+
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th></tr>
+    <tr><td><code>cv2.imread(path)</code></td><td>อ่านรูปเป็น array — ไม่เจอไฟล์คืน <code>None</code></td></tr>
+    <tr><td><code>cv2.imshow(ชื่อหน้าต่าง, img)</code></td><td>แสดงรูปในหน้าต่างใหม่</td></tr>
+    <tr><td><code>cv2.waitKey(ms)</code></td><td>รอกดปุ่ม (0 = รอไม่จำกัด) คืนรหัสปุ่มที่กด</td></tr>
+    <tr><td><code>cv2.destroyAllWindows()</code></td><td>ปิดหน้าต่างทั้งหมด</td></tr>
+    <tr><td><code>cv2.imwrite(path, img)</code></td><td>บันทึกลงไฟล์ (นามสกุลเป็นตัวกำหนดรูปแบบ)</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>ต้องมี <code>waitKey</code> เสมอ</b> — ถ้าเรียก <code>imshow</code> เฉย ๆ
+    หน้าต่างจะค้างเป็นสีเทาว่าง ๆ เพราะ OpenCV วาดหน้าต่างตอนที่ <code>waitKey</code> ทำงานเท่านั้น
+  </div>
+
+  <h2>14.3 รูปภาพคือ array ของตัวเลข</h2>
+
+  <p>สิ่งที่ <code>imread</code> คืนมาคือ NumPy array 3 มิติ — <b>สูง × กว้าง × 3 สี</b>
+  แต่ละช่องเก็บเลข 0-255</p>
+
+<pre>img = cv2.imread("cat.jpg")
+
+print(img.shape)     <span class="out"># (480, 640, 3) = สูง 480, กว้าง 640, 3 ช่องสี</span>
+print(img.dtype)     <span class="out"># uint8 = จำนวนเต็ม 0 ถึง 255</span>
+
+h, w, c = img.shape
+print(f"กว้าง {w} สูง {h}")
+
+<span class="out"># อ่านค่าสีของจุดหนึ่ง — img[แถว, คอลัมน์] = img[y, x]</span>
+b, g, r = img[100, 50]
+print(f"จุด (50,100) → B={b} G={g} R={r}")
+
+<span class="out"># ตัดรูป (crop) = การ slice แบบเดียวกับ list แต่ทำ 2 แกนพร้อมกัน</span>
+crop = img[50:200, 100:300]        <span class="out"># [y1:y2, x1:x2]</span>
+cv2.imwrite("crop.jpg", crop)</pre>
+
+  <div class="warn">
+    <b>OpenCV เก็บสีเป็น BGR ไม่ใช่ RGB</b> — และ index เป็น <code>[y, x]</code> ไม่ใช่ <code>[x, y]</code><br>
+    ถ้ารูปที่แสดงออกมาสีเพี้ยน (ฟ้ากลายเป็นส้ม) แปลว่าลืมแปลง BGR → RGB
+  </div>
+
+  <div class="note">
+    <b>ทำไมภาพถึงเป็นตัวเลข และ 0-255 มาจากไหน</b> —
+    เรื่อง sampling, quantization และรูปแบบภาพทั้ง 4 แบบ (เทา · ไบนารี · RGB · HSV) อยู่ใน
+    <a href="ch15.html">บทที่ 15</a>
+  </div>
+
+  <h2>14.4 แปลงสี ย่อขยาย และหมุน</h2>
+
+<pre>gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)   <span class="out"># ขาวดำ — shape เหลือ 2 มิติ</span>
+rgb  = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)    <span class="out"># ไว้ส่งต่อให้ matplotlib</span>
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)    <span class="out"># ไว้คัดแยกสี</span>
+
+small = cv2.resize(img, (320, 240))            <span class="out"># ระบุขนาด (กว้าง, สูง)</span>
+half  = cv2.resize(img, None, fx=0.5, fy=0.5)  <span class="out"># ย่อครึ่งตามสัดส่วนเดิม</span>
+
+flip  = cv2.flip(img, 1)                       <span class="out"># 1=ซ้ายขวา 0=บนล่าง -1=ทั้งคู่</span>
+rot   = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)</pre>
+
+  <div class="note">
+    <b>สลับที่กันจนงง</b> — <code>img.shape</code> คืน (สูง, กว้าง)
+    แต่ <code>cv2.resize</code> รับ (กว้าง, สูง) จำไว้ว่า shape เรียงตามแกนของ array
+    ส่วน resize เรียงตามขนาดภาพแบบที่คนพูดกัน
+  </div>
+
+  <h2>14.5 วาดรูปและใส่ข้อความ</h2>
+
+  <p>ทุกคำสั่งวาดจะ <b>แก้ไขรูปต้นฉบับเลย</b> ถ้าอยากเก็บของเดิมไว้ให้ <code>copy()</code> ก่อน</p>
+
+<pre>canvas = img.copy()
+
+<span class="out"># สีเป็น (B, G, R) — เลขท้ายคือความหนาเส้น, -1 = ทึบ</span>
+cv2.line(canvas, (0, 0), (200, 200), (255, 0, 0), 2)          <span class="out"># เส้นน้ำเงิน</span>
+cv2.rectangle(canvas, (50, 50), (250, 180), (0, 255, 0), 3)   <span class="out"># กรอบเขียว</span>
+cv2.circle(canvas, (300, 120), 40, (0, 0, 255), -1)           <span class="out"># วงกลมแดงทึบ</span>
+
+cv2.putText(canvas, "Hello CV", (20, 300),
+            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 2)
+
+cv2.imshow("draw", canvas)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</pre>
+
+  <div class="warn">
+    <b><code>putText</code> เขียนภาษาไทยไม่ได้</b> — ฟอนต์ที่ OpenCV มีให้รองรับแค่ ASCII
+    ภาษาไทยจะออกมาเป็น <span class="mono">???</span> ถ้าจำเป็นต้องใช้ Pillow วาดตัวหนังสือทับแทน
+  </div>
+
+  <h2>14.6 เบลอ · Threshold · หาขอบ</h2>
+
+<pre>gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+blur = cv2.GaussianBlur(gray, (5, 5), 0)       <span class="out"># เบลอลดจุดรบกวน (ขนาดต้องเป็นเลขคี่)</span>
+
+<span class="out"># แยกขาว-ดำ: จุดที่สว่างกว่า 127 เป็นขาว(255) ที่เหลือเป็นดำ(0)</span>
+_, binary = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
+
+edges = cv2.Canny(blur, 100, 200)              <span class="out"># หาเส้นขอบในภาพ</span>
+
+<span class="out"># นับจุดขาว — ภาพเป็น array เลยใช้ NumPy นับได้ตรง ๆ</span>
+white = int(np.sum(binary == 255))
+print(f"จุดขาว {white} จุด จากทั้งหมด {binary.size} จุด")</pre>
+
+  <div class="note">
+    <b>ลำดับที่ใช้จริงเกือบทุกงาน</b> — แปลงเป็นเทา → เบลอ → threshold หรือ Canny
+    การเบลอก่อนสำคัญมาก เพราะจุดรบกวนเม็ดเล็ก ๆ จะกลายเป็นขอบปลอมเต็มไปหมด
+  </div>
+
+  <div class="note">
+    <b>เกณฑ์ 127 ไม่ต้องเดาเองก็ได้</b> — Otsu หา T ให้อัตโนมัติ, adaptive คิด T แยกทีละส่วนของภาพ,
+    morphology เก็บกวาดเศษหลัง threshold และ convolution คือสิ่งที่อยู่เบื้องหลัง
+    <code>GaussianBlur</code> กับ <code>Canny</code> — ทั้งหมดอยู่ใน <a href="ch15.html">บทที่ 15</a>
+  </div>
+
+  <h2>14.7 กล้องและวิดีโอ</h2>
+
+  <p>วิดีโอคือรูปหลาย ๆ ใบต่อกัน — อ่านทีละเฟรมด้วย <code>while</code> loop</p>
+
+<pre>cap = cv2.VideoCapture(0)          <span class="out"># 0 = กล้องตัวแรก, หรือใส่ "video.mp4"</span>
+
+if not cap.isOpened():
+    print("เปิดกล้องไม่ได้")
+    exit()
+
+while True:
+    ret, frame = cap.read()        <span class="out"># ret = True/False ว่าอ่านสำเร็จไหม</span>
+    if not ret:
+        break                      <span class="out"># กล้องหลุด หรือวิดีโอจบ</span>
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("camera", gray)
+
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):   <span class="out"># กด q เพื่อออก</span>
+        break
+
+cap.release()                      <span class="out"># คืนกล้องให้ระบบ ห้ามลืม</span>
+cv2.destroyAllWindows()</pre>
+
+  <table>
+    <tr><th>ส่วน</th><th>ทำไมต้องมี</th></tr>
+    <tr><td><code>cap.isOpened()</code></td><td>กล้องอาจถูกโปรแกรมอื่นยึดอยู่ เช็กก่อนวน</td></tr>
+    <tr><td><code>if not ret: break</code></td><td>วิดีโอจบแล้ว <code>frame</code> จะเป็น <code>None</code></td></tr>
+    <tr><td><code>waitKey(1)</code></td><td>1 มิลลิวินาที — ทั้งหน่วงเฟรมและรับปุ่มไปพร้อมกัน</td></tr>
+    <tr><td><code>&amp; 0xFF</code></td><td>ตัดเอาเฉพาะ 8 บิตท้าย ให้เทียบกับ <code>ord("q")</code> ได้ตรง</td></tr>
+    <tr><td><code>cap.release()</code></td><td>ไม่เรียก = ไฟกล้องค้างติด เปิดใหม่ไม่ได้จนกว่าจะปิดโปรแกรม</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>ลืม <code>waitKey</code> ใน loop = จอค้าง</b> และ <b>ลืม <code>release</code> = กล้องค้าง</b>
+    สองอย่างนี้คือบั๊กที่มือใหม่เจอบ่อยที่สุด
+  </div>
+
+  <h2>14.8 ตัวอย่างรวม — ตรวจจับใบหน้า</h2>
+
+<pre>import cv2
+
+<span class="out"># ไฟล์โมเดลติดมากับ OpenCV อยู่แล้ว ไม่ต้องโหลดเพิ่ม</span>
+path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+detector = cv2.CascadeClassifier(path)
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = detector.detectMultiScale(gray, 1.1, 5)   <span class="out"># คืน list ของ (x, y, w, h)</span>
+
+    for (x, y, w, h) in faces:                        <span class="out"># วน list แบบเดียวกับบทที่ 6</span>
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+    cv2.putText(frame, f"faces: {len(faces)}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+    cv2.imshow("face detect", frame)
+
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+        break
+
+cap.release()
+cv2.destroyAllWindows()</pre>
+
+  <div class="note">
+    <b>ตัวเลข 2 ตัวใน <code>detectMultiScale</code> คือปุ่มปรับ</b> —
+    <code>1.1</code> คือความละเอียดในการค้นหา (ยิ่งใกล้ 1 ยิ่งแม่นแต่ช้า)
+    และ <code>5</code> คือความเข้มงวด (ยิ่งมากยิ่งเจอน้อยลงแต่มั่นใจกว่า)
+    ต้องลองปรับตามแสงและกล้องจริง ไม่มีค่าที่ดีที่สุดค่าเดียว
+  </div>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">ติดตั้งด้วย <code>pip install opencv-python</code> แล้ว ในโค้ดต้องเขียนอะไร?</div>
+    <button class="choice">import opencv</button>
+    <button class="choice">import opencv-python</button>
+    <button class="choice" data-correct>import cv2</button>
+    <button class="choice">import OpenCV as cv</button>
+    <div class="explain">ชื่อ package กับชื่อ module ไม่ตรงกัน — ติดตั้ง opencv-python แต่ import cv2</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2"><code>cv2.imread("ไม่มีไฟล์นี้.jpg")</code> จะเกิดอะไรขึ้น?</div>
+    <button class="choice">เกิด FileNotFoundError ทันที</button>
+    <button class="choice" data-correct>คืนค่า None เงียบ ๆ แล้วไปพังบรรทัดถัดไป</button>
+    <button class="choice">คืนรูปสีดำขนาด 0×0</button>
+    <button class="choice">โปรแกรมหยุดทำงานทันที</button>
+    <div class="explain">เพราะแบบนี้จึงต้องเช็ก <code>if img is None:</code> ทุกครั้งหลังอ่านรูป</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">รูปหนึ่ง <code>img.shape</code> ได้ <code>(480, 640, 3)</code> รูปนี้ขนาดเท่าไร?</div>
+    <button class="choice">กว้าง 480 สูง 640</button>
+    <button class="choice" data-correct>กว้าง 640 สูง 480</button>
+    <button class="choice">กว้าง 480 สูง 3</button>
+    <button class="choice">กว้าง 3 สูง 640</button>
+    <div class="explain"><code>shape</code> เรียงเป็น (สูง, กว้าง, ช่องสี) — เลข 3 คือ B G R</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">อยากได้สีแดงล้วนใน OpenCV ต้องใส่ tuple อะไร?</div>
+    <button class="choice">(255, 0, 0)</button>
+    <button class="choice">(0, 255, 0)</button>
+    <button class="choice" data-correct>(0, 0, 255)</button>
+    <button class="choice">(255, 255, 0)</button>
+    <div class="explain">OpenCV เรียงเป็น BGR ตัวสุดท้ายคือแดง — <code>(255,0,0)</code> จะได้น้ำเงิน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">เรียก <code>cv2.imshow()</code> แล้วไม่ใส่ <code>cv2.waitKey()</code> จะเกิดอะไร?</div>
+    <button class="choice">รูปแสดงปกติแต่ปิดหน้าต่างไม่ได้</button>
+    <button class="choice" data-correct>หน้าต่างค้างว่างเปล่า เพราะ OpenCV วาดตอน waitKey ทำงาน</button>
+    <button class="choice">เกิด error ทันที</button>
+    <button class="choice">รูปถูกบันทึกลงไฟล์แทน</button>
+    <div class="explain"><code>waitKey</code> ไม่ได้แค่รอปุ่ม แต่เป็นจังหวะที่หน้าต่างได้วาดตัวเองด้วย</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">ในลูปอ่านกล้อง <code>ret, frame = cap.read()</code> ตัวแปร <code>ret</code> คืออะไร?</div>
+    <button class="choice">จำนวนเฟรมที่อ่านไปแล้ว</button>
+    <button class="choice">ขนาดของเฟรม</button>
+    <button class="choice" data-correct>True/False ว่าอ่านเฟรมนี้สำเร็จหรือไม่</button>
+    <button class="choice">เวลาที่ใช้อ่านเฟรม</button>
+    <div class="explain">พอวิดีโอจบหรือกล้องหลุด <code>ret</code> เป็น False และ <code>frame</code> เป็น None — ต้อง break</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ปิดโปรแกรมกล้องแล้ว เปิดใหม่ขึ้นว่ากล้องถูกใช้งานอยู่ น่าจะลืมอะไร?</div>
+    <button class="choice">cv2.imwrite()</button>
+    <button class="choice">cv2.cvtColor()</button>
+    <button class="choice" data-correct>cap.release()</button>
+    <button class="choice">cv2.threshold()</button>
+    <div class="explain">เหมือนไฟล์ที่ต้องปิด — กล้องก็ต้องคืนให้ระบบด้วย <code>cap.release()</code></div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — เปิดรูปแบบไม่พัง</h4>
+    <p>เขียนฟังก์ชัน <code>open_image(path)</code> ที่อ่านรูปแล้วคืน array
+    ถ้าเปิดไม่ได้ให้พิมพ์บอกและคืน <code>None</code>
+    จากนั้นใช้ฟังก์ชันนี้เปิดรูป แล้วพิมพ์ความกว้าง ความสูง และจำนวนช่องสี</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+def open_image(path):
+    img = cv2.imread(path)
+    if img is None:
+        print(f"เปิดไม่ได้: {path}")
+        return None
+    return img
+
+img = open_image("cat.jpg")
+
+if img is not None:
+    h, w, c = img.shape
+    print(f"กว้าง {w} สูง {h} ช่องสี {c}")
+    cv2.imshow("image", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — โรงงานแปลงรูป</h4>
+    <p>รับรูปมา 1 ใบ สร้างออกมา 4 เวอร์ชันแล้วบันทึกลงไฟล์: ขาวดำ, ย่อครึ่ง,
+    กลับซ้ายขวา และภาพขอบ (Canny) โดยใช้ <code>list</code> ของคู่ (ชื่อไฟล์, รูป)
+    แล้ว <code>for</code> วนบันทึกทีเดียว</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+img = cv2.imread("cat.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+outputs = [
+    ("out_gray.jpg",  gray),
+    ("out_small.jpg", cv2.resize(img, None, fx=0.5, fy=0.5)),
+    ("out_flip.jpg",  cv2.flip(img, 1)),
+    ("out_edge.jpg",  cv2.Canny(cv2.GaussianBlur(gray, (5, 5), 0), 100, 200)),
+]
+
+for name, image in outputs:
+    cv2.imwrite(name, image)
+    print("บันทึกแล้ว:", name)</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — วัดความสว่างของรูป</h4>
+    <p>อ่านรูป แปลงเป็นขาวดำ หาค่าเฉลี่ยความสว่าง (0-255) แล้วบอกว่ารูป
+    <b>มืด</b> (&lt; 85), <b>ปกติ</b> (85-170) หรือ <b>สว่าง</b> (&gt; 170)
+    พร้อมเขียนผลลัพธ์ทับลงบนรูปด้วย <code>putText</code></p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+img = cv2.imread("cat.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+mean = gray.mean()            <span class="out"># ค่าเฉลี่ยของทุกจุดในภาพ</span>
+
+if mean &lt; 85:
+    label = "DARK"
+elif mean &lt;= 170:
+    label = "NORMAL"
+else:
+    label = "BRIGHT"
+
+print(f"ความสว่างเฉลี่ย {mean:.1f} → {label}")
+
+cv2.putText(img, f"{label} ({mean:.0f})", (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+cv2.imshow("brightness", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — ท้าทาย: กล้องถ่ายภาพพร้อมฟิลเตอร์</h4>
+    <p>ทำโปรแกรมกล้องที่กดปุ่มเปลี่ยนโหมดได้ — รวม while, if/elif และการเขียนไฟล์:</p>
+    <ol>
+      <li>กด <code>1</code> ภาพปกติ · <code>2</code> ขาวดำ · <code>3</code> ภาพขอบ</li>
+      <li>กด <code>s</code> บันทึกเฟรมปัจจุบันเป็น <code>shot1.jpg</code>, <code>shot2.jpg</code>, ... ไม่เขียนทับกัน</li>
+      <li>กด <code>q</code> ออก และแสดงชื่อโหมดปัจจุบันบนภาพเสมอ</li>
+    </ol>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("เปิดกล้องไม่ได้")
+    exit()
+
+mode = "normal"
+count = 0
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    if mode == "gray":
+        show = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    elif mode == "edge":
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        show = cv2.Canny(cv2.GaussianBlur(gray, (5, 5), 0), 100, 200)
+    else:
+        show = frame.copy()
+
+    cv2.putText(show, mode, (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+    cv2.imshow("camera", show)
+
+    key = cv2.waitKey(1) &amp; 0xFF
+    if key == ord("q"):
+        break
+    elif key == ord("1"):
+        mode = "normal"
+    elif key == ord("2"):
+        mode = "gray"
+    elif key == ord("3"):
+        mode = "edge"
+    elif key == ord("s"):
+        count += 1
+        name = f"shot{count}.jpg"
+        cv2.imwrite(name, show)
+        print("บันทึก", name)
+
+cap.release()
+cv2.destroyAllWindows()
+print(f"ถ่ายไปทั้งหมด {count} รูป")</pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>OpenCV คือประตูบานแรกของงาน Computer Vision</b> — ต่อจากนี้มี
+    <code>mediapipe</code> (จับมือและท่าทาง), <code>pytesseract</code> (อ่านตัวอักษรจากภาพ)
+    และ <code>ultralytics</code> (YOLO ตรวจจับวัตถุ) ซึ่งทั้งหมดรับ-ส่งภาพเป็น array
+    หน้าตาเดียวกับที่เรียนในบทนี้ — แต่ก่อนไปถึงตรงนั้น <a href="ch15.html">บทที่ 15</a>
+    จะอธิบายว่าคำสั่งที่เพิ่งใช้ไปทำอะไรกับตัวเลขในภาพบ้าง
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

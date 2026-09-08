@@ -19,6 +19,7 @@
   --font-mono:    "JetBrains Mono", ui-monospace, Menlo, monospace;
 
   --sidebar-w: 260px;
+  --topbar-h: 46px;
 }
 
 * { box-sizing: border-box; }
@@ -133,7 +134,7 @@ body {
   padding: .5rem 1rem;
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
-  min-height: 46px;
+  min-height: var(--topbar-h);
 }
 
 .pres-topbar-left, .pres-topbar-right { display: flex; align-items: center; gap: .8rem; }
@@ -503,9 +504,10 @@ th {
 @media (max-width: 900px) {
   body { font-size: 19px; }
 
+  /* วางใต้ topbar เสมอ ปุ่ม ☰ จะได้ไม่โดนเมนูบัง */
   .pres-sidebar {
     position: fixed;
-    left: 0; top: 0; bottom: 0;
+    left: 0; top: var(--topbar-h); bottom: 0;
     box-shadow: 4px 0 20px rgba(78, 109, 134, .18);
   }
 
@@ -524,3 +526,102 @@ th {
   .pres-nav-btn { font-size: .7rem; padding: .2rem .5rem; }
   .pres-counter { font-size: .62rem; min-width: 2.4rem; }
 }
+
+/* ===== รูปประกอบเคลื่อนไหว (SVG + CSS ล้วน ไม่มีไฟล์ภาพ) ===== */
+
+.fig {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  border-radius: 2px;
+  max-width: 640px;
+}
+
+.fig svg { display: block; width: 100%; height: auto; }
+
+.fig figcaption {
+  font-family: var(--font-ui);
+  font-size: .74rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin-top: .7rem;
+}
+
+.fig figcaption b { color: var(--ink); }
+.fig .lbl { font-family: var(--font-ui); font-size: 9px; fill: var(--ink-soft); }
+
+@keyframes fig-a { 0%, 44% { opacity: 1 } 56%, 100% { opacity: 0 } }
+@keyframes fig-b { 0%, 44% { opacity: 0 } 56%, 100% { opacity: 1 } }
+.fig-a { animation: fig-a 4s infinite; }
+.fig-b { animation: fig-b 4s infinite; }
+
+@keyframes fig-shift { 0%, 100% { transform: translateX(-34px) } 50% { transform: translateX(34px) } }
+.fig-shift { animation: fig-shift 6s ease-in-out infinite; }
+
+@keyframes fig-tline { 0%, 100% { transform: translateX(-72px) } 50% { transform: translateX(72px) } }
+@keyframes fig-tfill { 0%, 100% { transform: scaleX(.2) } 50% { transform: scaleX(.8) } }
+.fig-tline { animation: fig-tline 6s ease-in-out infinite; }
+.fig-tfill {
+  transform-box: fill-box; transform-origin: left;
+  animation: fig-tfill 6s ease-in-out infinite;
+}
+
+@keyframes fig-walk { to { offset-distance: 100% } }
+.fig-dot {
+  offset-path: path("M 60 22 L 142 16 L 188 58 L 166 104 L 92 110 L 40 74 Z");
+  animation: fig-walk 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fig * { animation: none !important; }
+}
+
+/* รูปที่ผู้อ่านเลื่อนดูเองทีละขั้น (ไม่ใช่อนิเมชัน) */
+
+.fig-step { display: none; }
+.fig[data-step="0"] .s0,
+.fig[data-step="1"] .s1,
+.fig[data-step="2"] .s2,
+.fig[data-step="3"] .s3,
+.fig[data-step="4"] .s4,
+.fig[data-step="5"] .s5,
+.fig[data-step="6"] .s6,
+.fig[data-step="7"] .s7,
+.fig[data-step="8"] .s8 { display: inline; }
+
+.fig-ctl {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  margin-top: .8rem;
+  cursor: pointer;
+}
+
+.fig-ctl input[type="range"] {
+  flex: 1;
+  max-width: 240px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.fig-ctl-label {
+  font-family: var(--font-ui);
+  font-size: .74rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fig-math {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin-top: .7rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.fig-math b { color: var(--accent-hot); }
+.fig .num { font-family: var(--font-mono); font-size: 11px; text-anchor: middle; }
