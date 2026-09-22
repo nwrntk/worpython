@@ -228,6 +228,26 @@ plt.show()</pre>
     ส่วนภาพเทาต้องบอกด้วยว่าให้ใช้โทนเทา: <code>plt.imshow(gray, cmap="gray")</code>
   </div>
 
+  <h2>16.9 Flowchart การสร้างกราฟ</h2>
+
+  <p>การพล็อตกราฟมีลำดับตายตัว: <strong>ข้อมูล → สร้างผืน → วาด → แต่ง → บันทึก/แสดง</strong>
+  ข้อควรจำคือ <code>savefig</code> ควรมาก่อน <code>show</code> เพราะพอปิดหน้าต่าง show แล้ว figure จะถูกปิดไปด้วย <code>plt.savefig</code> ที่เรียกทีหลังจึงมักได้ภาพเปล่า</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-104 -21 406 444" style="max-width:589px" role="img" aria-label="flowchart สร้างกราฟด้วย matplotlib"><defs><marker id="ah-ch16ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch16ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M0.0 223.0 L0.0 249.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M65.4 272.0 L112.1 272.0" marker-end="url(#ah-ch16ex)"/><text class="el" x="73.4" y="267.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 295.0 L0.0 335.0" marker-end="url(#ah-ch16ex)"/><text class="el" x="6.0" y="306.0" style="text-anchor:start">เท็จ</text><path class="e" d="M200.0 287.0 L200.0 321.0 L0.0 321.0 L0.0 335.0" marker-end="url(#ah-ch16ex)"/><path class="e" d="M0.0 365.0 L0.0 387.0" marker-end="url(#ah-ch16ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-56.6" y="37.0" width="113.1" height="30"/><text x="0" y="52.0">เตรียมข้อมูล x, y</text><rect class="n" x="-83.8" y="89.0" width="167.6" height="30"/><text x="0" y="104.0">fig, ax = plt.subplots()</text><rect class="n" x="-51.4" y="141.0" width="102.7" height="30"/><text x="0" y="156.0">ax.plot(x, y)</text><rect class="n" x="-90.2" y="193.0" width="180.4" height="30"/><text x="0" y="208.0">ตั้ง title / xlabel / ylabel</text><path class="n dec" d="M0 249.0L65.4 272L0 295.0L-65.4 272Z"/><text x="0" y="272.0">ต้องบันทึกไฟล์ ?</text><path class="n io" d="M120.1 257.0H295.9L279.9 287.0H104.1Z"/><text x="200" y="272.0">fig.savefig(&quot;plot.png&quot;)</text><path class="n io" d="M-41.5 335.0H57.5L41.5 365.0H-57.5Z"/><text x="0" y="350.0">plt.show()</text><rect class="n term" x="-19.4" y="387.0" width="38.8" height="30" rx="15.0"/><text x="0" y="402.0">จบ</text></svg>
+    <figcaption>ทางบันทึกไฟล์วนกลับมาเข้า <b>plt.show()</b> — บันทึกก่อนแสดงเสมอ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.set_title("ยอดขาย")
+ax.set_xlabel("เดือน")
+ax.set_ylabel("บาท")
+if save:
+    fig.savefig("plot.png")
+plt.show()</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -294,6 +314,15 @@ plt.show()</pre>
     <button class="choice" data-correct>แปลง BGR เป็น RGB ด้วย <code>cv2.cvtColor()</code> ก่อน</button>
     <button class="choice">บันทึกเป็นไฟล์ก่อนแล้วค่อยเปิด</button>
     <div class="explain">OpenCV เรียงสีเป็น BGR แต่ matplotlib อ่านเป็น RGB จึงต้องแปลงก่อน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ใน flowchart สร้างกราฟ (16.9) ทำไมกล่อง <code>savefig</code> ต้องมาก่อน <code>plt.show()</code>?</div>
+    <button class="choice">savefig ทำงานเร็วกว่า</button>
+    <button class="choice" data-correct>show ก่อน พอปิดหน้าต่าง figure ก็ถูกปิดไปด้วย มักได้ไฟล์ภาพเปล่า</button>
+    <button class="choice">show ลบไฟล์ที่บันทึกไว้</button>
+    <button class="choice">ไม่จำเป็น สลับกันก็ได้</button>
+    <div class="explain">ปิดหน้าต่าง show แล้ว figure ถูกปิดตามไป <code>plt.savefig</code> ทีหลังจึงมักได้ภาพเปล่า · savefig ก่อนปลอดภัยเสมอ</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -401,6 +430,25 @@ plt.show()</pre>
   <div class="note">
     <b>กราฟที่ดีไม่ได้แปลว่ากราฟสวย</b> — แต่คือกราฟที่คนอ่านเข้าใจได้เองโดยไม่ต้องถาม
     ใส่ชื่อกราฟ ชื่อแกน และหน่วยให้ครบทุกครั้ง แค่นี้ก็ดีกว่ากราฟหลากสีที่ไม่มีป้ายอะไรเลย
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>มี dict <code>data</code> เก็บชื่อสินค้ากับยอดขายรายเดือน วาดทุกสินค้าเป็นเส้นในกราฟเดียวกันพร้อม legend วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 268 414" style="max-width:389px" role="img" aria-label="flowchart วาดหลายเส้นในกราฟเดียว"><defs><marker id="ah-ch16lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch16lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch16lab)"/><path class="e" d="M0.0 67.0 L0.0 86.5" marker-end="url(#ah-ch16lab)"/><path class="e" d="M0.0 145.5 L0.0 173.0" marker-end="url(#ah-ch16lab)"/><text class="el" x="6.0" y="156.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 203.0 L0.0 218.0 L-130.0 218.0 L-130.0 116.0 L-76.9 116.0" marker-end="url(#ah-ch16lab)"/><path class="e" d="M0.0 283.0 L0.0 305.0" marker-end="url(#ah-ch16lab)"/><path class="e" d="M0.0 335.0 L0.0 357.0" marker-end="url(#ah-ch16lab)"/><path class="e" d="M76.9 116.0 L130.0 116.0 L130.0 238.0 L0.0 238.0 L0.0 253.0" marker-end="url(#ah-ch16lab)"/><text class="el" x="84.9" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-83.8" y="37.0" width="167.6" height="30"/><text x="0" y="52.0">fig, ax = plt.subplots()</text><path class="n dec" d="M0 86.5L76.9 116L0 145.5L-76.9 116Z"/><text x="0" y="109.5">ยังมี name, ys ใน</text><text x="0" y="122.5">data.items() ?</text><rect class="n" x="-89.7" y="173.0" width="179.4" height="30"/><text x="0" y="188.0">ax.plot(x, ys, label=name)</text><rect class="n" x="-45.4" y="253.0" width="90.9" height="30"/><text x="0" y="268.0">ax.legend()</text><path class="n io" d="M-41.5 305.0H57.5L41.5 335.0H-57.5Z"/><text x="0" y="320.0">plt.show()</text><rect class="n term" x="-19.4" y="357.0" width="38.8" height="30" rx="15.0"/><text x="0" y="372.0">จบ</text></svg>
+    <figcaption>สร้างผืนครั้งเดียวก่อน loop · plot ใน loop · legend และ show หลัง loop</figcaption>
+  </figure>
+  <div class="pair-code"><pre>fig, ax = plt.subplots()
+for name, ys in data.items():
+    ax.plot(x, ys, label=name)
+ax.legend()
+plt.show()</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

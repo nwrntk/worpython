@@ -167,6 +167,22 @@ print(bool(" "))      <span class="out"># True ← ช่องว่างก�
     (เอาไว้นับจำนวนเงื่อนไขที่เป็นจริงได้)
   </div>
 
+  <h2>2.7 Flowchart — แปลงชนิดก่อนคำนวณ</h2>
+
+  <p>ข้อมูลจาก <code>input()</code> เป็น str เสมอ ใน flowchart ให้วาด<strong>การแปลงชนิด</strong>
+  เป็นกล่อง process แยกออกมา จะได้ไม่ลืมเวลาเขียนโค้ด</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-95 -21 190 302" style="max-width:275px" role="img" aria-label="flowchart แปลงองศาฟาเรนไฮต์เป็นเซลเซียส"><defs><marker id="ah-ch2ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch2ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch2ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch2ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch2ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch2ex)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch2ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-72.8 37.0H88.8L72.8 67.0H-88.8Z"/><text x="0" y="52.0">รับ text  (ได้เป็น str)</text><rect class="n" x="-57.3" y="89.0" width="114.5" height="30"/><text x="0" y="104.0">f = float(text)</text><rect class="n" x="-72.0" y="141.0" width="144.0" height="30"/><text x="0" y="156.0">c = (f - 32) * 5 / 9</text><path class="n io" d="M-30.7 193.0H46.7L30.7 223.0H-46.7Z"/><text x="0" y="208.0">แสดง c</text><rect class="n term" x="-19.4" y="245.0" width="38.8" height="30" rx="15.0"/><text x="0" y="260.0">จบ</text></svg>
+    <figcaption>แปลงฟาเรนไฮต์เป็นเซลเซียส · กล่อง <b>f = float(text)</b> คือจุดที่มือใหม่มักลืม</figcaption>
+  </figure>
+  <div class="pair-code"><pre>text = input("องศา F: ")
+f = float(text)
+c = (f - 32) * 5 / 9
+print(f"{c:.1f} °C")</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -235,6 +251,18 @@ print(bool(" "))      <span class="out"># True ← ช่องว่างก�
     <button class="choice">24</button>
     <button class="choice">9</button>
     <div class="explain">คูณก่อนบวก → 3*4=12 แล้ว +2 = 14 (ถ้าอยากได้ 20 ต้องใส่วงเล็บ)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ตาม flowchart นี้ ถ้าผู้ใช้พิมพ์ <code>5</code> จะแสดงอะไร?</div>
+    <figure class="fig">
+      <svg class="flow" viewBox="-62 -21 125 250" style="max-width:181px" role="img" aria-label="flowchart ที่ลืมแปลงชนิด"><defs><marker id="ah-q2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-q2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-q2)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-q2)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-q2)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-q2)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ text</text><rect class="n" x="-48.4" y="89.0" width="96.8" height="30"/><text x="0" y="104.0">c = text * 2</text><path class="n io" d="M-30.7 141.0H46.7L30.7 171.0H-46.7Z"/><text x="0" y="156.0">แสดง c</text><rect class="n term" x="-19.4" y="193.0" width="38.8" height="30" rx="15.0"/><text x="0" y="208.0">จบ</text></svg>
+    </figure>
+    <button class="choice">10</button>
+    <button class="choice" data-correct>55</button>
+    <button class="choice">เกิด error</button>
+    <button class="choice">5 5</button>
+    <div class="explain"><code>text</code> เป็น str การคูณ str ด้วย 2 คือต่อข้อความซ้ำ → "55" · flowchart นี้ขาดกล่อง <code>int(text)</code> ก่อนคำนวณ</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -323,6 +351,24 @@ print("เกียรตินิยม:", score &gt;= 80 and att == 100)
 
 <span class="out"># นับว่าผ่านกี่เกณฑ์ — ใช้ได้เพราะ True มีค่า 1</span>
 print("ผ่าน", pass_score + pass_att, "เกณฑ์จาก 2")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>รับจำนวนนาทีทั้งหมด (เช่น 135) แล้วแสดงเป็นชั่วโมงกับนาที (2 ชั่วโมง 15 นาที) วาด flowchart ก่อน แล้วค่อยเขียนโค้ด (ใบ้: <code>//</code> กับ <code>%</code>)</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-95 -21 191 302" style="max-width:276px" role="img" aria-label="flowchart แปลงนาทีเป็นชั่วโมงและนาที"><defs><marker id="ah-ch2lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch2lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch2lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch2lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch2lab)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch2lab)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch2lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-73.3 37.0H89.3L73.3 67.0H-89.3Z"/><text x="0" y="52.0">รับ total แปลงเป็น int</text><rect class="n" x="-57.3" y="89.0" width="114.5" height="30"/><text x="0" y="104.0">h = total // 60</text><rect class="n" x="-54.3" y="141.0" width="108.6" height="30"/><text x="0" y="156.0">m = total % 60</text><path class="n io" d="M-68.1 193.0H84.1L68.1 223.0H-84.1Z"/><text x="0" y="208.0">แสดง h ชั่วโมง m นาที</text><rect class="n term" x="-19.4" y="245.0" width="38.8" height="30" rx="15.0"/><text x="0" y="260.0">จบ</text></svg>
+    <figcaption>หารปัดเศษทิ้งได้ชั่วโมง เศษที่เหลือคือนาที</figcaption>
+  </figure>
+  <div class="pair-code"><pre>total = int(input("จำนวนนาที: "))
+h = total // 60
+m = total % 60
+print(f"{h} ชั่วโมง {m} นาที")</pre></div>
+  </div>
     </details>
   </div>
 </main>

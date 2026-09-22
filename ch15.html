@@ -512,6 +512,22 @@ cv2.destroyAllWindows()</pre>
     เขียนโค้ดให้แก้ตัวเลขพวกนี้ง่าย ๆ ไว้ตั้งแต่แรก แล้วนั่งลองปรับดูผล นี่คือ 80% ของงานจริง
   </div>
 
+  <h2>15.13 Flowchart ของงานประมวลผลภาพ</h2>
+
+  <p>งานประมวลผลภาพส่วนใหญ่เป็น<strong>ท่อ (pipeline)</strong> — ภาพไหลผ่านขั้นตอนเรียงกันลงมา
+  flowchart จึงเป็นเส้นตรงยาว แล้วมี loop ตอนท้ายเมื่อต้องจัดการวัตถุทีละชิ้น
+  ในกล่องเขียนเป็นคำอธิบายสั้น ๆ ได้ ไม่ต้องใส่พารามิเตอร์ครบ</p>
+
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 374 722" style="max-width:542px" role="img" aria-label="flowchart นับวัตถุในภาพ"><defs><marker id="ah-ch15ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch15ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 327.0 L0.0 349.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 379.0 L0.0 398.5" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 457.5 L0.0 486.5" marker-end="url(#ah-ch15ex)"/><text class="el" x="6.0" y="468.5" style="text-anchor:start">จริง</text><path class="e" d="M70.6 516.0 L126.6 516.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="78.6" y="511.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 545.5 L0.0 576.0 L-130.0 576.0 L-130.0 428.0 L-52.7 428.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="6.0" y="556.5" style="text-anchor:start">เท็จ</text><path class="e" d="M169.1 537.5 L169.1 576.0 L-130.0 576.0 L-130.0 428.0 L-52.7 428.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 643.0 L0.0 665.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M52.7 428.0 L235.6 428.0 L235.6 598.0 L0.0 598.0 L0.0 613.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="60.7" y="423.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-31.2 37.0H47.2L31.2 67.0H-47.2Z"/><text x="0" y="52.0">อ่านภาพ</text><rect class="n" x="-50.1" y="89.0" width="100.3" height="30"/><text x="0" y="104.0">แปลงเป็น gray</text><rect class="n" x="-75.5" y="141.0" width="150.9" height="30"/><text x="0" y="156.0">GaussianBlur ลด noise</text><rect class="n" x="-66.9" y="193.0" width="133.7" height="30"/><text x="0" y="208.0">threshold แบบ Otsu</text><rect class="n" x="-80.9" y="245.0" width="161.7" height="30"/><text x="0" y="260.0">morphology open / close</text><rect class="n" x="-48.4" y="297.0" width="96.8" height="30"/><text x="0" y="312.0">findContours</text><rect class="n" x="-39.5" y="349.0" width="79.1" height="30"/><text x="0" y="364.0">count = 0</text><path class="n dec" d="M0 398.5L52.7 428L0 457.5L-52.7 428Z"/><text x="0" y="421.5">ยังมี c ใน</text><text x="0" y="434.5">contours ?</text><path class="n dec" d="M0 486.5L70.6 516L0 545.5L-70.6 516Z"/><text x="0" y="509.5">contourArea(c)</text><text x="0" y="522.5">&gt;= 300 ?</text><rect class="n" x="126.6" y="494.5" width="85.0" height="43"/><text x="169.07575757575756" y="509.5">count += 1</text><text x="169.07575757575756" y="522.5">วาดกรอบ</text><path class="n io" d="M-64.7 613.0H80.7L64.7 643.0H-80.7Z"/><text x="0" y="628.0">แสดง count และภาพ</text><rect class="n term" x="-19.4" y="665.0" width="38.8" height="30" rx="15.0"/><text x="0" y="680.0">จบ</text></svg>
+    <figcaption>ท่ามาตรฐาน 15.12 · 7 กล่องบนคือ pipeline · เพชรล่างคือการกรองก้อนเล็กทิ้ง</figcaption>
+  </figure>
+
+  <div class="note">
+    <b>วาด pipeline ก่อนเขียนโค้ด</b> ช่วยให้เห็นว่าขั้นไหนรับภาพชนิดไหน
+    เช่น threshold ต้องได้ภาพ gray · findContours ต้องได้ภาพไบนารี ถ้าสลับลำดับผิดจะ error หรือได้ผลเพี้ยน
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -597,6 +613,15 @@ cv2.destroyAllWindows()</pre>
     <button class="choice" data-correct>ภาพไบนารี (ผ่าน threshold มาแล้ว)</button>
     <button class="choice">ภาพขนาดเท่าไรก็ได้ แต่ต้องเป็นภาพสี</button>
     <div class="explain">ลำดับมาตรฐานคือ เทา → เบลอ → threshold → morphology → findContours</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q10">ข้อใดเรียงลำดับกล่องใน pipeline นับวัตถุ (15.13) ถูกต้อง?</div>
+    <button class="choice">threshold → gray → findContours</button>
+    <button class="choice" data-correct>gray → blur → threshold → findContours</button>
+    <button class="choice">findContours → threshold → gray</button>
+    <button class="choice">blur → findContours → gray → threshold</button>
+    <div class="explain">threshold ต้องได้ภาพ gray · findContours ต้องได้ภาพไบนารี · ลำดับผิด = error หรือผลเพี้ยน</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -727,6 +752,26 @@ while True:
     <b>ทุกอย่างในบทนี้คือเลขคณิตกับลูป</b> — OpenCV แค่ทำให้เร็วพอใช้งานจริง
     ถ้าเข้าใจว่าแต่ละคำสั่งทำอะไรกับตัวเลขในเมทริกซ์ ก็อ่านโค้ดงาน Computer Vision
     ที่ไหนก็รู้เรื่อง แม้จะเจอคำสั่งที่ไม่เคยเห็นมาก่อน
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>วาด flowchart ของโปรแกรมหาขอบวัตถุ: อ่านภาพ → ขาวดำ → ลด noise → Canny → แสดงผล แล้วเขียนโค้ดตาม</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-89 -21 179 354" style="max-width:259px" role="img" aria-label="flowchart หาขอบด้วย Canny"><defs><marker id="ah-ch15lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch15lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch15lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-31.2 37.0H47.2L31.2 67.0H-47.2Z"/><text x="0" y="52.0">อ่านภาพ</text><rect class="n" x="-50.1" y="89.0" width="100.3" height="30"/><text x="0" y="104.0">แปลงเป็น gray</text><rect class="n" x="-75.5" y="141.0" width="150.9" height="30"/><text x="0" y="156.0">GaussianBlur ลด noise</text><rect class="n" x="-46.7" y="193.0" width="93.4" height="30"/><text x="0" y="208.0">Canny หาขอบ</text><path class="n io" d="M-44.0 245.0H60.0L44.0 275.0H-60.0Z"/><text x="0" y="260.0">แสดงภาพขอบ</text><rect class="n term" x="-19.4" y="297.0" width="38.8" height="30" rx="15.0"/><text x="0" y="312.0">จบ</text></svg>
+    <figcaption>pipeline ล้วน ไม่มีการตัดสินใจ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>img = cv2.imread("coins.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blur, 50, 150)
+cv2.imshow("edges", edges)
+cv2.waitKey(0)</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

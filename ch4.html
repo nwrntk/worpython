@@ -143,6 +143,25 @@ c = a[:]         <span class="out"># หรือ list(a) หรือ a.copy()<
 c.append(99)
 print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี่ยน</span></pre>
 
+  <h2>4.7 Flowchart กับ List</h2>
+
+  <p>คำสั่งที่เปลี่ยน list (<code>append</code>, <code>remove</code>, <code>sort</code>)
+  เป็นกล่อง process ธรรมดา ส่วนการเช็กว่ามีของใน list ไหม (<code>in</code>) เป็นคำถาม จริง/เท็จ
+  จึงเป็นกล่องข้าวหลามตัด</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-298 -21 585 290" style="max-width:848px" role="img" aria-label="flowchart เพิ่มชื่อลง list ถ้ายังไม่มี"><defs><marker id="ah-ch4ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch4ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch4ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch4ex)"/><path class="e" d="M0.0 119.0 L0.0 145.0" marker-end="url(#ah-ch4ex)"/><path class="e" d="M84.0 168.0 L151.1 168.0" marker-end="url(#ah-ch4ex)"/><text class="el" x="92.0" y="163.0" style="text-anchor:start">จริง</text><path class="e" d="M-84.0 168.0 L-140.0 168.0" marker-end="url(#ah-ch4ex)"/><text class="el" x="-92.0" y="163.0" style="text-anchor:end">เท็จ</text><path class="e" d="M212.0 183.0 L212.0 219.0 L0.0 219.0 L0.0 233.0" marker-end="url(#ah-ch4ex)"/><path class="e" d="M-212.0 183.0 L-212.0 219.0 L0.0 219.0 L0.0 233.0" marker-end="url(#ah-ch4ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-78.9" y="37.0" width="157.8" height="30"/><text x="0" y="52.0">members = [&quot;ฟ้า&quot;, &quot;ต้น&quot;]</text><path class="n io" d="M-33.1 89.0H49.1L33.1 119.0H-49.1Z"/><text x="0" y="104.0">รับ name</text><path class="n dec" d="M0 145.0L84.0 168L0 191.0L-84.0 168Z"/><text x="0" y="168.0">name in members ?</text><path class="n io" d="M159.1 153.0H280.8L264.8 183.0H143.1Z"/><text x="211.98484848484853" y="168.0">แสดง &quot;มีชื่อแล้ว&quot;</text><rect class="n" x="-284.0" y="153.0" width="144.0" height="30"/><text x="-211.98484848484853" y="168.0">members.append(name)</text><rect class="n term" x="-19.4" y="233.0" width="38.8" height="30" rx="15.0"/><text x="0" y="248.0">จบ</text></svg>
+    <figcaption>เพิ่มชื่อลงรายชื่อเฉพาะเมื่อยังไม่มี · <b>in</b> = คำถาม, <b>append</b> = การกระทำ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>members = ["ฟ้า", "ต้น"]
+name = input("ชื่อ: ")
+if name in members:
+    print("มีชื่อแล้ว")
+else:
+    members.append(name)</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -206,6 +225,15 @@ print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี�
     <button class="choice" data-correct>30</button>
     <button class="choice">เกิด IndexError</button>
     <div class="explain">index ติดลบนับถอยหลังจากท้าย → <code>-1</code> คือตัวสุดท้าย</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ข้อใดต้องวาดเป็น<strong>สี่เหลี่ยมข้าวหลามตัด</strong>?</div>
+    <button class="choice"><code>members.append(x)</code></button>
+    <button class="choice" data-correct><code>x in members</code></button>
+    <button class="choice"><code>members.sort()</code></button>
+    <button class="choice"><code>n = len(members)</code></button>
+    <div class="explain"><code>in</code> ได้คำตอบ True/False จึงเป็นคำถาม · ที่เหลือเป็นการกระทำ = กล่อง process</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -290,6 +318,27 @@ print("มากไปน้อย:", sorted(nums, reverse=True))
 print("ตัวมากสุดอยู่ index:", nums.index(max(nums)))
 
 <span class="out"># หมายเหตุ: บทที่ 6 จะได้เรียน for loop ซึ่งเขียนส่วนรับค่าให้สั้นลงมากได้</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>รับคะแนน 3 ค่า เก็บลง list แล้วแสดงคะแนนสูงสุด ต่ำสุด และค่าเฉลี่ย วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-135 -21 271 354" style="max-width:392px" role="img" aria-label="flowchart สรุปคะแนนด้วย list"><defs><marker id="ah-ch4lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch4lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch4lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch4lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch4lab)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch4lab)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch4lab)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch4lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-42.0 37.0H58.0L42.0 67.0H-58.0Z"/><text x="0" y="52.0">รับ a, b, c</text><rect class="n" x="-66.1" y="89.0" width="132.2" height="30"/><text x="0" y="104.0">scores = [a, b, c]</text><rect class="n" x="-69.1" y="141.0" width="138.1" height="30"/><text x="0" y="156.0">total = sum(scores)</text><rect class="n" x="-86.8" y="193.0" width="173.5" height="30"/><text x="0" y="208.0">avg = total / len(scores)</text><path class="n io" d="M-113.3 245.0H129.3L113.3 275.0H-129.3Z"/><text x="0" y="260.0">แสดง max(scores), min(scores), avg</text><rect class="n term" x="-19.4" y="297.0" width="38.8" height="30" rx="15.0"/><text x="0" y="312.0">จบ</text></svg>
+    <figcaption>ไม่มีการตัดสินใจ เป็นลำดับตรงยาวเส้นเดียว</figcaption>
+  </figure>
+  <div class="pair-code"><pre>a = float(input("คะแนน 1: "))
+b = float(input("คะแนน 2: "))
+c = float(input("คะแนน 3: "))
+scores = [a, b, c]
+total = sum(scores)
+avg = total / len(scores)
+print(max(scores), min(scores), avg)</pre></div>
+  </div>
     </details>
   </div>
 </main>

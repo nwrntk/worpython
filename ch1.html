@@ -138,6 +138,85 @@ price = 100      <span class="out"># เขียนต่อท้ายบร�
 <span class="out"># ใช้ปิดโค้ดชั่วคราวตอนหาที่ผิดก็ได้
 # print("บรรทัดนี้ถูกปิดไว้")</span></pre>
 
+  <h2>1.8 Flowchart — วางแผนก่อนเขียนโค้ด</h2>
+
+  <p>Flowchart (ผังงาน) คือรูปที่บอก<strong>ลำดับการทำงาน</strong>ของโปรแกรม
+  วาดก่อนเขียนโค้ดช่วยให้คิดเป็นขั้นเป็นตอน และเอาไปอธิบายให้คนอื่นเข้าใจได้โดยไม่ต้องอ่านโค้ด
+  ใช้สัญลักษณ์มาตรฐานไม่กี่แบบ</p>
+
+  <figure class="fig">
+    <svg class="flow" viewBox="-52 -29 578 58" style="max-width:838px" role="img" aria-label="สัญลักษณ์ flowchart 5 แบบ"><defs><marker id="ah-sym" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-sym" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="n term" x="-37.8" y="-15.0" width="75.7" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม / จบ</text><path class="n io" d="M73.6 -15.0H182.4L166.4 15.0H57.6Z"/><text x="120" y="0.0">รับ / แสดงผล</text><rect class="n" x="211.0" y="-15.0" width="58.0" height="30"/><text x="240" y="0.0">คำนวณ</text><path class="n dec" d="M350 -23.0L396.0 0L350 23.0L304.0 0Z"/><text x="350" y="0.0">เงื่อนไข ?</text><rect class="n" x="428.2" y="-15.0" width="83.6" height="30"/><path class="n" d="M435.2 -15.0V15.0M504.8 -15.0V15.0"/><text x="470" y="0.0">เรียกฟังก์ชัน</text></svg>
+    <figcaption>สัญลักษณ์ที่ใช้ตลอดทั้งคอร์ส</figcaption>
+  </figure>
+
+  <table>
+    <tr><th>รูปทรง</th><th>ความหมาย</th><th>ตรงกับโค้ด</th></tr>
+    <tr><td>วงรี (Terminal)</td><td>จุดเริ่มต้น / จุดสิ้นสุด</td><td>บรรทัดแรก / บรรทัดสุดท้าย</td></tr>
+    <tr><td>สี่เหลี่ยมด้านขนาน (Input/Output)</td><td>รับค่าเข้า หรือแสดงผลออก</td><td><code>input()</code>, <code>print()</code></td></tr>
+    <tr><td>สี่เหลี่ยมผืนผ้า (Process)</td><td>คำนวณ / กำหนดค่าตัวแปร</td><td><code>x = x + 3</code></td></tr>
+    <tr><td>สี่เหลี่ยมข้าวหลามตัด (Decision)</td><td>คำถามที่ตอบได้แค่ จริง / เท็จ</td><td><code>if</code>, <code>while</code> (บทที่ 3, 7)</td></tr>
+    <tr><td>สี่เหลี่ยมมีเส้นข้าง (Predefined process)</td><td>เรียกใช้ฟังก์ชันที่เขียนแยกไว้</td><td><code>def</code> (บทที่ 12)</td></tr>
+    <tr><td>ลูกศร</td><td>ทิศทางว่าทำอะไรต่อ</td><td>ลำดับบรรทัด</td></tr>
+  </table>
+
+  <p>ตัวอย่าง: โปรแกรมรับชื่อกับอายุ แล้วบอกว่าอีก 10 ปีจะอายุเท่าไร</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-89 -21 179 302" style="max-width:259px" role="img" aria-label="flowchart รับชื่อและอายุ แล้วแสดงอายุในอีก 10 ปี"><defs><marker id="ah-ch1ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch1ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch1ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch1ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch1ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch1ex)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch1ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ name</text><path class="n io" d="M-67.4 89.0H83.4L67.4 119.0H-83.4Z"/><text x="0" y="104.0">รับ age แปลงเป็น int</text><rect class="n" x="-63.2" y="141.0" width="126.3" height="30"/><text x="0" y="156.0">future = age + 10</text><path class="n io" d="M-63.2 193.0H79.2L63.2 223.0H-79.2Z"/><text x="0" y="208.0">แสดง name, future</text><rect class="n term" x="-19.4" y="245.0" width="38.8" height="30" rx="15.0"/><text x="0" y="260.0">จบ</text></svg>
+    <figcaption>ทำงานจากบนลงล่าง <b>1 กล่อง ≈ 1 บรรทัดโค้ด</b></figcaption>
+  </figure>
+  <div class="pair-code"><pre>name = input("ชื่อ: ")
+age = int(input("อายุ: "))
+future = age + 10
+print(f"{name} อีก 10 ปีจะอายุ {future} ปี")</pre></div>
+  </div>
+
+  <div class="note">
+    <b>กติกาการวาด</b><br>
+    · มีจุดเริ่ม 1 จุด และจุดจบ 1 จุด<br>
+    · ลูกศรไหลจากบนลงล่าง (หรือซ้ายไปขวา) เส้นไม่ควรตัดกัน<br>
+    · ในกล่องเขียนสั้น ๆ ใช้ชื่อตัวแปรจริงได้ ไม่ต้องเขียนเป็นโค้ดเป๊ะ ๆ
+  </div>
+
+  <h3>จากโจทย์ไปเป็นโค้ด — 4 ขั้น</h3>
+
+  <p>ในงานจริงเราได้โจทย์เป็นภาษาไทยมา ไม่ได้ได้โค้ด อย่าเพิ่งรีบพิมพ์โค้ด ให้ไล่ 4 ขั้นนี้ก่อน</p>
+
+  <p><strong>ขั้นที่ 1 · อ่านโจทย์ แล้วขีดเส้นใต้คำสำคัญ</strong></p>
+  <div class="note">
+    การไฟฟ้าคิดค่าไฟ<strong>หน่วยละ 4.5 บาท</strong> บวก<strong>ค่าบริการ 38 บาท</strong>ต่อเดือน
+    แล้วคิด <strong>VAT 7%</strong> จากยอดรวม เขียนโปรแกรม<em>รับจำนวนหน่วยที่ใช้</em>
+    แล้ว<em>แสดงยอดที่ต้องจ่าย</em>
+  </div>
+
+  <p><strong>ขั้นที่ 2 · แยก IPO</strong> — Input (รับอะไร) · Process (ทำอะไร) · Output (แสดงอะไร)</p>
+  <table>
+    <tr><th>IPO</th><th>จากโจทย์</th><th>กลายเป็นกล่อง</th></tr>
+    <tr><td>Input</td><td>จำนวนหน่วยที่ใช้ → <code>units</code></td><td>สี่เหลี่ยมด้านขนาน</td></tr>
+    <tr><td>Process</td><td><code>energy = units * 4.5</code><br><code>subtotal = energy + 38</code><br><code>total = subtotal * 1.07</code></td><td>สี่เหลี่ยมผืนผ้า (ทีละขั้น)</td></tr>
+    <tr><td>Output</td><td>ยอดที่ต้องจ่าย → <code>total</code></td><td>สี่เหลี่ยมด้านขนาน</td></tr>
+  </table>
+  <div class="warn">
+    <b>ตัวเลขที่โจทย์บอกมาแล้ว (4.5, 38, 7%) ไม่ใช่ Input</b> เพราะผู้ใช้ไม่ต้องพิมพ์
+    Input คือสิ่งที่เปลี่ยนไปทุกครั้งที่รันโปรแกรม · หาจากคำว่า "รับ" ส่วน Output หาจากคำว่า "แสดง"
+  </div>
+
+  <p><strong>ขั้นที่ 3 และ 4 · เรียง IPO ลงเป็น flowchart แล้วแปลทีละกล่องเป็นโค้ด</strong></p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-95 -21 190 354" style="max-width:275px" role="img" aria-label="flowchart คำนวณค่าไฟจาก IPO"><defs><marker id="ah-ch1ipo" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch1ipo" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch1ipo)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch1ipo)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch1ipo)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch1ipo)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch1ipo)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch1ipo)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-36.1 37.0H52.1L36.1 67.0H-52.1Z"/><text x="0" y="52.0">รับ units</text><rect class="n" x="-72.0" y="89.0" width="144.0" height="30"/><text x="0" y="104.0">energy = units * 4.5</text><rect class="n" x="-77.9" y="141.0" width="155.8" height="30"/><text x="0" y="156.0">subtotal = energy + 38</text><rect class="n" x="-80.9" y="193.0" width="161.7" height="30"/><text x="0" y="208.0">total = subtotal * 1.07</text><path class="n io" d="M-42.5 245.0H58.5L42.5 275.0H-58.5Z"/><text x="0" y="260.0">แสดง total</text><rect class="n term" x="-19.4" y="297.0" width="38.8" height="30" rx="15.0"/><text x="0" y="312.0">จบ</text></svg>
+    <figcaption>Input 1 กล่อง · Process 3 กล่อง · Output 1 กล่อง — ตรงกับตาราง IPO ทุกแถว</figcaption>
+  </figure>
+  <div class="pair-code"><pre>units = float(input("จำนวนหน่วยที่ใช้: "))
+energy = units * 4.5
+subtotal = energy + 38
+total = subtotal * 1.07
+print(f"ยอดที่ต้องจ่าย {total:.2f} บาท")</pre></div>
+  </div>
+
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -201,6 +280,15 @@ price = 100      <span class="out"># เขียนต่อท้ายบร�
     <button class="choice">print(สวัสดี + name)</button>
     <div class="explain">ข้อแรกได้คำว่า "name" ตรง ๆ เพราะอยู่ในคำพูด ·
       ข้อ 2 ผิดไวยากรณ์ · ข้อ 4 คำว่าสวัสดีไม่มีคำพูดครอบ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ใน flowchart คำสั่ง <code>input()</code> และ <code>print()</code> ใช้สัญลักษณ์แบบไหน?</div>
+    <button class="choice">วงรี</button>
+    <button class="choice" data-correct>สี่เหลี่ยมด้านขนาน</button>
+    <button class="choice">สี่เหลี่ยมผืนผ้า</button>
+    <button class="choice">สี่เหลี่ยมข้าวหลามตัด</button>
+    <div class="explain">รับเข้า / แสดงออก = สี่เหลี่ยมด้านขนาน · วงรีใช้กับเริ่ม/จบ · ผืนผ้าใช้กับการคำนวณ</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -279,6 +367,18 @@ width = len(msg) + 4
 print("*" * width)
 print(f"* {msg} *")
 print("*" * width)</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>วาด flowchart ของ<strong>โจทย์ 3 (คำนวณราคาสินค้า)</strong> ก่อน แล้วค่อยเทียบกับโค้ดที่เขียนไว้</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <figure class="fig">
+    <svg class="flow" viewBox="-109 -21 218 354" style="max-width:315px" role="img" aria-label="flowchart คำนวณราคาสินค้า"><defs><marker id="ah-ch1lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch1lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch1lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch1lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch1lab)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch1lab)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch1lab)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch1lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-68.6 37.0H84.6L68.6 67.0H-84.6Z"/><text x="0" y="52.0">รับ item, price, qty</text><rect class="n" x="-77.9" y="89.0" width="155.8" height="30"/><text x="0" y="104.0">subtotal = price * qty</text><rect class="n" x="-75.0" y="141.0" width="149.9" height="30"/><text x="0" y="156.0">vat = subtotal * 0.07</text><rect class="n" x="-77.9" y="193.0" width="155.8" height="30"/><text x="0" y="208.0">total = subtotal + vat</text><path class="n io" d="M-86.8 245.0H102.8L86.8 275.0H-102.8Z"/><text x="0" y="260.0">แสดง subtotal, vat, total</text><rect class="n term" x="-19.4" y="297.0" width="38.8" height="30" rx="15.0"/><text x="0" y="312.0">จบ</text></svg>
+    <figcaption>เป็นลำดับตรงยาวเส้นเดียว ยังไม่มีการตัดสินใจ</figcaption>
+  </figure>
     </details>
   </div>
 </main>

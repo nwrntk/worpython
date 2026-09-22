@@ -145,6 +145,25 @@ print(t)         <span class="out"># (1, 2, [3, 4, 5])  ← เปลี่ย�
 
 t[2] = [9]       <span class="out"># TypeError  ← แต่เปลี่ยนตัวที่ชี้ไม่ได้</span></pre>
 
+  <h2>5.7 Flowchart กับ Tuple — unpacking ใช้กล่องเดียว</h2>
+
+  <p>การ unpack หลายตัวแปรพร้อมกันเกิดขึ้นในบรรทัดเดียว จึงวาดเป็น<strong>กล่อง process กล่องเดียว</strong>
+  เทียบกับการสลับค่าแบบเก่าที่ต้องใช้ตัวแปรพักถึง 3 กล่อง</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-51 -21 280 250" style="max-width:406px" role="img" aria-label="เทียบ flowchart สลับค่าแบบใช้ตัวแปรพักกับแบบ tuple"><defs><marker id="ah-ch5ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch5ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch5ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch5ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch5ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch5ex)"/><path class="e" d="M170.0 15.0 L170.0 37.0" marker-end="url(#ah-ch5ex)"/><path class="e" d="M170.0 67.0 L170.0 89.0" marker-end="url(#ah-ch5ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-36.6" y="37.0" width="73.2" height="30"/><text x="0" y="52.0">temp = a</text><rect class="n" x="-27.8" y="89.0" width="55.5" height="30"/><text x="0" y="104.0">a = b</text><rect class="n" x="-36.6" y="141.0" width="73.2" height="30"/><text x="0" y="156.0">b = temp</text><rect class="n term" x="-19.4" y="193.0" width="38.8" height="30" rx="15.0"/><text x="0" y="208.0">จบ</text><rect class="n term" x="147.4" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="170" y="0.0">เริ่ม</text><rect class="n" x="124.6" y="37.0" width="90.9" height="30"/><text x="170" y="52.0">a, b = b, a</text><rect class="n term" x="150.6" y="89.0" width="38.8" height="30" rx="15.0"/><text x="170" y="104.0">จบ</text></svg>
+    <figcaption>ซ้าย: สลับค่าด้วยตัวแปรพัก 3 ขั้น · ขวา: สลับด้วย tuple ขั้นเดียว</figcaption>
+  </figure>
+  <div class="pair-code"><pre><span class="out"># แบบซ้าย</span>
+temp = a
+a = b
+b = temp
+
+<span class="out"># แบบขวา</span>
+a, b = b, a</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -206,6 +225,15 @@ t[2] = [9]       <span class="out"># TypeError  ← แต่เปลี่ย�
     <button class="choice" data-correct>พิกัด (latitude, longitude) ของสถานที่</button>
     <button class="choice">ตะกร้าสินค้าที่ผู้ใช้กดเพิ่มได้</button>
     <div class="explain">พิกัดเป็นค่าคงที่ที่ไม่ควรถูกแก้ ส่วนอีก 3 ข้อต้องเพิ่ม/ลบ → ใช้ list</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7"><code>a, b = b, a</code> วาดเป็นกล่อง process กี่กล่อง?</div>
+    <button class="choice" data-correct>1 กล่อง</button>
+    <button class="choice">2 กล่อง</button>
+    <button class="choice">3 กล่อง</button>
+    <button class="choice">ต้องใช้กล่องข้าวหลามตัด</button>
+    <div class="explain">เป็นคำสั่งเดียวที่ทำพร้อมกัน จึงเป็นกล่องเดียว · แบบใช้ temp ถึงจะเป็น 3 กล่อง</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -281,6 +309,28 @@ for name, price in items:       <span class="out"># unpack ทีละ tuple</s
 
 print("-" * 20)
 print(f"{'รวม':10s} {total:3d} บาท")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>รับค่า x, y สร้างเป็น tuple <code>point</code> แล้ว unpack ออกมาเช็กว่าจุดอยู่ควอดรันต์ที่ 1 หรือไม่ วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-328 -21 644 342" style="max-width:934px" role="img" aria-label="flowchart เช็กว่าจุดอยู่ควอดรันต์ 1"><defs><marker id="ah-ch5lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch5lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch5lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch5lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch5lab)"/><path class="e" d="M0.0 171.0 L0.0 197.0" marker-end="url(#ah-ch5lab)"/><path class="e" d="M92.9 220.0 L161.7 220.0" marker-end="url(#ah-ch5lab)"/><text class="el" x="100.9" y="215.0" style="text-anchor:start">จริง</text><path class="e" d="M-92.9 220.0 L-148.9 220.0" marker-end="url(#ah-ch5lab)"/><text class="el" x="-100.9" y="215.0" style="text-anchor:end">เท็จ</text><path class="e" d="M231.7 235.0 L231.7 271.0 L0.0 271.0 L0.0 285.0" marker-end="url(#ah-ch5lab)"/><path class="e" d="M-231.7 235.0 L-231.7 271.0 L0.0 271.0 L0.0 285.0" marker-end="url(#ah-ch5lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ x, y</text><rect class="n" x="-54.3" y="89.0" width="108.6" height="30"/><text x="0" y="104.0">point = (x, y)</text><rect class="n" x="-54.3" y="141.0" width="108.6" height="30"/><text x="0" y="156.0">px, py = point</text><path class="n dec" d="M0 197.0L92.9 220L0 243.0L-92.9 220Z"/><text x="0" y="220.0">px &gt; 0 and py &gt; 0 ?</text><path class="n io" d="M169.7 205.0H309.6L293.6 235.0H153.7Z"/><text x="231.67424242424246" y="220.0">แสดง &quot;ควอดรันต์ 1&quot;</text><path class="n io" d="M-306.4 205.0H-140.9L-156.9 235.0H-322.4Z"/><text x="-231.67424242424246" y="220.0">แสดง &quot;ไม่ใช่ควอดรันต์ 1&quot;</text><rect class="n term" x="-19.4" y="285.0" width="38.8" height="30" rx="15.0"/><text x="0" y="300.0">จบ</text></svg>
+    <figcaption>สร้าง tuple กับ unpack อย่างละ 1 กล่อง แล้วค่อยตัดสินใจ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>x = float(input("x: "))
+y = float(input("y: "))
+point = (x, y)
+px, py = point
+if px > 0 and py > 0:
+    print("ควอดรันต์ 1")
+else:
+    print("ไม่ใช่ควอดรันต์ 1")</pre></div>
+  </div>
     </details>
   </div>
 </main>

@@ -177,6 +177,57 @@ else:
 
 <span class="out"># ไม่พบเลข 7</span></pre>
 
+  <h2>7.8 Flowchart ของ while loop</h2>
+
+  <p><code>while</code> วาดตรงตัวที่สุด: เพชรคือเงื่อนไขของ while เลย
+  จริง = ทำตัว loop แล้ววนกลับไปถามใหม่ · เท็จ = ออกจาก loop</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-104 -21 208 466" style="max-width:302px" role="img" aria-label="flowchart รับตัวเลขจนกว่าจะเจอ 0 แล้วแสดงผลรวม"><defs><marker id="ah-ch7ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch7ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M0.0 119.0 L0.0 145.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M0.0 191.0 L0.0 225.0" marker-end="url(#ah-ch7ex)"/><text class="el" x="6.0" y="202.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 277.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M0.0 307.0 L0.0 322.0 L-100.0 322.0 L-100.0 168.0 L-43.8 168.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M0.0 387.0 L0.0 409.0" marker-end="url(#ah-ch7ex)"/><path class="e" d="M43.8 168.0 L100.0 168.0 L100.0 342.0 L0.0 342.0 L0.0 357.0" marker-end="url(#ah-ch7ex)"/><text class="el" x="51.8" y="163.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-39.5" y="37.0" width="79.1" height="30"/><text x="0" y="52.0">total = 0</text><path class="n io" d="M-24.3 89.0H40.3L24.3 119.0H-40.3Z"/><text x="0" y="104.0">รับ n</text><path class="n dec" d="M0 145.0L43.8 168L0 191.0L-43.8 168Z"/><text x="0" y="168.0">n != 0 ?</text><rect class="n" x="-42.5" y="225.0" width="85.0" height="30"/><text x="0" y="240.0">total += n</text><path class="n io" d="M-24.3 277.0H40.3L24.3 307.0H-40.3Z"/><text x="0" y="292.0">รับ n</text><path class="n io" d="M-42.5 357.0H58.5L42.5 387.0H-58.5Z"/><text x="0" y="372.0">แสดง total</text><rect class="n term" x="-19.4" y="409.0" width="38.8" height="30" rx="15.0"/><text x="0" y="424.0">จบ</text></svg>
+    <figcaption>รับตัวเลขจนเจอ 0 (sentinel) · สังเกตว่า <b>รับ n</b> มี 2 กล่อง: ก่อนเข้า loop และท้าย loop</figcaption>
+  </figure>
+  <div class="pair-code"><pre>total = 0
+n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
+
+while n != 0:
+    total += n
+    n = int(input("ใส่ตัวเลข (0 เพื่อจบ): "))
+
+print("ผลรวม:", total)</pre></div>
+  </div>
+
+  <div class="warn">
+    <b>ใช้ flowchart จับ loop ไม่รู้จบ:</b> ไล่ดูเส้นทางวนกลับ ต้องมีอย่างน้อย 1 กล่อง
+    ที่เปลี่ยนค่าตัวแปรในเพชร ถ้าไม่มี = วนไม่มีวันจบ
+  </div>
+
+  <h3>while True + break — เพชรย้ายไปอยู่กลาง loop</h3>
+
+  <p><code>while True</code> ไม่มีเพชรที่หัว loop เพราะถามว่า "True ?" ก็ได้คำตอบ<em>จริง</em>ทุกครั้ง
+  ไม่ต้องวาด · ทางออกเดียวคือเพชรของ <code>if ... break</code> ซึ่ง<strong>อยู่กลาง loop</strong></p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-138 -21 272 394" style="max-width:394px" role="img" aria-label="flowchart ของ while True กับ break"><defs><marker id="ah-ch7true" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch7true" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="grp i" x="-134" y="30" width="246" height="226" rx="6"/><text class="gl i" x="-128" y="43">while True</text><path class="e" d="M0.0 15.0 L0.0 41.0" marker-end="url(#ah-ch7true)"/><path class="e" d="M0.0 71.0 L0.0 107.0" marker-end="url(#ah-ch7true)"/><path class="e" d="M0.0 153.0 L0.0 195.0" marker-end="url(#ah-ch7true)"/><text class="el" x="6.0" y="164.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 225.0 L0.0 245.0 L-120.0 245.0 L-120.0 56.0 L-32.3 56.0" marker-end="url(#ah-ch7true)"/><path class="e hl" d="M52.7 130.0 L130.0 130.0 L130.0 270.0 L0.0 270.0 L0.0 285.0" marker-end="url(#ah2-ch7true)"/><text class="el hl" x="60.7" y="125.0" style="text-anchor:start">จริง: break</text><path class="e" d="M0.0 315.0 L0.0 337.0" marker-end="url(#ah-ch7true)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-24.3 41.0H40.3L24.3 71.0H-40.3Z"/><text x="0" y="56.0">รับ n</text><path class="n dec" d="M0 107.0L52.7 130L0 153.0L-52.7 130Z"/><text x="0" y="130.0">n == &quot;q&quot; ?</text><path class="n io" d="M-60.2 195.0H76.2L60.2 225.0H-76.2Z"/><text x="0" y="210.0">แสดง int(n) ** 2</text><path class="n io" d="M-62.5 285.0H78.5L62.5 315.0H-78.5Z"/><text x="0" y="300.0">แสดง &quot;จบโปรแกรม&quot;</text><rect class="n term" x="-19.4" y="337.0" width="38.8" height="30" rx="15.0"/><text x="0" y="352.0">จบ</text></svg>
+    <figcaption>ตัวอย่างจาก 7.4 · กรอบฟ้าคือตัว loop ไม่มีเพชรที่หัว · ออกได้ทางเดียวคือเส้นแดง <b>break</b></figcaption>
+  </figure>
+  <div class="pair-code"><pre>while True:
+    n = input("ใส่ตัวเลข (q เพื่อออก): ")
+    if n == "q":
+        break
+    print("กำลังสอง:", int(n) ** 2)
+
+print("จบโปรแกรม")</pre></div>
+  </div>
+
+  <table>
+    <tr><th></th><th>while เงื่อนไข (รูปแรก)</th><th>while True + break (รูปนี้)</th></tr>
+    <tr><td>เพชรอยู่ตรงไหน</td><td>หัว loop</td><td>กลาง loop</td></tr>
+    <tr><td>กล่อง "รับ n"</td><td>2 กล่อง ก่อน loop และท้าย loop</td><td>กล่องเดียว ต้น loop</td></tr>
+    <tr><td>ถ้าลืมทางออก</td><td>ลืมเปลี่ยนค่า = วนไม่จบ</td><td>ลืม break = วนไม่จบ</td></tr>
+  </table>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -258,6 +309,15 @@ else:
     <button class="choice">break ใช้ได้เฉพาะใน for · continue ใช้ได้เฉพาะใน while</button>
     <div class="explain">ทั้งสองคำสั่งใช้ได้ทั้ง for และ while — ต่างกันที่ break หยุดทั้ง loop
       ส่วน continue แค่ข้ามรอบปัจจุบัน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ใน flowchart ของ 7.8 (รับตัวเลขจนเจอ 0) ถ้า<strong>ลบกล่อง "รับ n" ตัวที่อยู่ใน loop</strong> ออก แล้วผู้ใช้พิมพ์ 5 ครั้งแรก จะเกิดอะไร?</div>
+    <button class="choice">loop จบทันที</button>
+    <button class="choice" data-correct>วนไม่รู้จบ</button>
+    <button class="choice">เกิด error</button>
+    <button class="choice">แสดงผลรวม 5</button>
+    <div class="explain">เส้นวนกลับไม่ผ่านกล่องไหนที่เปลี่ยนค่า <code>n</code> เลย เพชร <code>n != 0</code> จึงจริงตลอดไป</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -394,6 +454,26 @@ print(f"ผลรวมหลักของ {n} คือ {total}")
     <b>ผ่านครึ่งทางแล้ว</b> — ถ้าทำโจทย์ทั้งหมดได้เอง แปลว่าใช้ list, tuple,
     for และ while ได้จริงแล้ว บทถัดไปจะรวบ 7 รูปแบบที่ใช้กับ loop บ่อยที่สุด
     ไว้ในที่เดียว — นับ, รวม, เฉลี่ย, กรอง, ค้นหา, หาค่ามากสุดและน้อยสุด
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 6 — วาด Flowchart</h4>
+    <p>เงินฝาก 1,000 บาท ดอกเบี้ย 5% ต่อปี ต้องฝากกี่ปีถึงจะได้อย่างน้อย 2,000 บาท วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-124 -21 248 414" style="max-width:360px" role="img" aria-label="flowchart คำนวณปีที่เงินฝากถึง 2000"><defs><marker id="ah-ch7lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch7lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 30.5" marker-end="url(#ah-ch7lab)"/><path class="e" d="M0.0 73.5 L0.0 93.0" marker-end="url(#ah-ch7lab)"/><path class="e" d="M0.0 139.0 L0.0 173.0" marker-end="url(#ah-ch7lab)"/><text class="el" x="6.0" y="150.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 203.0 L0.0 225.0" marker-end="url(#ah-ch7lab)"/><path class="e" d="M0.0 255.0 L0.0 270.0 L-120.0 270.0 L-120.0 116.0 L-70.6 116.0" marker-end="url(#ah-ch7lab)"/><path class="e" d="M0.0 335.0 L0.0 357.0" marker-end="url(#ah-ch7lab)"/><path class="e" d="M70.6 116.0 L120.0 116.0 L120.0 290.0 L0.0 290.0 L0.0 305.0" marker-end="url(#ah-ch7lab)"/><text class="el" x="78.6" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-48.4" y="30.5" width="96.8" height="43"/><text x="0" y="45.5">money = 1000</text><text x="0" y="58.5">year = 0</text><path class="n dec" d="M0 93.0L70.6 116L0 139.0L-70.6 116Z"/><text x="0" y="116.0">money &lt; 2000 ?</text><rect class="n" x="-72.0" y="173.0" width="144.0" height="30"/><text x="0" y="188.0">money = money * 1.05</text><rect class="n" x="-39.5" y="225.0" width="79.1" height="30"/><text x="0" y="240.0">year += 1</text><path class="n io" d="M-60.2 305.0H76.2L60.2 335.0H-76.2Z"/><text x="0" y="320.0">แสดง year, money</text><rect class="n term" x="-19.4" y="357.0" width="38.8" height="30" rx="15.0"/><text x="0" y="372.0">จบ</text></svg>
+    <figcaption>เส้นวนกลับผ่าน 2 กล่องที่เปลี่ยนค่า money และ year</figcaption>
+  </figure>
+  <div class="pair-code"><pre>money = 1000
+year = 0
+while money &lt; 2000:
+    money = money * 1.05
+    year += 1
+print(f"ใช้เวลา {year} ปี ได้เงิน {money:.2f} บาท")</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

@@ -186,6 +186,30 @@ for name, score in sorted(scores.items(), key=lambda x: x[1], reverse=True):
 <span class="out"># หา key ที่ value สูงสุด</span>
 print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
 
+  <h2>9.9 Flowchart นับของด้วย dict</h2>
+
+  <p>ท่านับของ (9.5) มีเพชร 2 อัน: อันบนคือ loop ส่วนอันล่างถามว่า
+  <strong>เคยเจอ key นี้หรือยัง</strong> — คำตอบต่างกันก็ทำคนละอย่าง</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-124 -21 383 462" style="max-width:555px" role="img" aria-label="flowchart นับคำด้วย dictionary"><defs><marker id="ah-ch9ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch9ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch9ex)"/><path class="e" d="M0.0 67.0 L0.0 86.5" marker-end="url(#ah-ch9ex)"/><path class="e" d="M0.0 145.5 L0.0 181.0" marker-end="url(#ah-ch9ex)"/><text class="el" x="6.0" y="156.5" style="text-anchor:start">จริง</text><path class="e" d="M66.1 204.0 L122.1 204.0" marker-end="url(#ah-ch9ex)"/><text class="el" x="74.1" y="199.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 227.0 L0.0 267.0" marker-end="url(#ah-ch9ex)"/><text class="el" x="6.0" y="238.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 297.0 L0.0 316.0 L-120.0 316.0 L-120.0 116.0 L-53.5 116.0" marker-end="url(#ah-ch9ex)"/><path class="e" d="M176.4 219.0 L176.4 316.0 L-120.0 316.0 L-120.0 116.0 L-53.5 116.0" marker-end="url(#ah-ch9ex)"/><path class="e" d="M0.0 383.0 L0.0 405.0" marker-end="url(#ah-ch9ex)"/><path class="e" d="M53.5 116.0 L254.7 116.0 L254.7 338.0 L0.0 338.0 L0.0 353.0" marker-end="url(#ah-ch9ex)"/><text class="el" x="61.5" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-45.4" y="37.0" width="90.9" height="30"/><text x="0" y="52.0">counts = {}</text><path class="n dec" d="M0 86.5L53.5 116L0 145.5L-53.5 116Z"/><text x="0" y="109.5">ยังมี w</text><text x="0" y="122.5">ใน words ?</text><path class="n dec" d="M0 181.0L66.1 204L0 227.0L-66.1 204Z"/><text x="0" y="204.0">w in counts ?</text><rect class="n" x="122.1" y="189.0" width="108.6" height="30"/><text x="176.4060606060606" y="204.0">counts[w] += 1</text><rect class="n" x="-51.4" y="267.0" width="102.7" height="30"/><text x="0" y="282.0">counts[w] = 1</text><path class="n io" d="M-45.4 353.0H61.4L45.4 383.0H-61.4Z"/><text x="0" y="368.0">แสดง counts</text><rect class="n term" x="-19.4" y="405.0" width="38.8" height="30" rx="15.0"/><text x="0" y="420.0">จบ</text></svg>
+    <figcaption>เคยเจอแล้ว → บวกเพิ่ม · ยังไม่เคย → สร้าง key ใหม่ค่าเริ่ม 1 · แล้วทั้งคู่วนกลับไปคำถัดไป</figcaption>
+  </figure>
+  <div class="pair-code"><pre>counts = {}
+for w in words:
+    if w in counts:
+        counts[w] += 1
+    else:
+        counts[w] = 1
+print(counts)</pre></div>
+  </div>
+
+  <div class="note">
+    <code>counts[w] = counts.get(w, 0) + 1</code> ทำงานเหมือน flowchart ข้างบนทุกอย่าง
+    แค่ย่อเพชรกับ 2 กล่องให้เหลือบรรทัดเดียว
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -246,6 +270,15 @@ print(max(scores, key=scores.get))    <span class="out"># นล</span></pre>
     <button class="choice">get จะสร้าง key "x" ให้ด้วย</button>
     <button class="choice">get ใช้ได้เฉพาะกับ value ที่เป็นตัวเลข</button>
     <div class="explain">พารามิเตอร์ตัวที่ 2 คือค่าสำรองเมื่อไม่เจอ key (ถ้าไม่ใส่จะได้ <code>None</code>)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ใน flowchart นับคำ (9.9) ถ้าตัดเพชร <code>w in counts ?</code> ทิ้ง แล้วทำ <code>counts[w] += 1</code> ทุกรอบ จะเกิดอะไร?</div>
+    <button class="choice">นับได้ถูกเหมือนเดิม</button>
+    <button class="choice">ได้ค่าทุกคำเป็น 1</button>
+    <button class="choice" data-correct>KeyError ตั้งแต่คำแรก</button>
+    <button class="choice">ได้ dict ว่าง</button>
+    <div class="explain">คำแรกยังไม่มี key ใน dict การ <code>+= 1</code> ต้องอ่านค่าเดิมก่อน จึงพัง · ทาง "เท็จ" มีไว้สร้าง key นี่เอง</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -355,6 +388,26 @@ while True:
 
     else:
         print("เลือก 1-4 เท่านั้น")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>สมุดโทรศัพท์เก็บใน dict รับชื่อจากผู้ใช้ ถ้ามีให้แสดงเบอร์ ถ้าไม่มีให้แสดง "ไม่พบ" วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-260 -21 531 290" style="max-width:770px" role="img" aria-label="flowchart ค้นหาเบอร์โทรใน dict"><defs><marker id="ah-ch9lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch9lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch9lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch9lab)"/><path class="e" d="M0.0 119.0 L0.0 145.0" marker-end="url(#ah-ch9lab)"/><path class="e" d="M70.6 168.0 L126.6 168.0" marker-end="url(#ah-ch9lab)"/><text class="el" x="78.6" y="163.0" style="text-anchor:start">จริง</text><path class="e" d="M-70.6 168.0 L-137.4 168.0" marker-end="url(#ah-ch9lab)"/><text class="el" x="-78.6" y="163.0" style="text-anchor:end">เท็จ</text><path class="e" d="M191.8 183.0 L191.8 219.0 L0.0 219.0 L0.0 233.0" marker-end="url(#ah-ch9lab)"/><path class="e" d="M-191.8 183.0 L-191.8 219.0 L0.0 219.0 L0.0 233.0" marker-end="url(#ah-ch9lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-96.1" y="37.0" width="192.2" height="30"/><text x="0" y="52.0">book = {&quot;ฟ้า&quot;: &quot;081...&quot;, ...}</text><path class="n io" d="M-33.1 89.0H49.1L33.1 119.0H-49.1Z"/><text x="0" y="104.0">รับ name</text><path class="n dec" d="M0 145.0L70.6 168L0 191.0L-70.6 168Z"/><text x="0" y="168.0">name in book ?</text><path class="n io" d="M134.6 153.0H265.1L249.1 183.0H118.6Z"/><text x="191.82575757575756" y="168.0">แสดง book[name]</text><path class="n io" d="M-238.3 153.0H-129.4L-145.4 183.0H-254.3Z"/><text x="-191.82575757575756" y="168.0">แสดง &quot;ไม่พบ&quot;</text><rect class="n term" x="-19.4" y="233.0" width="38.8" height="30" rx="15.0"/><text x="0" y="248.0">จบ</text></svg>
+    <figcaption>ถาม <b>name in book</b> ก่อนอ่าน จะได้ไม่เกิด KeyError</figcaption>
+  </figure>
+  <div class="pair-code"><pre>book = {"ฟ้า": "081-111-1111", "ต้น": "082-222-2222"}
+name = input("ชื่อ: ")
+if name in book:
+    print(book[name])
+else:
+    print("ไม่พบ")</pre></div>
+  </div>
     </details>
   </div>
 </main>

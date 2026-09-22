@@ -204,6 +204,97 @@ for i in range(1, 6):
     ถ้าโปรแกรมช้าผิดปกติ ให้มองหา loop ซ้อนก่อนเป็นอันดับแรก
   </div>
 
+  <h2>6.9 Flowchart ของ for loop</h2>
+
+  <p>flowchart ไม่มีสัญลักษณ์ "for" โดยเฉพาะ loop คือ<strong>เพชรที่ถามว่ายังมีค่าถัดไปไหม</strong>
+  ถ้ามี (จริง) ทำงานในตัว loop แล้วลากเส้น<em>ย้อนกลับขึ้นไป</em>ถามใหม่ ถ้าหมดแล้ว (เท็จ) ออกไปทำบรรทัดถัดไป</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-124 -21 248 414" style="max-width:360px" role="img" aria-label="flowchart หาผลรวม 1 ถึง n ด้วย for loop"><defs><marker id="ah-ch6ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch6ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch6ex)"/><path class="e" d="M0.0 119.0 L0.0 138.5" marker-end="url(#ah-ch6ex)"/><path class="e" d="M0.0 197.5 L0.0 225.0" marker-end="url(#ah-ch6ex)"/><text class="el" x="6.0" y="208.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 270.0 L-120.0 270.0 L-120.0 168.0 L-84.0 168.0" marker-end="url(#ah-ch6ex)"/><path class="e" d="M0.0 335.0 L0.0 357.0" marker-end="url(#ah-ch6ex)"/><path class="e" d="M84.0 168.0 L120.0 168.0 L120.0 290.0 L0.0 290.0 L0.0 305.0" marker-end="url(#ah-ch6ex)"/><text class="el" x="92.0" y="163.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-24.3 37.0H40.3L24.3 67.0H-40.3Z"/><text x="0" y="52.0">รับ n</text><rect class="n" x="-39.5" y="89.0" width="79.1" height="30"/><text x="0" y="104.0">total = 0</text><path class="n dec" d="M0 138.5L84.0 168L0 197.5L-84.0 168Z"/><text x="0" y="161.5">ยังมี i ถัดไปใน</text><text x="0" y="174.5">range(1, n + 1) ?</text><rect class="n" x="-63.2" y="225.0" width="126.3" height="30"/><text x="0" y="240.0">total = total + i</text><path class="n io" d="M-42.5 305.0H58.5L42.5 335.0H-58.5Z"/><text x="0" y="320.0">แสดง total</text><rect class="n term" x="-19.4" y="357.0" width="38.8" height="30" rx="15.0"/><text x="0" y="372.0">จบ</text></svg>
+    <figcaption>หาผลรวม 1 ถึง n · <b>เส้นย้อนกลับ</b>ทางซ้ายคือสิ่งที่ทำให้มันเป็น loop</figcaption>
+  </figure>
+  <div class="pair-code"><pre>n = int(input("n: "))
+total = 0
+for i in range(1, n + 1):
+    total = total + i
+print(total)</pre></div>
+  </div>
+
+  <div class="note">
+    <b>อ่าน flowchart ให้ออกว่าอะไรอยู่ใน loop:</b> กล่องที่อยู่บนเส้นทางจากทาง "จริง"
+    วนกลับไปหาเพชร = โค้ดที่ย่อหน้าอยู่ใต้ <code>for</code> ส่วนกล่องหลังทาง "เท็จ" = โค้ดที่อยู่นอก loop
+  </div>
+
+  <h3>Loop ซ้อน Loop — วงเล็กอยู่ในวงใหญ่</h3>
+
+  <p>loop ซ้อนคือ<strong>ทั้งก้อน loop ใน (เพชร + เส้นวนกลับ) ไปอยู่บนทาง "จริง" ของ loop นอก</strong>
+  ตัวอย่างสูตรคูณ 3x3 จาก 6.8 วาดได้แบบนี้</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-200 -21 404 482" style="max-width:586px" role="img" aria-label="flowchart loop ซ้อน loop พิมพ์สูตรคูณ 3x3"><defs><marker id="ah-ch6nest" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6nest" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="grp o" x="-196" y="20" width="362" height="357" rx="6"/><text class="gl o" x="-190" y="33">loop นอก (i)</text><rect class="grp i" x="-136" y="116" width="284" height="194" rx="6"/><text class="gl i" x="-130" y="129">loop ใน (j)</text><path class="e" d="M0.0 15.0 L0.0 34.5" marker-end="url(#ah-ch6nest)"/><path class="e" d="M0.0 93.5 L0.0 130.5" marker-end="url(#ah-ch6nest)"/><text class="el" x="6.0" y="104.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 189.5 L0.0 225.0" marker-end="url(#ah-ch6nest)"/><text class="el" x="6.0" y="200.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 280.0 L-120.0 280.0 L-120.0 160.0 L-66.1 160.0" marker-end="url(#ah-ch6nest)"/><path class="e" d="M66.1 160.0 L130.0 160.0 L130.0 300.0 L0.0 300.0 L0.0 315.0" marker-end="url(#ah-ch6nest)"/><text class="el" x="74.1" y="155.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 345.0 L0.0 365.0 L-180.0 365.0 L-180.0 64.0 L-66.1 64.0" marker-end="url(#ah-ch6nest)"/><path class="e" d="M66.1 64.0 L200.0 64.0 L200.0 410.0 L0.0 410.0 L0.0 425.0" marker-end="url(#ah-ch6nest)"/><text class="el" x="74.1" y="59.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n dec" d="M0 34.5L66.1 64L0 93.5L-66.1 64Z"/><text x="0" y="57.5">ยังมี i ใน</text><text x="0" y="70.5">range(1, 4) ?</text><path class="n dec" d="M0 130.5L66.1 160L0 189.5L-66.1 160Z"/><text x="0" y="153.5">ยังมี j ใน</text><text x="0" y="166.5">range(1, 4) ?</text><path class="n io" d="M-77.9 225.0H93.9L77.9 255.0H-93.9Z"/><text x="0" y="240.0">แสดง i x j  (end=&quot;  &quot;)</text><path class="n io" d="M-70.6 315.0H86.6L70.6 345.0H-86.6Z"/><text x="0" y="330.0">print()  ขึ้นบรรทัดใหม่</text><rect class="n term" x="-19.4" y="425.0" width="38.8" height="30" rx="15.0"/><text x="0" y="440.0">จบ</text></svg>
+    <figcaption><b>กรอบฟ้า</b> = loop ใน วนเส้นซ้ายเล็ก 3 รอบ แล้วจึงออกทาง "เท็จ" ไปขึ้นบรรทัดใหม่ · จากนั้นเส้นซ้ายใหญ่ใน<b>กรอบม่วง</b> (loop นอก) พากลับไปถาม i รอบถัดไป</figcaption>
+  </figure>
+  <div class="pair-code"><pre>for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"{i}x{j}={i*j}", end="  ")
+    print()</pre></div>
+  </div>
+
+  <p>ไล่ลูกศรตามทีละรอบ จะเห็นว่าวงเล็กวนครบก่อนวงใหญ่จะขยับ 1 ครั้งเสมอ</p>
+
+  <table>
+    <tr><th>loop นอก</th><th>loop ใน วนกี่รอบ</th><th>สิ่งที่ออกหน้าจอ</th><th>ออกจาก loop ใน แล้ว</th></tr>
+    <tr><td><code>i = 1</code></td><td>j = 1, 2, 3</td><td><span class="mono">1x1=1  1x2=2  1x3=3</span></td><td>ขึ้นบรรทัดใหม่ · กลับไปถาม i</td></tr>
+    <tr><td><code>i = 2</code></td><td>j = 1, 2, 3</td><td><span class="mono">2x1=2  2x2=4  2x3=6</span></td><td>ขึ้นบรรทัดใหม่ · กลับไปถาม i</td></tr>
+    <tr><td><code>i = 3</code></td><td>j = 1, 2, 3</td><td><span class="mono">3x1=3  3x2=6  3x3=9</span></td><td>ขึ้นบรรทัดใหม่ · กลับไปถาม i</td></tr>
+    <tr><td>i หมดแล้ว</td><td>—</td><td>—</td><td>ออกทาง "เท็จ" ของ loop นอก → จบ</td></tr>
+  </table>
+
+  <div class="note">
+    <b>ดูจากเส้นว่ากล่องไหนอยู่ชั้นไหน</b><br>
+    · อยู่ในกรอบฟ้า (วนตามเส้นซ้ายเล็ก) = ย่อหน้า 2 ชั้น ทำ 3 × 3 = 9 ครั้ง<br>
+    · อยู่ในกรอบม่วงแต่นอกกรอบฟ้า เช่น <code>print()</code> = ย่อหน้า 1 ชั้น ทำ 3 ครั้ง<br>
+    · อยู่นอกทุกกรอบ = ไม่ย่อหน้า ทำครั้งเดียว<br>
+    ถ้าเอา <code>print()</code> ไปไว้ผิดชั้น ใน flowchart จะเห็นทันทีว่าอยู่ผิดวง
+  </div>
+
+  <h3>break และ continue — เส้นที่ลัดทาง</h3>
+
+  <p>ใน flowchart สองคำสั่งนี้ไม่มีกล่องของตัวเอง แต่เป็น<strong>ลูกศรที่ลัดทาง</strong> (เส้นแดง)
+  <code>break</code> พุ่งออกนอก loop ไปเลย · <code>continue</code> ย้อนกลับไปหาเพชรของ loop
+  โดยข้ามกล่องที่เหลือในรอบนั้น</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-154 -21 466 372" style="max-width:676px" role="img" aria-label="flowchart ของ break"><defs><marker id="ah-ch6brk" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6brk" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 42.5" marker-end="url(#ah-ch6brk)"/><path class="e" d="M0.0 101.5 L0.0 143.0" marker-end="url(#ah-ch6brk)"/><text class="el" x="6.0" y="112.5" style="text-anchor:start">จริง</text><path class="e" d="M43.8 166.0 L99.8 166.0" marker-end="url(#ah-ch6brk)"/><text class="el" x="51.8" y="161.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 189.0 L0.0 225.0" marker-end="url(#ah-ch6brk)"/><text class="el" x="6.0" y="200.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 255.0 L0.0 275.0 L-150.0 275.0 L-150.0 72.0 L-88.5 72.0" marker-end="url(#ah-ch6brk)"/><path class="e" d="M88.5 72.0 L308.0 72.0 L308.0 301.0 L0.0 301.0 L0.0 315.0" marker-end="url(#ah-ch6brk)"/><text class="el" x="96.5" y="67.0" style="text-anchor:start">เท็จ</text><path class="e hl" d="M190.9 181.0 L190.9 301.0 L0.0 301.0 L0.0 315.0" marker-end="url(#ah2-ch6brk)"/><text class="el hl" x="196.9" y="192.0" style="text-anchor:start">break</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n dec" d="M0 42.5L88.5 72L0 101.5L-88.5 72Z"/><text x="0" y="65.5">ยังมี n ใน</text><text x="0" y="78.5">[3, 7, 12, 5, 9] ?</text><path class="n dec" d="M0 143.0L43.8 166L0 189.0L-43.8 166Z"/><text x="0" y="166.0">n &gt; 10 ?</text><path class="n io" d="M107.8 151.0H290.0L274.0 181.0H91.8Z"/><text x="190.85757575757577" y="166.0">แสดง &quot;เจอเลขเกิน 10:&quot;, n</text><path class="n io" d="M-55.1 225.0H71.1L55.1 255.0H-71.1Z"/><text x="0" y="240.0">แสดง &quot;ผ่าน:&quot;, n</text><rect class="n term" x="-19.4" y="315.0" width="38.8" height="30" rx="15.0"/><text x="0" y="330.0">จบ</text></svg>
+    <figcaption><b>break</b>: เจอเลขเกิน 10 แล้วเส้นแดงพาไป "จบ" ทันที 5 กับ 9 จึงไม่ถูกถามเลย · loop นี้เลยออกได้ 2 ทาง คือของหมดกับ break</figcaption>
+  </figure>
+  <div class="pair-code"><pre>for n in [3, 7, 12, 5, 9]:
+    if n &gt; 10:
+        print("เจอเลขเกิน 10:", n)
+        break
+    print("ผ่าน:", n)</pre></div>
+  </div>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-154 -21 288 372" style="max-width:418px" role="img" aria-label="flowchart ของ continue"><defs><marker id="ah-ch6cont" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6cont" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 42.5" marker-end="url(#ah-ch6cont)"/><path class="e" d="M0.0 101.5 L0.0 143.0" marker-end="url(#ah-ch6cont)"/><text class="el" x="6.0" y="112.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 189.0 L0.0 225.0" marker-end="url(#ah-ch6cont)"/><text class="el" x="6.0" y="200.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 255.0 L0.0 275.0 L-150.0 275.0 L-150.0 72.0 L-70.6 72.0" marker-end="url(#ah-ch6cont)"/><path class="e hl" d="M-61.6 166.0 L-150.0 166.0 L-150.0 72.0 L-70.6 72.0" marker-end="url(#ah2-ch6cont)"/><text class="el hl" x="-69.6" y="161.0" style="text-anchor:end">จริง: continue</text><path class="e" d="M70.6 72.0 L130.0 72.0 L130.0 301.0 L0.0 301.0 L0.0 315.0" marker-end="url(#ah-ch6cont)"/><text class="el" x="78.6" y="67.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n dec" d="M0 42.5L70.6 72L0 101.5L-70.6 72Z"/><text x="0" y="65.5">ยังมี n ใน</text><text x="0" y="78.5">range(1, 11) ?</text><path class="n dec" d="M0 143.0L61.6 166L0 189.0L-61.6 166Z"/><text x="0" y="166.0">n % 2 == 0 ?</text><path class="n io" d="M-30.7 225.0H46.7L30.7 255.0H-46.7Z"/><text x="0" y="240.0">แสดง n</text><rect class="n term" x="-19.4" y="315.0" width="38.8" height="30" rx="15.0"/><text x="0" y="330.0">จบ</text></svg>
+    <figcaption><b>continue</b>: เลขคู่วิ่งตามเส้นแดงกลับไปถามเพชรบนทันที ไม่ผ่านกล่อง "แสดง n"</figcaption>
+  </figure>
+  <div class="pair-code"><pre>for n in range(1, 11):
+    if n % 2 == 0:
+        continue
+    print(n, end=" ")</pre></div>
+  </div>
+
+  <div class="note">
+    <b>จำง่าย ๆ จากทิศของเส้นแดง:</b> break ชี้<strong>ลง</strong>ออกนอก loop ·
+    continue ชี้<strong>ขึ้น</strong>กลับไปหัว loop · ถ้าอยู่ใน loop ซ้อน ทั้งคู่มีผลแค่กับ
+    <em>loop ชั้นที่ใกล้ที่สุด</em> (กรอบฟ้า) ไม่ทะลุออกกรอบม่วง
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -281,6 +372,18 @@ for i in range(1, 6):
     <button class="choice">5</button>
     <button class="choice">6</button>
     <div class="explain"><code>zip</code> หยุดตามตัวที่สั้นที่สุด → 2 รอบ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ตาม flowchart นี้ กล่อง <strong>"แสดง i, j"</strong> ทำงานทั้งหมดกี่ครั้ง?</div>
+    <figure class="fig">
+      <svg class="flow" viewBox="-200 -21 404 482" style="max-width:586px" role="img" aria-label="flowchart loop ซ้อนสำหรับคำถาม"><defs><marker id="ah-q6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-q6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="grp o" x="-196" y="20" width="362" height="357" rx="6"/><text class="gl o" x="-190" y="33">loop นอก (i)</text><rect class="grp i" x="-136" y="116" width="284" height="194" rx="6"/><text class="gl i" x="-130" y="129">loop ใน (j)</text><path class="e" d="M0.0 15.0 L0.0 34.5" marker-end="url(#ah-q6)"/><path class="e" d="M0.0 93.5 L0.0 130.5" marker-end="url(#ah-q6)"/><text class="el" x="6.0" y="104.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 189.5 L0.0 225.0" marker-end="url(#ah-q6)"/><text class="el" x="6.0" y="200.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 280.0 L-120.0 280.0 L-120.0 160.0 L-66.1 160.0" marker-end="url(#ah-q6)"/><path class="e" d="M66.1 160.0 L130.0 160.0 L130.0 300.0 L0.0 300.0 L0.0 315.0" marker-end="url(#ah-q6)"/><text class="el" x="74.1" y="155.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 345.0 L0.0 365.0 L-180.0 365.0 L-180.0 64.0 L-66.1 64.0" marker-end="url(#ah-q6)"/><path class="e" d="M66.1 64.0 L200.0 64.0 L200.0 410.0 L0.0 410.0 L0.0 425.0" marker-end="url(#ah-q6)"/><text class="el" x="74.1" y="59.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n dec" d="M0 34.5L66.1 64L0 93.5L-66.1 64Z"/><text x="0" y="57.5">ยังมี i ใน</text><text x="0" y="70.5">range(1, 3) ?</text><path class="n dec" d="M0 130.5L66.1 160L0 189.5L-66.1 160Z"/><text x="0" y="153.5">ยังมี j ใน</text><text x="0" y="166.5">range(1, 4) ?</text><path class="n io" d="M-39.5 225.0H55.5L39.5 255.0H-55.5Z"/><text x="0" y="240.0">แสดง i, j</text><path class="n io" d="M-32.6 315.0H48.6L32.6 345.0H-48.6Z"/><text x="0" y="330.0">print()</text><rect class="n term" x="-19.4" y="425.0" width="38.8" height="30" rx="15.0"/><text x="0" y="440.0">จบ</text></svg>
+    </figure>
+    <button class="choice">3 ครั้ง</button>
+    <button class="choice">5 ครั้ง</button>
+    <button class="choice" data-correct>6 ครั้ง</button>
+    <button class="choice">9 ครั้ง</button>
+    <div class="explain">loop นอกวน 2 รอบ (i = 1, 2) · แต่ละรอบ loop ในวน 3 รอบ (j = 1, 2, 3) → 2 × 3 = 6</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -393,6 +496,41 @@ for i in range(1, h + 1):
         print(n, end=" ")
 
 <span class="out"># 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 6 — วาด Flowchart</h4>
+    <p>รับเลข <code>n</code> แล้วแสดงสูตรคูณแม่ n ตั้งแต่ n x 1 ถึง n x 12 วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-124 -21 248 310" style="max-width:360px" role="img" aria-label="flowchart สูตรคูณด้วย for loop"><defs><marker id="ah-ch6lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch6lab)"/><path class="e" d="M0.0 67.0 L0.0 86.5" marker-end="url(#ah-ch6lab)"/><path class="e" d="M0.0 145.5 L0.0 173.0" marker-end="url(#ah-ch6lab)"/><text class="el" x="6.0" y="156.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 203.0 L0.0 218.0 L-120.0 218.0 L-120.0 116.0 L-70.6 116.0" marker-end="url(#ah-ch6lab)"/><path class="e" d="M70.6 116.0 L120.0 116.0 L120.0 238.0 L0.0 238.0 L0.0 253.0" marker-end="url(#ah-ch6lab)"/><text class="el" x="78.6" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-24.3 37.0H40.3L24.3 67.0H-40.3Z"/><text x="0" y="52.0">รับ n</text><path class="n dec" d="M0 86.5L70.6 116L0 145.5L-70.6 116Z"/><text x="0" y="109.5">ยังมี i ถัดไปใน</text><text x="0" y="122.5">range(1, 13) ?</text><path class="n io" d="M-66.1 173.0H82.1L66.1 203.0H-82.1Z"/><text x="0" y="188.0">แสดง n x i = n * i</text><rect class="n term" x="-19.4" y="253.0" width="38.8" height="30" rx="15.0"/><text x="0" y="268.0">จบ</text></svg>
+    <figcaption>ใน loop มีกล่องเดียวคือแสดงผล</figcaption>
+  </figure>
+  <div class="pair-code"><pre>n = int(input("แม่: "))
+for i in range(1, 13):
+    print(f"{n} x {i} = {n * i}")</pre></div>
+  </div>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 7 — วาด Flowchart loop ซ้อน</h4>
+    <p>วาด flowchart ของโปรแกรมวาดสามเหลี่ยมดาว 5 แถวใน 6.8 (แถวที่ i มีดาว i ดวง) แล้วบอกว่ากล่อง "แสดง *" ทำงานทั้งหมดกี่ครั้ง</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-200 -21 404 482" style="max-width:586px" role="img" aria-label="flowchart loop ซ้อน loop วาดสามเหลี่ยมดาว"><defs><marker id="ah-ch6lab2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch6lab2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="grp o" x="-196" y="20" width="362" height="357" rx="6"/><text class="gl o" x="-190" y="33">loop นอก (i)</text><rect class="grp i" x="-136" y="116" width="284" height="194" rx="6"/><text class="gl i" x="-130" y="129">loop ใน (j)</text><path class="e" d="M0.0 15.0 L0.0 34.5" marker-end="url(#ah-ch6lab2)"/><path class="e" d="M0.0 93.5 L0.0 130.5" marker-end="url(#ah-ch6lab2)"/><text class="el" x="6.0" y="104.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 189.5 L0.0 225.0" marker-end="url(#ah-ch6lab2)"/><text class="el" x="6.0" y="200.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 280.0 L-120.0 280.0 L-120.0 160.0 L-52.7 160.0" marker-end="url(#ah-ch6lab2)"/><path class="e" d="M52.7 160.0 L130.0 160.0 L130.0 300.0 L0.0 300.0 L0.0 315.0" marker-end="url(#ah-ch6lab2)"/><text class="el" x="60.7" y="155.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 345.0 L0.0 365.0 L-180.0 365.0 L-180.0 64.0 L-66.1 64.0" marker-end="url(#ah-ch6lab2)"/><path class="e" d="M66.1 64.0 L200.0 64.0 L200.0 410.0 L0.0 410.0 L0.0 425.0" marker-end="url(#ah-ch6lab2)"/><text class="el" x="74.1" y="59.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n dec" d="M0 34.5L66.1 64L0 93.5L-66.1 64Z"/><text x="0" y="57.5">ยังมี i ใน</text><text x="0" y="70.5">range(1, 6) ?</text><path class="n dec" d="M0 130.5L52.7 160L0 189.5L-52.7 160Z"/><text x="0" y="153.5">ยังมี j ใน</text><text x="0" y="166.5">range(i) ?</text><path class="n io" d="M-66.1 225.0H82.1L66.1 255.0H-82.1Z"/><text x="0" y="240.0">แสดง &quot;*&quot;  (end=&quot;&quot;)</text><path class="n io" d="M-70.6 315.0H86.6L70.6 345.0H-86.6Z"/><text x="0" y="330.0">print()  ขึ้นบรรทัดใหม่</text><rect class="n term" x="-19.4" y="425.0" width="38.8" height="30" rx="15.0"/><text x="0" y="440.0">จบ</text></svg>
+    <figcaption>โครงเหมือนสูตรคูณเป๊ะ ต่างกันที่ loop ในวน <b>range(i)</b> จึงวนไม่เท่ากันทุกแถว · กล่อง "แสดง *" ทำงาน 1 + 2 + 3 + 4 + 5 = <b>15 ครั้ง</b></figcaption>
+  </figure>
+  <div class="pair-code"><pre>for i in range(1, 6):
+    for j in range(i):
+        print("*", end="")
+    print()</pre></div>
+  </div>
     </details>
   </div>
 </main>

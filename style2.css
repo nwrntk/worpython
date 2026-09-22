@@ -625,3 +625,59 @@ th {
 
 .fig-math b { color: var(--accent-hot); }
 .fig .num { font-family: var(--font-mono); font-size: 11px; text-anchor: middle; }
+
+/* ===== Flowchart (SVG) ===== */
+
+.fig svg.flow { margin: 0 auto; }
+.flow .n { fill: var(--paper); stroke: var(--accent-hot); stroke-width: 1.2; }
+.flow .n.term { fill: var(--bg); }
+.flow .n.dec { fill: #fdf6e3; }
+.flow .n.io { fill: #eef6f1; }
+.flow text {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.flow .e { fill: none; stroke: var(--ink-soft); stroke-width: 1.1; }
+.flow .ah { fill: var(--ink-soft); }
+.flow text.el { font-size: 9.5px; font-weight: 600; fill: var(--accent-hot); dominant-baseline: auto; }
+/* กรอบ loop ซ้อน: นอก = ม่วง, ใน = ฟ้าเข้ม */
+.flow .grp { stroke-width: 1.2; stroke-dasharray: 5 3; }
+.flow .grp.o { fill: #f3eefa; stroke: #7b5ea7; }
+.flow .grp.i { fill: #e1edf7; stroke: #2c5871; }
+.flow text.gl { font-size: 9.5px; font-weight: 700; text-anchor: start; }
+.flow text.gl.o { fill: #7b5ea7; }
+.flow text.gl.i { fill: #2c5871; }
+.flow .e.hl { stroke: #b0453d; stroke-width: 2; }
+.flow .ah.hl { fill: #b0453d; }
+.flow text.el.hl { fill: #b0453d; }
+.quiz .fig { margin: .6rem 0 .9rem; max-width: 360px; border-left-width: 1px; }
+
+/* ===== คู่ flowchart + โค้ด: การ์ดเดียว รูปบน โค้ดล่าง ===== */
+
+.pair {
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-top: 3px solid var(--accent-hot);
+  border-radius: 2px;
+  padding: 1rem 1.2rem 1.2rem;
+  margin: 2.2rem 0;
+  max-width: 680px;
+}
+
+.pair .fig { margin: 0; padding: 0; border: 0; max-width: none; }
+.pair .fig::before, .pair-code::before {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--accent-hot);
+  margin-bottom: .5rem;
+}
+.pair .fig::before { content: "FLOWCHART"; }
+.pair-code::before { content: "PYTHON"; }
+.pair-code { border-top: 1px dashed var(--rule-2); margin-top: 1rem; padding-top: .9rem; }
+.pair-code pre { margin: 0; }

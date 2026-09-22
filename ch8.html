@@ -343,6 +343,23 @@ print(3 in nums)               <span class="out"># True   ← ค้นหา</s
 print(max(nums))               <span class="out"># 74     ← มากสุด</span>
 print(min(nums))               <span class="out"># 3      ← น้อยสุด</span></pre>
 
+  <h2>8.12 Flowchart ของ Loop Patterns</h2>
+
+  <p>ทุก pattern ในบทนี้มีโครงเดียวกัน: <strong>ตั้งค่าเริ่มต้นก่อน loop → อัปเดตใน loop → ใช้ผลหลัง loop</strong>
+  ใน flowchart จะเห็นชัดมากว่าแต่ละกล่องอยู่ช่วงไหน</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-154 -21 408 410" style="max-width:592px" role="img" aria-label="flowchart หาค่ามากที่สุดโดยเริ่มจาก None"><defs><marker id="ah-ch8ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch8ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch8ex)"/><path class="e" d="M0.0 67.0 L0.0 86.5" marker-end="url(#ah-ch8ex)"/><path class="e" d="M0.0 145.5 L0.0 174.5" marker-end="url(#ah-ch8ex)"/><text class="el" x="6.0" y="156.5" style="text-anchor:start">จริง</text><path class="e" d="M79.5 204.0 L135.5 204.0" marker-end="url(#ah-ch8ex)"/><text class="el" x="87.5" y="199.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 233.5 L0.0 264.0 L-150.0 264.0 L-150.0 116.0 L-49.0 116.0" marker-end="url(#ah-ch8ex)"/><text class="el" x="6.0" y="244.5" style="text-anchor:start">เท็จ</text><path class="e" d="M181.0 219.0 L181.0 264.0 L-150.0 264.0 L-150.0 116.0 L-49.0 116.0" marker-end="url(#ah-ch8ex)"/><path class="e" d="M0.0 331.0 L0.0 353.0" marker-end="url(#ah-ch8ex)"/><path class="e" d="M49.0 116.0 L250.4 116.0 L250.4 286.0 L0.0 286.0 L0.0 301.0" marker-end="url(#ah-ch8ex)"/><text class="el" x="57.0" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-54.3" y="37.0" width="108.6" height="30"/><text x="0" y="52.0">largest = None</text><path class="n dec" d="M0 86.5L49.0 116L0 145.5L-49.0 116Z"/><text x="0" y="109.5">ยังมี x</text><text x="0" y="122.5">ใน nums ?</text><path class="n dec" d="M0 174.5L79.5 204L0 233.5L-79.5 204Z"/><text x="0" y="197.5">largest is None</text><text x="0" y="210.5">or x &gt; largest ?</text><rect class="n" x="135.5" y="189.0" width="90.9" height="30"/><text x="180.96515151515152" y="204.0">largest = x</text><path class="n io" d="M-48.4 301.0H64.4L48.4 331.0H-64.4Z"/><text x="0" y="316.0">แสดง largest</text><rect class="n term" x="-19.4" y="353.0" width="38.8" height="30" rx="15.0"/><text x="0" y="368.0">จบ</text></svg>
+    <figcaption>Largest · เพชรบนคือ loop เพชรล่างคือ if ใน loop · ทาง "เท็จ" ของ if วนกลับไปเลยโดยไม่ทำอะไร</figcaption>
+  </figure>
+  <div class="pair-code"><pre>largest = None
+for x in nums:
+    if largest is None or x > largest:
+        largest = x
+print(largest)</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -436,6 +453,15 @@ print(min(nums))               <span class="out"># 3      ← น้อยสุ
     <button class="choice">ทั้งคู่เป็น indefinite</button>
     <div class="explain"><code>for</code> รู้จำนวนรอบแน่นอน (definite) ส่วน <code>while</code>
       วนจนกว่าเงื่อนไขจะเป็นเท็จ ไม่รู้ล่วงหน้า (indefinite)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q9">ใน flowchart หาค่ามากสุด (8.12) ถ้าเปลี่ยนกล่องแรกเป็น <code>largest = 0</code> และ <code>nums = [-5, -2, -9]</code> จะแสดงอะไร?</div>
+    <button class="choice">-2</button>
+    <button class="choice">-9</button>
+    <button class="choice" data-correct>0</button>
+    <button class="choice">None</button>
+    <div class="explain">ไม่มีค่าไหนมากกว่า 0 ทาง "จริง" จึงไม่เคยถูกใช้ · นี่คือเหตุผลที่ต้องเริ่มจาก <code>None</code></div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -593,6 +619,27 @@ else:
   <div class="note">
     <b>ต่อไป:</b> ทั้ง 7 รูปแบบนี้จะกลับมาใช้อีกในบทถัด ๆ ไป —
     ตอนนับคำด้วย <code>dict</code> (บทที่ 9) และตอนสรุปข้อมูลจากไฟล์ (บทที่ 13)
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 6 — วาด Flowchart</h4>
+    <p>วาด flowchart ที่ใช้ทั้ง <strong>Counting</strong> และ <strong>Summing</strong> ใน loop เดียว เพื่อหาค่าเฉลี่ยของ <code>nums</code> แล้วเขียนโค้ดตาม</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-114 -21 228 414" style="max-width:331px" role="img" aria-label="flowchart หาค่าเฉลี่ยด้วยการนับและรวม"><defs><marker id="ah-ch8lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch8lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 30.5" marker-end="url(#ah-ch8lab)"/><path class="e" d="M0.0 73.5 L0.0 86.5" marker-end="url(#ah-ch8lab)"/><path class="e" d="M0.0 145.5 L0.0 166.5" marker-end="url(#ah-ch8lab)"/><text class="el" x="6.0" y="156.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 209.5 L0.0 218.0 L-110.0 218.0 L-110.0 116.0 L-49.0 116.0" marker-end="url(#ah-ch8lab)"/><path class="e" d="M0.0 283.0 L0.0 305.0" marker-end="url(#ah-ch8lab)"/><path class="e" d="M0.0 335.0 L0.0 357.0" marker-end="url(#ah-ch8lab)"/><path class="e" d="M49.0 116.0 L110.0 116.0 L110.0 238.0 L0.0 238.0 L0.0 253.0" marker-end="url(#ah-ch8lab)"/><text class="el" x="57.0" y="111.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-39.5" y="30.5" width="79.1" height="43"/><text x="0" y="45.5">count = 0</text><text x="0" y="58.5">total = 0</text><path class="n dec" d="M0 86.5L49.0 116L0 145.5L-49.0 116Z"/><text x="0" y="109.5">ยังมี x</text><text x="0" y="122.5">ใน nums ?</text><rect class="n" x="-42.5" y="166.5" width="85.0" height="43"/><text x="0" y="181.5">count += 1</text><text x="0" y="194.5">total += x</text><rect class="n" x="-69.1" y="253.0" width="138.1" height="30"/><text x="0" y="268.0">avg = total / count</text><path class="n io" d="M-57.2 305.0H73.2L57.2 335.0H-73.2Z"/><text x="0" y="320.0">แสดง count, avg</text><rect class="n term" x="-19.4" y="357.0" width="38.8" height="30" rx="15.0"/><text x="0" y="372.0">จบ</text></svg>
+    <figcaption>ตั้งค่าเริ่มต้น 2 ตัวก่อน loop · หารหาค่าเฉลี่ย<b>หลัง</b> loop ไม่ใช่ข้างใน</figcaption>
+  </figure>
+  <div class="pair-code"><pre>count = 0
+total = 0
+for x in nums:
+    count += 1
+    total += x
+avg = total / count
+print(count, avg)</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

@@ -196,6 +196,103 @@ else:
     else:
         print("ผ่านแล้ว")</pre>
 
+  <h2>3.8 Flowchart ของ if — 4 แบบ</h2>
+
+  <p>เงื่อนไขทุกตัววาดเป็น<strong>สี่เหลี่ยมข้าวหลามตัด</strong> มีลูกศรเข้า 1 เส้น
+  ออก 2 เส้นเสมอ คือ <em>จริง</em> กับ <em>เท็จ</em> แล้วทุกทางต้องมาบรรจบกันก่อนทำงานต่อ
+  ต่อเพชรหลายอันเข้าด้วยกันได้ 4 แบบ ซึ่งทำงานต่างกัน</p>
+
+  <h3>แบบที่ 1 · if if if — ถามทุกข้อ</h3>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-85 -21 334 452" style="max-width:484px" role="img" aria-label="flowchart if หลายตัวแยกกัน"><defs><marker id="ah-ch3ifs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch3ifs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch3ifs)"/><path class="e" d="M66.1 122.0 L122.1 122.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="74.1" y="117.0" style="text-anchor:start">จริง</text><path class="e" d="M66.1 222.0 L122.1 222.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="74.1" y="217.0" style="text-anchor:start">จริง</text><path class="e" d="M70.6 322.0 L126.6 322.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="78.6" y="317.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 67.0 L0.0 99.0" marker-end="url(#ah-ch3ifs)"/><path class="e" d="M0.0 145.0 L0.0 199.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="6.0" y="156.0" style="text-anchor:start">เท็จ</text><path class="e" d="M173.4 137.0 L173.4 185.0 L0.0 185.0 L0.0 199.0" marker-end="url(#ah-ch3ifs)"/><path class="e" d="M0.0 245.0 L0.0 299.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="6.0" y="256.0" style="text-anchor:start">เท็จ</text><path class="e" d="M176.6 237.0 L176.6 285.0 L0.0 285.0 L0.0 299.0" marker-end="url(#ah-ch3ifs)"/><path class="e" d="M0.0 345.0 L0.0 395.0" marker-end="url(#ah-ch3ifs)"/><text class="el" x="6.0" y="356.0" style="text-anchor:start">เท็จ</text><path class="e" d="M180.8 337.0 L180.8 381.0 L0.0 381.0 L0.0 395.0" marker-end="url(#ah-ch3ifs)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-36.1 37.0H52.1L36.1 67.0H-52.1Z"/><text x="0" y="52.0">รับ score</text><path class="n dec" d="M0 99.0L66.1 122L0 145.0L-66.1 122Z"/><text x="0" y="122.0">score &gt;= 50 ?</text><path class="n io" d="M130.1 107.0H232.6L216.6 137.0H114.1Z"/><text x="173.3560606060606" y="122.0">แสดง &quot;ผ่าน&quot;</text><path class="n dec" d="M0 199.0L66.1 222L0 245.0L-66.1 222Z"/><text x="0" y="222.0">score &gt;= 80 ?</text><path class="n io" d="M130.1 207.0H239.0L223.0 237.0H114.1Z"/><text x="176.55606060606058" y="222.0">แสดง &quot;ดีมาก&quot;</text><path class="n dec" d="M0 299.0L70.6 322L0 345.0L-70.6 322Z"/><text x="0" y="322.0">score == 100 ?</text><path class="n io" d="M134.6 307.0H243.0L227.0 337.0H118.6Z"/><text x="180.77575757575758" y="322.0">แสดง &quot;เต็ม!&quot;</text><rect class="n term" x="-19.4" y="395.0" width="38.8" height="30" rx="15.0"/><text x="0" y="410.0">จบ</text></svg>
+    <figcaption>ไม่ว่าจะตอบจริงหรือเท็จ ก็ต้องกลับมา<b>ถามเพชรถัดไปทุกอัน</b> · ได้ 100 คะแนนจะแสดงครบทั้ง 3 บรรทัด</figcaption>
+  </figure>
+  <div class="pair-code"><pre>score = int(input("คะแนน: "))
+if score >= 50:
+    print("ผ่าน")
+if score >= 80:
+    print("ดีมาก")
+if score == 100:
+    print("เต็ม!")</pre></div>
+  </div>
+
+  <p>เหมาะกับเงื่อนไขที่<strong>เป็นอิสระต่อกัน</strong> จริงพร้อมกันหลายข้อได้
+  ทางเท็จไม่มีกล่อง แค่ลากเส้นลงไปถามข้อถัดไปเลย</p>
+
+  <h3>แบบที่ 2 · if-else — เลือก 1 จาก 2</h3>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-251 -21 496 238" style="max-width:720px" role="img" aria-label="flowchart if-else"><defs><marker id="ah-ch3ifelse" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch3ifelse" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch3ifelse)"/><path class="e" d="M0.0 67.0 L0.0 93.0" marker-end="url(#ah-ch3ifelse)"/><path class="e" d="M66.1 116.0 L128.5 116.0" marker-end="url(#ah-ch3ifelse)"/><text class="el" x="74.1" y="111.0" style="text-anchor:start">จริง</text><path class="e" d="M-66.1 116.0 L-122.1 116.0" marker-end="url(#ah-ch3ifelse)"/><text class="el" x="-74.1" y="111.0" style="text-anchor:end">เท็จ</text><path class="e" d="M179.8 131.0 L179.8 167.0 L0.0 167.0 L0.0 181.0" marker-end="url(#ah-ch3ifelse)"/><path class="e" d="M-179.8 131.0 L-179.8 167.0 L0.0 167.0 L0.0 181.0" marker-end="url(#ah-ch3ifelse)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-36.1 37.0H52.1L36.1 67.0H-52.1Z"/><text x="0" y="52.0">รับ score</text><path class="n dec" d="M0 93.0L66.1 116L0 139.0L-66.1 116Z"/><text x="0" y="116.0">score &gt;= 50 ?</text><path class="n io" d="M136.5 101.0H239.0L223.0 131.0H120.5Z"/><text x="179.7560606060606" y="116.0">แสดง &quot;ผ่าน&quot;</text><path class="n io" d="M-229.4 101.0H-114.1L-130.1 131.0H-245.4Z"/><text x="-179.7560606060606" y="116.0">แสดง &quot;ไม่ผ่าน&quot;</text><rect class="n term" x="-19.4" y="181.0" width="38.8" height="30" rx="15.0"/><text x="0" y="196.0">จบ</text></svg>
+    <figcaption>เพชรอันเดียว แยก 2 ทาง <b>ได้ทำแน่นอน 1 ทาง</b> แล้วมารวมกันที่จบ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>score = int(input("คะแนน: "))
+if score >= 50:
+    print("ผ่าน")
+else:
+    print("ไม่ผ่าน")</pre></div>
+  </div>
+
+  <h3>แบบที่ 3 · if-elif-else — เลือก 1 จากหลายทาง</h3>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-80 -21 354 476" style="max-width:513px" role="img" aria-label="flowchart ตัดเกรดด้วย if-elif-else"><defs><marker id="ah-ch3ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch3ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M66.1 116.0 L134.6 116.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="74.1" y="111.0" style="text-anchor:start">จริง</text><path class="e" d="M225.4 116.0 L270.0 116.0 L270.0 382.0 L50.5 382.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M66.1 186.0 L134.6 186.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="74.1" y="181.0" style="text-anchor:start">จริง</text><path class="e" d="M225.4 186.0 L270.0 186.0 L270.0 382.0 L50.5 382.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M66.1 256.0 L134.6 256.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="74.1" y="251.0" style="text-anchor:start">จริง</text><path class="e" d="M225.4 256.0 L270.0 256.0 L270.0 382.0 L50.5 382.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M0.0 67.0 L0.0 93.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M0.0 139.0 L0.0 163.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="6.0" y="150.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 209.0 L0.0 233.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="6.0" y="220.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 279.0 L0.0 311.0" marker-end="url(#ah-ch3ex)"/><text class="el" x="6.0" y="290.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 341.0 L0.0 367.0" marker-end="url(#ah-ch3ex)"/><path class="e" d="M0.0 397.0 L0.0 419.0" marker-end="url(#ah-ch3ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-36.1 37.0H52.1L36.1 67.0H-52.1Z"/><text x="0" y="52.0">รับ score</text><path class="n dec" d="M0 93.0L66.1 116L0 139.0L-66.1 116Z"/><text x="0" y="116.0">score &gt;= 80 ?</text><rect class="n" x="134.6" y="101.0" width="90.9" height="30"/><text x="180" y="116.0">grade = &quot;A&quot;</text><path class="n dec" d="M0 163.0L66.1 186L0 209.0L-66.1 186Z"/><text x="0" y="186.0">score &gt;= 70 ?</text><rect class="n" x="134.6" y="171.0" width="90.9" height="30"/><text x="180" y="186.0">grade = &quot;B&quot;</text><path class="n dec" d="M0 233.0L66.1 256L0 279.0L-66.1 256Z"/><text x="0" y="256.0">score &gt;= 60 ?</text><rect class="n" x="134.6" y="241.0" width="90.9" height="30"/><text x="180" y="256.0">grade = &quot;C&quot;</text><rect class="n" x="-45.4" y="311.0" width="90.9" height="30"/><text x="0" y="326.0">grade = &quot;F&quot;</text><path class="n io" d="M-42.5 367.0H58.5L42.5 397.0H-58.5Z"/><text x="0" y="382.0">แสดง grade</text><rect class="n term" x="-19.4" y="419.0" width="38.8" height="30" rx="15.0"/><text x="0" y="434.0">จบ</text></svg>
+    <figcaption>เพชรต่อกันเป็นขั้นบันได ทางเท็จไหลลงไปถามข้อถัดไป · <b>เจอข้อที่จริงแล้วออกขวาทันที</b> ไม่ถามข้อที่เหลือ แล้วมารวมกันที่ "แสดง grade"</figcaption>
+  </figure>
+  <div class="pair-code"><pre>score = int(input("คะแนน: "))
+if score >= 80:
+    grade = "A"
+elif score >= 70:
+    grade = "B"
+elif score >= 60:
+    grade = "C"
+else:
+    grade = "F"
+print(grade)</pre></div>
+  </div>
+
+  <table>
+    <tr><th>แบบ</th><th>ถามกี่ข้อ</th><th>ได้ทำกี่กล่อง</th><th>ใช้เมื่อ</th></tr>
+    <tr><td>if if if</td><td>ทุกข้อเสมอ</td><td>0 ถึงทุกกล่อง</td><td>เงื่อนไขไม่เกี่ยวกัน จริงพร้อมกันได้</td></tr>
+    <tr><td>if-else</td><td>1 ข้อ</td><td>1 กล่องพอดี</td><td>มี 2 ทางเลือก</td></tr>
+    <tr><td>if-elif-else</td><td>จนกว่าจะเจอข้อที่จริง</td><td>1 กล่องพอดี</td><td>มีหลายทาง แต่ได้แค่ทางเดียว</td></tr>
+    <tr><td>if ซ้อน if</td><td>ข้อในถูกถามเฉพาะเมื่อข้อนอกจริง</td><td>1 กล่องพอดี</td><td>ต้องผ่านด่านแรกก่อน แล้วแต่ละกรณีได้ผลต่างกัน</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>ใช้ if if if ตัดเกรดจะผิด:</b> ได้ 85 คะแนน ทั้ง <code>score &gt;= 80</code> และ
+    <code>score &gt;= 70</code> เป็นจริง grade จะถูกทับจนเหลือค่าจากข้อสุดท้ายที่จริง ·
+    ไล่ตาม flowchart แบบที่ 1 จะเห็นว่าไม่มีทางไหนข้ามเพชรที่เหลือไปได้เลย
+  </div>
+
+  <h3>แบบที่ 4 · if ซ้อน if — ด่านแรกผ่านก่อน ค่อยถามต่อ</h3>
+
+  <p>if ซ้อนคือ<strong>ทั้งก้อน if ข้างใน (กรอบฟ้า) ไปอยู่บนทาง "จริง" ของ if ข้างนอก</strong>
+  เพชรตัวในจึงถูกถามก็ต่อเมื่อเพชรตัวนอกตอบจริงเท่านั้น ตัวอย่างจาก 3.5</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-255 -21 520 422" style="max-width:754px" role="img" aria-label="flowchart if ซ้อน if"><defs><marker id="ah-ch3nest" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch3nest" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><rect class="grp i" x="-76" y="178" width="337" height="138" rx="6"/><text class="gl i" x="-70" y="191">if ใน</text><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch3nest)"/><path class="e" d="M0.0 67.0 L0.0 101.0" marker-end="url(#ah-ch3nest)"/><path class="e" d="M0.0 147.0 L0.0 191.0" marker-end="url(#ah-ch3nest)"/><text class="el" x="6.0" y="158.0" style="text-anchor:start">จริง</text><path class="e" d="M-57.2 124.0 L-113.2 124.0" marker-end="url(#ah-ch3nest)"/><text class="el" x="-65.2" y="119.0" style="text-anchor:end">เท็จ</text><path class="e" d="M0.0 237.0 L0.0 277.0" marker-end="url(#ah-ch3nest)"/><text class="el" x="6.0" y="248.0" style="text-anchor:start">จริง</text><path class="e" d="M61.6 214.0 L117.6 214.0" marker-end="url(#ah-ch3nest)"/><text class="el" x="69.6" y="209.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 307.0 L0.0 365.0" marker-end="url(#ah-ch3nest)"/><path class="e" d="M181.7 229.0 L181.7 351.0 L0.0 351.0 L0.0 365.0" marker-end="url(#ah-ch3nest)"/><path class="e" d="M-177.2 139.0 L-177.2 351.0 L0.0 351.0 L0.0 365.0" marker-end="url(#ah-ch3nest)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-65.6 37.0H81.6L65.6 67.0H-81.6Z"/><text x="0" y="52.0">รับ age, has_ticket</text><path class="n dec" d="M0 101.0L57.2 124L0 147.0L-57.2 124Z"/><text x="0" y="124.0">age &gt;= 18 ?</text><path class="n dec" d="M0 191.0L61.6 214L0 237.0L-61.6 214Z"/><text x="0" y="214.0">has_ticket ?</text><path class="n io" d="M-56.1 277.0H72.1L56.1 307.0H-72.1Z"/><text x="0" y="292.0">แสดง &quot;เข้าชมได้&quot;</text><path class="n io" d="M125.6 199.0H253.7L237.7 229.0H109.6Z"/><text x="181.68636363636364" y="214.0">แสดง &quot;ยังไม่มีตั๋ว&quot;</text><path class="n io" d="M-233.3 109.0H-105.2L-121.2 139.0H-249.3Z"/><text x="-177.21666666666667" y="124.0">แสดง &quot;อายุไม่ถึง&quot;</text><rect class="n term" x="-19.4" y="365.0" width="38.8" height="30" rx="15.0"/><text x="0" y="380.0">จบ</text></svg>
+    <figcaption>อายุไม่ถึงออกซ้ายทันที ไม่ถูกถามเรื่องตั๋วเลย · ผ่านด่านอายุแล้วจึงเข้า<b>กรอบฟ้า</b> ซึ่งก็คือ if-else ธรรมดาอีกชุดหนึ่ง</figcaption>
+  </figure>
+  <div class="pair-code"><pre>if age &gt;= 18:
+    if has_ticket:
+        print("เข้าชมได้")
+    else:
+        print("ยังไม่มีตั๋ว")
+else:
+    print("อายุไม่ถึง")</pre></div>
+  </div>
+
+  <div class="note">
+    <b>ซ้อน หรือใช้ and ดี?</b> นับทางออกใน flowchart: รูปนี้มี 3 ทาง แต่ละทางแสดงข้อความต่างกัน
+    จึงต้องซ้อน · ถ้าอยากได้แค่ 2 ผล (เข้าได้ / เข้าไม่ได้) รวมเป็นเพชรเดียว
+    <code>age &gt;= 18 and has_ticket</code> ก็พอ
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -276,6 +373,18 @@ else:
     <button class="choice">0</button>
     <div class="explain">เป็น <code>if</code> แยกกัน 3 อัน ไม่ใช่ <code>elif</code> —
       จึงตรวจทุกข้อและจริงทั้งหมด</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ตาม flowchart นี้ ถ้า <code>score = 85</code> จะแสดงอะไรบ้าง?</div>
+    <figure class="fig">
+      <svg class="flow" viewBox="-85 -21 334 452" style="max-width:484px" role="img" aria-label="flowchart if if if สำหรับคำถาม"><defs><marker id="ah-q3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-q3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-q3)"/><path class="e" d="M66.1 122.0 L122.1 122.0" marker-end="url(#ah-q3)"/><text class="el" x="74.1" y="117.0" style="text-anchor:start">จริง</text><path class="e" d="M66.1 222.0 L122.1 222.0" marker-end="url(#ah-q3)"/><text class="el" x="74.1" y="217.0" style="text-anchor:start">จริง</text><path class="e" d="M70.6 322.0 L126.6 322.0" marker-end="url(#ah-q3)"/><text class="el" x="78.6" y="317.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 67.0 L0.0 99.0" marker-end="url(#ah-q3)"/><path class="e" d="M0.0 145.0 L0.0 199.0" marker-end="url(#ah-q3)"/><text class="el" x="6.0" y="156.0" style="text-anchor:start">เท็จ</text><path class="e" d="M173.4 137.0 L173.4 185.0 L0.0 185.0 L0.0 199.0" marker-end="url(#ah-q3)"/><path class="e" d="M0.0 245.0 L0.0 299.0" marker-end="url(#ah-q3)"/><text class="el" x="6.0" y="256.0" style="text-anchor:start">เท็จ</text><path class="e" d="M176.6 237.0 L176.6 285.0 L0.0 285.0 L0.0 299.0" marker-end="url(#ah-q3)"/><path class="e" d="M0.0 345.0 L0.0 395.0" marker-end="url(#ah-q3)"/><text class="el" x="6.0" y="356.0" style="text-anchor:start">เท็จ</text><path class="e" d="M180.8 337.0 L180.8 381.0 L0.0 381.0 L0.0 395.0" marker-end="url(#ah-q3)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-36.1 37.0H52.1L36.1 67.0H-52.1Z"/><text x="0" y="52.0">รับ score</text><path class="n dec" d="M0 99.0L66.1 122L0 145.0L-66.1 122Z"/><text x="0" y="122.0">score &gt;= 50 ?</text><path class="n io" d="M130.1 107.0H232.6L216.6 137.0H114.1Z"/><text x="173.3560606060606" y="122.0">แสดง &quot;ผ่าน&quot;</text><path class="n dec" d="M0 199.0L66.1 222L0 245.0L-66.1 222Z"/><text x="0" y="222.0">score &gt;= 80 ?</text><path class="n io" d="M130.1 207.0H239.0L223.0 237.0H114.1Z"/><text x="176.55606060606058" y="222.0">แสดง &quot;ดีมาก&quot;</text><path class="n dec" d="M0 299.0L70.6 322L0 345.0L-70.6 322Z"/><text x="0" y="322.0">score == 100 ?</text><path class="n io" d="M134.6 307.0H243.0L227.0 337.0H118.6Z"/><text x="180.77575757575758" y="322.0">แสดง &quot;เต็ม!&quot;</text><rect class="n term" x="-19.4" y="395.0" width="38.8" height="30" rx="15.0"/><text x="0" y="410.0">จบ</text></svg>
+    </figure>
+    <button class="choice">ผ่าน</button>
+    <button class="choice" data-correct>ผ่าน และ ดีมาก</button>
+    <button class="choice">ดีมาก</button>
+    <button class="choice">ผ่าน ดีมาก และ เต็ม!</button>
+    <div class="explain">if if if ถามทุกข้อ: 85 >= 50 จริง · 85 >= 80 จริง · 85 == 100 เท็จ → แสดง 2 บรรทัด</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -405,6 +514,25 @@ else:
   <div class="note">
     <b>ต่อไป:</b> ตอนนี้โปรแกรมตัดสินใจได้แล้ว บทถัดไปจะเก็บข้อมูลหลายค่าไว้ในตัวแปรเดียวด้วย
     <code>list</code> แล้วค่อยเอามาวนซ้ำในบทที่ 6-7
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 6 — วาด Flowchart</h4>
+    <p>รับตัวเลข <code>n</code> แล้วบอกว่าเป็นเลขคู่หรือเลขคี่ วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-241 -21 481 238" style="max-width:698px" role="img" aria-label="flowchart ตรวจเลขคู่เลขคี่"><defs><marker id="ah-ch3lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch3lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch3lab)"/><path class="e" d="M0.0 67.0 L0.0 93.0" marker-end="url(#ah-ch3lab)"/><path class="e" d="M61.6 116.0 L117.6 116.0" marker-end="url(#ah-ch3lab)"/><text class="el" x="69.6" y="111.0" style="text-anchor:start">จริง</text><path class="e" d="M-61.6 116.0 L-117.6 116.0" marker-end="url(#ah-ch3lab)"/><text class="el" x="-69.6" y="111.0" style="text-anchor:end">เท็จ</text><path class="e" d="M172.1 131.0 L172.1 167.0 L0.0 167.0 L0.0 181.0" marker-end="url(#ah-ch3lab)"/><path class="e" d="M-172.1 131.0 L-172.1 167.0 L0.0 167.0 L0.0 181.0" marker-end="url(#ah-ch3lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-24.3 37.0H40.3L24.3 67.0H-40.3Z"/><text x="0" y="52.0">รับ n</text><path class="n dec" d="M0 93.0L61.6 116L0 139.0L-61.6 116Z"/><text x="0" y="116.0">n % 2 == 0 ?</text><path class="n io" d="M125.6 101.0H234.5L218.5 131.0H109.6Z"/><text x="172.08636363636361" y="116.0">แสดง &quot;เลขคู่&quot;</text><path class="n io" d="M-218.5 101.0H-109.6L-125.6 131.0H-234.5Z"/><text x="-172.08636363636361" y="116.0">แสดง &quot;เลขคี่&quot;</text><rect class="n term" x="-19.4" y="181.0" width="38.8" height="30" rx="15.0"/><text x="0" y="196.0">จบ</text></svg>
+    <figcaption>if-else = เพชร 1 อัน แยก 2 ทาง แล้วมาจบที่จุดเดียวกัน</figcaption>
+  </figure>
+  <div class="pair-code"><pre>n = int(input("n: "))
+if n % 2 == 0:
+    print("เลขคู่")
+else:
+    print("เลขคี่")</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

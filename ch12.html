@@ -183,6 +183,32 @@ scores = {"ฟ้า": 85, "นล": 72, "อาร์ม": 45}
 for name, g in grade_report(scores).items():
     print(f"{name:8s} {scores[name]:3d} → {g}")</pre>
 
+  <h2>12.9 Flowchart กับฟังก์ชัน</h2>
+
+  <p>ฟังก์ชันวาด<strong>แยกเป็น flowchart ของตัวเอง</strong> วงรีบนสุดเป็นชื่อฟังก์ชันกับพารามิเตอร์
+  วงรีล่างสุดคือ <code>return</code> ส่วนโปรแกรมหลักเรียกใช้ด้วย<strong>กล่องมีเส้นข้าง</strong>
+  (predefined process) ไม่ต้องวาดไส้ในซ้ำ</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-65 -21 358 250" style="max-width:520px" role="img" aria-label="flowchart โปรแกรมหลักเรียกฟังก์ชัน bmi"><defs><marker id="ah-ch12ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch12ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch12ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch12ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch12ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch12ex)"/><path class="e" d="M210.0 67.0 L210.0 89.0" marker-end="url(#ah-ch12ex)"/><path class="e" d="M210.0 119.0 L210.0 141.0" marker-end="url(#ah-ch12ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ w, h</text><rect class="n" x="-51.4" y="89.0" width="102.7" height="30"/><path class="n" d="M-44.4 89.0V119.0M44.4 89.0V119.0"/><text x="0" y="104.0">b = bmi(w, h)</text><path class="n io" d="M-30.7 141.0H46.7L30.7 171.0H-46.7Z"/><text x="0" y="156.0">แสดง b</text><rect class="n term" x="-19.4" y="193.0" width="38.8" height="30" rx="15.0"/><text x="0" y="208.0">จบ</text><rect class="n term" x="170.4" y="37.0" width="79.1" height="30" rx="15.0"/><text x="210" y="52.0">bmi(w, h)</text><rect class="n" x="140.9" y="89.0" width="138.1" height="30"/><text x="210" y="104.0">result = w / h ** 2</text><rect class="n term" x="158.7" y="141.0" width="102.7" height="30" rx="15.0"/><text x="210" y="156.0">return result</text></svg>
+    <figcaption>ซ้าย: โปรแกรมหลัก · ขวา: ไส้ในของ <b>bmi</b> วาดครั้งเดียว เรียกกี่ครั้งก็ได้</figcaption>
+  </figure>
+  <div class="pair-code"><pre>def bmi(w, h):
+    result = w / h ** 2
+    return result
+
+w = float(input("น้ำหนัก (kg): "))
+h = float(input("ส่วนสูง (m): "))
+b = bmi(w, h)
+print(f"BMI = {b:.1f}")</pre></div>
+  </div>
+
+  <div class="note">
+    <b>ฟังก์ชันมีวงรี return ได้หลายอัน</b> เพราะ <code>return</code> ออกจากฟังก์ชันทันที
+    เช่นมี if แล้วแต่ละทาง return ค่าต่างกัน
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -281,6 +307,15 @@ for name, g in grade_report(scores).items():
     <div class="explain">บรรทัด <code>def</code> แค่<em>นิยาม</em>ฟังก์ชัน ยังไม่ทำงาน —
       โปรแกรมเริ่มทำงานจริงที่ <code>jane()</code> บรรทัดแรก
       จึงได้ ABC (jane) → Zap (fred) → ABC (jane)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q9">ในโปรแกรมหลัก การเรียก <code>b = bmi(w, h)</code> ควรวาดด้วยสัญลักษณ์ใด?</div>
+    <button class="choice">วงรี</button>
+    <button class="choice">สี่เหลี่ยมผืนผ้าธรรมดา</button>
+    <button class="choice" data-correct>สี่เหลี่ยมมีเส้นข้าง (predefined process)</button>
+    <button class="choice">สี่เหลี่ยมข้าวหลามตัด</button>
+    <div class="explain">กล่องมีเส้นข้างบอกว่า "ไส้ในวาดแยกไว้อีกรูป" · วงรีใช้ในรูปของฟังก์ชันเอง (ชื่อฟังก์ชัน / return)</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -499,6 +534,24 @@ print(computegrade(score))
 
 <span class="out"># เช็กช่วงที่ผิดปกติก่อนเป็นอันดับแรกเสมอ
 # ไม่ต้องใช้ elif ก็ได้ เพราะเจอ return แล้วฟังก์ชันจบทันที</span></pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 7 — วาด Flowchart</h4>
+    <p>วาด flowchart ของฟังก์ชัน <code>is_pass(score)</code> ที่คืน <code>True</code> ถ้าคะแนนตั้งแต่ 50 ขึ้นไป และคืน <code>False</code> ถ้าต่ำกว่า</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-80 -21 290 192" style="max-width:420px" role="img" aria-label="flowchart ฟังก์ชัน is_pass"><defs><marker id="ah-ch12lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch12lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 49.0" marker-end="url(#ah-ch12lab)"/><path class="e" d="M66.1 72.0 L104.6 72.0" marker-end="url(#ah-ch12lab)"/><text class="el" x="74.1" y="67.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 95.0 L0.0 135.0" marker-end="url(#ah-ch12lab)"/><text class="el" x="6.0" y="106.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-54.3" y="-15.0" width="108.6" height="30" rx="15.0"/><text x="0" y="0.0">is_pass(score)</text><path class="n dec" d="M0 49.0L66.1 72L0 95.0L-66.1 72Z"/><text x="0" y="72.0">score &gt;= 50 ?</text><rect class="n term" x="104.6" y="57.0" width="90.9" height="30" rx="15.0"/><text x="150" y="72.0">return True</text><rect class="n term" x="-48.4" y="135.0" width="96.8" height="30" rx="15.0"/><text x="0" y="150.0">return False</text></svg>
+    <figcaption>มีวงรี return 2 อัน แต่ละทางออกจากฟังก์ชันทันที</figcaption>
+  </figure>
+  <div class="pair-code"><pre>def is_pass(score):
+    if score &gt;= 50:
+        return True
+    return False</pre></div>
+  </div>
     </details>
   </div>
 </main>

@@ -197,6 +197,28 @@ save_scores("scores.csv", scores)</pre>
 
 print("อายุของคุณคือ", age)</pre>
 
+  <h2>13.7 Flowchart ของ try-except</h2>
+
+  <p>try-except วาดเป็นเพชรที่ถามว่า <strong>"เกิด error นี้ไหม?"</strong> ต่อจากกล่องที่เสี่ยงพัง
+  ทาง "จริง" คือบล็อก <code>except</code> ทาง "เท็จ" คือทำต่อตามปกติ</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 458 524" style="max-width:664px" role="img" aria-label="flowchart อ่านตัวเลขจากไฟล์พร้อมดัก FileNotFoundError"><defs><marker id="ah-ch13ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch13ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch13ex)"/><path class="e" d="M0.0 67.0 L0.0 95.0" marker-end="url(#ah-ch13ex)"/><path class="e" d="M92.9 118.0 L145.9 118.0" marker-end="url(#ah-ch13ex)"/><text class="el" x="100.9" y="113.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 141.0 L0.0 181.0" marker-end="url(#ah-ch13ex)"/><text class="el" x="6.0" y="152.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 211.0 L0.0 232.5" marker-end="url(#ah-ch13ex)"/><path class="e" d="M0.0 291.5 L0.0 327.0" marker-end="url(#ah-ch13ex)"/><text class="el" x="6.0" y="302.5" style="text-anchor:start">จริง</text><path class="e" d="M0.0 357.0 L0.0 374.0 L-130.0 374.0 L-130.0 262.0 L-44.9 262.0" marker-end="url(#ah-ch13ex)"/><path class="e" d="M44.9 262.0 L130.0 262.0 L130.0 400.0 L0.0 400.0 L0.0 415.0" marker-end="url(#ah-ch13ex)"/><text class="el" x="52.9" y="257.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 445.0 L0.0 467.0" marker-end="url(#ah-ch13ex)"/><path class="e" d="M274.1 118.0 L320.0 118.0 L320.0 482.0 L19.4 482.0" marker-end="url(#ah-ch13ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-48.1 37.0H64.2L48.1 67.0H-64.2Z"/><text x="0" y="52.0">เปิด data.txt</text><path class="n dec" d="M0 95.0L92.9 118L0 141.0L-92.9 118Z"/><text x="0" y="118.0">FileNotFoundError ?</text><path class="n io" d="M153.9 103.0H282.1L266.1 133.0H137.9Z"/><text x="210" y="118.0">แสดง &quot;ไม่พบไฟล์&quot;</text><rect class="n" x="-39.5" y="181.0" width="79.1" height="30"/><text x="0" y="196.0">total = 0</text><path class="n dec" d="M0 232.5L44.9 262L0 291.5L-44.9 262Z"/><text x="0" y="255.5">ยังมี line</text><text x="0" y="268.5">ในไฟล์ ?</text><rect class="n" x="-66.1" y="327.0" width="132.2" height="30"/><text x="0" y="342.0">total += int(line)</text><path class="n io" d="M-42.5 415.0H58.5L42.5 445.0H-58.5Z"/><text x="0" y="430.0">แสดง total</text><rect class="n term" x="-19.4" y="467.0" width="38.8" height="30" rx="15.0"/><text x="0" y="482.0">จบ</text></svg>
+    <figcaption>อ่านตัวเลขจากไฟล์มารวมกัน · ถ้าไม่มีไฟล์ แจ้งแล้วจบเลย</figcaption>
+  </figure>
+  <div class="pair-code"><pre>try:
+    f = open("data.txt", encoding="utf-8")
+except FileNotFoundError:
+    print("ไม่พบไฟล์")
+else:
+    total = 0
+    for line in f:
+        total += int(line)
+    f.close()
+    print(total)</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -266,6 +288,15 @@ print("อายุของคุณคือ", age)</pre>
     <button class="choice">open("f.txt", "thai")</button>
     <button class="choice">open("f.txt", "rb")</button>
     <div class="explain">ไม่ระบุ encoding แล้ว Windows จะเดาเอง ทำให้ภาษาไทยเพี้ยนหรือ error</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ใน flowchart ของ try-except ทาง <strong>"จริง"</strong> ของเพชร "เกิด error ?" ตรงกับโค้ดส่วนไหน?</div>
+    <button class="choice"><code>try</code></button>
+    <button class="choice" data-correct><code>except</code></button>
+    <button class="choice"><code>else</code></button>
+    <button class="choice">บรรทัดหลังจบ try ทั้งก้อน</button>
+    <div class="explain">เกิด error → ไปทำบล็อก except · ไม่เกิด (เท็จ) → ทำต่อตามปกติ ซึ่งก็คือส่วน else</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -435,6 +466,28 @@ while True:
     <b>จบครบ 13 บทแล้ว</b> — ตอนนี้เขียนโปรแกรมที่รับข้อมูล ประมวลผล
     และเก็บลงไฟล์ได้ครบวงจรแล้ว ขั้นต่อไปคือ module, class (OOP)
     และไลบรารีภายนอกอย่าง <code>requests</code> หรือ <code>pandas</code>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>รับจำนวนเต็มจากผู้ใช้ ถ้าพิมพ์ไม่ใช่ตัวเลขให้เตือนแล้วถามใหม่จนกว่าจะถูก วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 357 267" style="max-width:517px" role="img" aria-label="flowchart รับจำนวนเต็มจนกว่าจะถูก"><defs><marker id="ah-ch13lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch13lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch13lab)"/><path class="e" d="M0.0 67.0 L0.0 88.5" marker-end="url(#ah-ch13lab)"/><path class="e" d="M0.0 147.5 L0.0 191.0" marker-end="url(#ah-ch13lab)"/><text class="el" x="6.0" y="158.5" style="text-anchor:start">เท็จ</text><path class="e" d="M48.2 118.0 L131.3 118.0" marker-end="url(#ah-ch13lab)"/><text class="el" x="56.2" y="113.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 221.0 L0.0 240.0 L-130.0 240.0 L-130.0 52.0 L-41.1 52.0" marker-end="url(#ah-ch13lab)"/><path class="e" d="M170.0 133.0 L170.0 165.0" marker-end="url(#ah-ch13lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ text</text><path class="n dec" d="M0 88.5L48.2 118L0 147.5L-48.2 118Z"/><text x="0" y="111.5">int(text)</text><text x="0" y="124.5">สำเร็จ ?</text><path class="n io" d="M-68.9 191.0H84.9L68.9 221.0H-84.9Z"/><text x="0" y="206.0">แสดง &quot;ต้องเป็นตัวเลข&quot;</text><path class="n io" d="M139.3 103.0H216.7L200.7 133.0H123.3Z"/><text x="170" y="118.0">แสดง n</text><rect class="n term" x="150.6" y="165.0" width="38.8" height="30" rx="15.0"/><text x="170" y="180.0">จบ</text></svg>
+    <figcaption>ทาง "เท็จ" (เกิด ValueError) วนกลับไปรับใหม่ · ทาง "จริง" คือ <b>break</b> ออกจาก loop</figcaption>
+  </figure>
+  <div class="pair-code"><pre>while True:
+    text = input("จำนวนเต็ม: ")
+    try:
+        n = int(text)
+        break
+    except ValueError:
+        print("ต้องเป็นตัวเลข")
+print(n)</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 

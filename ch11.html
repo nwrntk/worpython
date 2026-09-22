@@ -157,6 +157,24 @@ text = """บรรทัดที่ 1
 บรรทัดที่ 3"""
 print(text)</pre>
 
+  <h2>11.8 Flowchart วนทีละตัวอักษร</h2>
+
+  <p>string คือลำดับของตัวอักษร การวนบน string จึงวาดเหมือน for loop ทั่วไป
+  แค่คำถามในเพชรเป็น "ยังมีตัวอักษรถัดไปไหม"</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 378 462" style="max-width:548px" role="img" aria-label="flowchart นับสระภาษาอังกฤษในข้อความ"><defs><marker id="ah-ch11ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch11ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch11ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch11ex)"/><path class="e" d="M0.0 119.0 L0.0 138.5" marker-end="url(#ah-ch11ex)"/><path class="e" d="M0.0 197.5 L0.0 233.0" marker-end="url(#ah-ch11ex)"/><text class="el" x="6.0" y="208.5" style="text-anchor:start">จริง</text><path class="e" d="M75.0 256.0 L131.0 256.0" marker-end="url(#ah-ch11ex)"/><text class="el" x="83.0" y="251.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 279.0 L0.0 316.0 L-130.0 316.0 L-130.0 168.0 L-70.6 168.0" marker-end="url(#ah-ch11ex)"/><text class="el" x="6.0" y="290.0" style="text-anchor:start">เท็จ</text><path class="e" d="M173.5 271.0 L173.5 316.0 L-130.0 316.0 L-130.0 168.0 L-70.6 168.0" marker-end="url(#ah-ch11ex)"/><path class="e" d="M0.0 383.0 L0.0 405.0" marker-end="url(#ah-ch11ex)"/><path class="e" d="M70.6 168.0 L240.0 168.0 L240.0 338.0 L0.0 338.0 L0.0 353.0" marker-end="url(#ah-ch11ex)"/><text class="el" x="78.6" y="163.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-33.1 37.0H49.1L33.1 67.0H-49.1Z"/><text x="0" y="52.0">รับ text</text><rect class="n" x="-39.5" y="89.0" width="79.1" height="30"/><text x="0" y="104.0">count = 0</text><path class="n dec" d="M0 138.5L70.6 168L0 197.5L-70.6 168Z"/><text x="0" y="161.5">ยังมี ch ใน</text><text x="0" y="174.5">text.lower() ?</text><path class="n dec" d="M0 233.0L75.0 256L0 279.0L-75.0 256Z"/><text x="0" y="256.0">ch in &quot;aeiou&quot; ?</text><rect class="n" x="131.0" y="241.0" width="85.0" height="30"/><text x="173.54545454545456" y="256.0">count += 1</text><path class="n io" d="M-42.5 353.0H58.5L42.5 383.0H-58.5Z"/><text x="0" y="368.0">แสดง count</text><rect class="n term" x="-19.4" y="405.0" width="38.8" height="30" rx="15.0"/><text x="0" y="420.0">จบ</text></svg>
+    <figcaption>นับสระ · แปลงเป็นตัวเล็กก่อนวน จะได้ไม่ต้องเช็กทั้ง "a" และ "A"</figcaption>
+  </figure>
+  <div class="pair-code"><pre>text = input("ข้อความ: ")
+count = 0
+for ch in text.lower():
+    if ch in "aeiou":
+        count += 1
+print(count)</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -226,6 +244,15 @@ print(text)</pre>
     <button class="choice" data-correct>"hi"</button>
     <button class="choice">"h i"</button>
     <div class="explain">ตัดช่องว่างทั้งหัวและท้าย แต่ไม่ยุ่งกับช่องว่างตรงกลาง</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ตาม flowchart ตรวจรหัสผ่าน (โจทย์ท้ายบท) ถ้า <code>pw = "abcdefgh"</code> จะแสดงอะไร?</div>
+    <button class="choice">"สั้นเกินไป"</button>
+    <button class="choice" data-correct>"ต้องมีตัวเลข"</button>
+    <button class="choice">"ใช้ได้"</button>
+    <button class="choice">ไม่แสดงอะไร</button>
+    <div class="explain">ยาว 8 ตัว ผ่านเพชรแรก (จริง) · ไม่มีตัวเลข เพชรที่สองตอบเท็จ → ออกขวาไปแจ้ง "ต้องมีตัวเลข"</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -332,6 +359,27 @@ if clean == clean[::-1]:
     print("เป็น palindrome")
 else:
     print("ไม่เป็น palindrome")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>ตรวจรหัสผ่าน: ต้องยาวอย่างน้อย 8 ตัว และมีตัวเลขอย่างน้อย 1 ตัว ถ้าผิดข้อไหนให้บอกเหตุผลข้อนั้น วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-85 -21 389 372" style="max-width:563px" role="img" aria-label="flowchart ตรวจรหัสผ่าน"><defs><marker id="ah-ch11lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch11lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch11lab)"/><path class="e" d="M0.0 67.0 L0.0 93.0" marker-end="url(#ah-ch11lab)"/><path class="e" d="M0.0 139.0 L0.0 177.0" marker-end="url(#ah-ch11lab)"/><text class="el" x="6.0" y="150.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 223.0 L0.0 255.0" marker-end="url(#ah-ch11lab)"/><text class="el" x="6.0" y="234.0" style="text-anchor:start">จริง</text><path class="e" d="M70.6 116.0 L125.9 116.0" marker-end="url(#ah-ch11lab)"/><text class="el" x="78.6" y="111.0" style="text-anchor:start">เท็จ</text><path class="e" d="M60.6 200.0 L119.5 200.0" marker-end="url(#ah-ch11lab)"/><text class="el" x="68.6" y="195.0" style="text-anchor:start">เท็จ</text><path class="e" d="M254.1 116.0 L300.0 116.0 L300.0 330.0 L19.4 330.0" marker-end="url(#ah-ch11lab)"/><path class="e" d="M260.5 200.0 L300.0 200.0 L300.0 330.0 L19.4 330.0" marker-end="url(#ah-ch11lab)"/><path class="e" d="M0.0 285.0 L0.0 315.0" marker-end="url(#ah-ch11lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-27.2 37.0H43.2L27.2 67.0H-43.2Z"/><text x="0" y="52.0">รับ pw</text><path class="n dec" d="M0 93.0L70.6 116L0 139.0L-70.6 116Z"/><text x="0" y="116.0">len(pw) &gt;= 8 ?</text><path class="n dec" d="M0 177.0L60.6 200L0 223.0L-60.6 200Z"/><text x="0" y="200.0">มีตัวเลขไหม ?</text><path class="n io" d="M-46.4 255.0H62.4L46.4 285.0H-62.4Z"/><text x="0" y="270.0">แสดง &quot;ใช้ได้&quot;</text><path class="n io" d="M133.9 101.0H262.1L246.1 131.0H117.9Z"/><text x="190" y="116.0">แสดง &quot;สั้นเกินไป&quot;</text><path class="n io" d="M127.5 185.0H268.5L252.5 215.0H111.5Z"/><text x="190" y="200.0">แสดง &quot;ต้องมีตัวเลข&quot;</text><rect class="n term" x="-19.4" y="315.0" width="38.8" height="30" rx="15.0"/><text x="0" y="330.0">จบ</text></svg>
+    <figcaption>เช็กทีละเงื่อนไข ตกข้อไหนก็ออกขวาไปแจ้งเหตุผล · "มีตัวเลขไหม" ย่อมาจาก loop ข้างในอีกชั้น</figcaption>
+  </figure>
+  <div class="pair-code"><pre>pw = input("รหัสผ่าน: ")
+if len(pw) &lt; 8:
+    print("สั้นเกินไป")
+elif not any(c.isdigit() for c in pw):
+    print("ต้องมีตัวเลข")
+else:
+    print("ใช้ได้")</pre></div>
+  </div>
     </details>
   </div>
 </main>

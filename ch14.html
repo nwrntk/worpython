@@ -238,6 +238,29 @@ cv2.destroyAllWindows()</pre>
     ต้องลองปรับตามแสงและกล้องจริง ไม่มีค่าที่ดีที่สุดค่าเดียว
   </div>
 
+  <h2>14.9 Flowchart ลูปกล้อง</h2>
+
+  <p>ลูปกล้อง (14.7) เป็น <code>while True</code> ที่มีทางออก 2 ทาง
+  คืออ่านเฟรมไม่ได้ กับผู้ใช้กด q · วาดแล้วจะเห็นว่าทั้งสองทางต้องไปจบที่ <code>release()</code> เหมือนกัน</p>
+
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-144 -21 288 534" style="max-width:418px" role="img" aria-label="flowchart วนอ่านภาพจากกล้องจนกด q"><defs><marker id="ah-ch14ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch14ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch14ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch14ex)"/><path class="e" d="M0.0 119.0 L0.0 147.0" marker-end="url(#ah-ch14ex)"/><path class="e" d="M0.0 193.0 L0.0 225.0" marker-end="url(#ah-ch14ex)"/><text class="el" x="6.0" y="204.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 255.0 L0.0 277.0" marker-end="url(#ah-ch14ex)"/><path class="e" d="M0.0 307.0 L0.0 341.0" marker-end="url(#ah-ch14ex)"/><path class="e" d="M0.0 387.0 L0.0 425.0" marker-end="url(#ah-ch14ex)"/><text class="el" x="6.0" y="398.0" style="text-anchor:start">จริง</text><path class="e" d="M-35.6 364.0 L-140.0 364.0 L-140.0 104.0 L-87.9 104.0" marker-end="url(#ah-ch14ex)"/><text class="el" x="-43.6" y="359.0" style="text-anchor:end">เท็จ</text><path class="e" d="M30.3 170.0 L140.0 170.0 L140.0 440.0 L51.4 440.0" marker-end="url(#ah-ch14ex)"/><text class="el" x="38.3" y="165.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 455.0 L0.0 477.0" marker-end="url(#ah-ch14ex)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><rect class="n" x="-86.8" y="37.0" width="173.5" height="30"/><text x="0" y="52.0">cap = cv2.VideoCapture(0)</text><path class="n io" d="M-79.9 89.0H95.9L79.9 119.0H-95.9Z"/><text x="0" y="104.0">ret, frame = cap.read()</text><path class="n dec" d="M0 147.0L30.3 170L0 193.0L-30.3 170Z"/><text x="0" y="170.0">ret ?</text><rect class="n" x="-83.8" y="225.0" width="167.6" height="30"/><text x="0" y="240.0">gray = cv2.cvtColor(...)</text><path class="n io" d="M-79.9 277.0H95.9L79.9 307.0H-95.9Z"/><text x="0" y="292.0">cv2.imshow(&quot;cam&quot;, gray)</text><path class="n dec" d="M0 341.0L35.6 364L0 387.0L-35.6 364Z"/><text x="0" y="364.0">กด q ?</text><rect class="n" x="-51.4" y="425.0" width="102.7" height="30"/><text x="0" y="440.0">cap.release()</text><rect class="n term" x="-19.4" y="477.0" width="38.8" height="30" rx="15.0"/><text x="0" y="492.0">จบ</text></svg>
+    <figcaption>เส้นวนกลับทางซ้ายคือ loop · ทางออกทั้งสองทางมารวมกันที่ปิดกล้อง</figcaption>
+  </figure>
+  <div class="pair-code"><pre>cap = cv2.VideoCapture(0)
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("cam", gray)
+    if cv2.waitKey(1) == ord("q"):
+        break
+cap.release()
+cv2.destroyAllWindows()</pre></div>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -304,6 +327,15 @@ cv2.destroyAllWindows()</pre>
     <button class="choice" data-correct>cap.release()</button>
     <button class="choice">cv2.threshold()</button>
     <div class="explain">เหมือนไฟล์ที่ต้องปิด — กล้องก็ต้องคืนให้ระบบด้วย <code>cap.release()</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ใน flowchart ลูปกล้อง (14.9) เส้นวนกลับพาไปที่กล่องไหน?</div>
+    <button class="choice"><code>cv2.VideoCapture(0)</code></button>
+    <button class="choice" data-correct><code>cap.read()</code></button>
+    <button class="choice"><code>cv2.cvtColor(...)</code></button>
+    <button class="choice"><code>cap.release()</code></button>
+    <div class="explain">เปิดกล้องครั้งเดียวก่อน loop · ที่ต้องทำซ้ำทุกรอบคืออ่านเฟรมใหม่ ถ้าวนกลับไปถึง VideoCapture จะเปิดกล้องซ้ำทุกเฟรม</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -462,6 +494,27 @@ print(f"ถ่ายไปทั้งหมด {count} รูป")</pre>
     และ <code>ultralytics</code> (YOLO ตรวจจับวัตถุ) ซึ่งทั้งหมดรับ-ส่งภาพเป็น array
     หน้าตาเดียวกับที่เรียนในบทนี้ — แต่ก่อนไปถึงตรงนั้น <a href="ch15.html">บทที่ 15</a>
     จะอธิบายว่าคำสั่งที่เพิ่งใช้ไปทำอะไรกับตัวเลขในภาพบ้าง
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>อ่านรูป ถ้าอ่านไม่ได้ให้แจ้งแล้วจบ ถ้าได้ให้แปลงเป็นขาวดำ หาขอบด้วย Canny แล้วบันทึกเป็นไฟล์ใหม่ วาด flowchart ก่อนเขียนโค้ด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-125 -21 449 398" style="max-width:652px" role="img" aria-label="flowchart อ่านรูป หาขอบ แล้วบันทึก"><defs><marker id="ah-ch14lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch14lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch14lab)"/><path class="e" d="M0.0 67.0 L0.0 99.0" marker-end="url(#ah-ch14lab)"/><path class="e" d="M66.1 122.0 L129.5 122.0" marker-end="url(#ah-ch14lab)"/><text class="el" x="74.1" y="117.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 145.0 L0.0 185.0" marker-end="url(#ah-ch14lab)"/><text class="el" x="6.0" y="156.0" style="text-anchor:start">เท็จ</text><path class="e" d="M0.0 215.0 L0.0 237.0" marker-end="url(#ah-ch14lab)"/><path class="e" d="M0.0 267.0 L0.0 289.0" marker-end="url(#ah-ch14lab)"/><path class="e" d="M0.0 319.0 L0.0 341.0" marker-end="url(#ah-ch14lab)"/><path class="e" d="M270.5 122.0 L320.0 122.0 L320.0 356.0 L19.4 356.0" marker-end="url(#ah-ch14lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-91.7 37.0H107.7L91.7 67.0H-107.7Z"/><text x="0" y="52.0">img = cv2.imread(&quot;cat.jpg&quot;)</text><path class="n dec" d="M0 99.0L66.1 122L0 145.0L-66.1 122Z"/><text x="0" y="122.0">img is None ?</text><path class="n io" d="M137.5 107.0H278.5L262.5 137.0H121.5Z"/><text x="200" y="122.0">แสดง &quot;อ่านรูปไม่ได้&quot;</text><rect class="n" x="-83.8" y="185.0" width="167.6" height="30"/><text x="0" y="200.0">gray = cv2.cvtColor(...)</text><rect class="n" x="-110.4" y="237.0" width="220.7" height="30"/><text x="0" y="252.0">edges = cv2.Canny(gray, 100, 200)</text><path class="n io" d="M-103.5 289.0H119.5L103.5 319.0H-119.5Z"/><text x="0" y="304.0">cv2.imwrite(&quot;edges.jpg&quot;, edges)</text><rect class="n term" x="-19.4" y="341.0" width="38.8" height="30" rx="15.0"/><text x="0" y="356.0">จบ</text></svg>
+    <figcaption>เช็ก <b>img is None</b> ทันทีหลังอ่าน ก่อนจะเอาไปประมวลผล</figcaption>
+  </figure>
+  <div class="pair-code"><pre>img = cv2.imread("cat.jpg")
+if img is None:
+    print("อ่านรูปไม่ได้")
+else:
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 100, 200)
+    cv2.imwrite("edges.jpg", edges)</pre></div>
+  </div>
+    </details>
   </div>
 </main>
 
