@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 0 · ติดตั้งและรันโปรแกรม — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 00</div>
+  <h1>ติดตั้งและรันโปรแกรม</h1>
+  <p class="lead">เตรียมเครื่องให้พร้อม แล้วรันโปรแกรมแรกให้ได้ ก่อนเริ่มบทที่ 1</p>
+
+  <h2>0.1 ต้องมีอะไรบ้าง</h2>
+
+  <table>
+    <tr><th>สิ่งที่ต้องมี</th><th>ทำหน้าที่</th><th>เทียบง่าย ๆ</th></tr>
+    <tr><td><strong>Python</strong></td><td>อ่านโค้ดแล้วสั่งให้คอมพิวเตอร์ทำตาม</td><td>คนแปลภาษา</td></tr>
+    <tr><td><strong>โปรแกรมเขียนโค้ด</strong> (editor)</td><td>ที่พิมพ์ แก้ และบันทึกไฟล์โค้ด แล้วกดรัน</td><td>สมุดจด</td></tr>
+  </table>
+
+  <p>ต้องมี<strong>ทั้งสองอย่าง</strong> · editor อย่างเดียวรันโค้ดไม่ได้ ต้องมี Python ในเครื่องด้วย</p>
+
+  <div class="dl">
+    <a class="dl-btn" href="https://www.python.org/downloads/" target="_blank" rel="noopener"><b>Python</b><span>python.org/downloads</span></a>
+    <a class="dl-btn" href="https://code.visualstudio.com/download" target="_blank" rel="noopener"><b>VS Code</b><span>code.visualstudio.com</span></a>
+    <a class="dl-btn" href="https://thonny.org/" target="_blank" rel="noopener"><b>Thonny</b><span>thonny.org</span></a>
+  </div>
+
+  <h2>0.2 ติดตั้ง Python</h2>
+
+  <ol>
+    <li>เข้า <a href="https://www.python.org/downloads/" target="_blank" rel="noopener"><strong>python.org/downloads</strong></a> แล้วกดปุ่มดาวน์โหลดเวอร์ชันล่าสุด
+      (ใช้ <strong>3.12 ขึ้นไป</strong> · ตัวอย่างในเว็บนี้รันด้วย 3.13)</li>
+    <li>เปิดไฟล์ที่โหลดมา</li>
+    <li><strong>Windows: ติ๊กช่อง <code>Add python.exe to PATH</code> ที่ด้านล่างของหน้าต่างแรก</strong> แล้วกด Install Now</li>
+    <li>macOS: กดถัดไปจนจบได้เลย</li>
+  </ol>
+
+  <div class="warn">
+    <b>อย่าลืมติ๊ก Add python.exe to PATH</b> เป็นสาเหตุอันดับหนึ่งที่รันไม่ได้
+    ถ้าลืมไปแล้ว ให้เปิดตัวติดตั้งอีกรอบ เลือก Modify หรือถอนแล้วติดตั้งใหม่ ·
+    หน้าตาตัวติดตั้งอาจเปลี่ยนไปตามเวอร์ชัน ถ้าไม่เห็นช่องนี้ ให้ทำตามขั้นตอนบนหน้าดาวน์โหลด
+    แล้วใช้ขั้นเช็กข้างล่างยืนยันว่าพร้อมใช้
+  </div>
+
+  <p><strong>เช็กว่าติดตั้งสำเร็จ</strong> เปิด Terminal (Windows: ค้นหา <em>Command Prompt</em> หรือ <em>PowerShell</em> ·
+  macOS: <em>Terminal</em>) แล้วพิมพ์</p>
+
+<pre>python --version
+<span class="out"># Python 3.13.7   ← ได้ประมาณนี้ = พร้อมใช้</span></pre>
+
+  <p>บน macOS ให้พิมพ์ <code>python3</code> แทน <code>python</code> ทุกครั้งที่เจอในเว็บนี้</p>
+
+  <h2>0.3 เลือกโปรแกรมเขียนโค้ด</h2>
+
+  <table>
+    <tr><th>โปรแกรม</th><th>จุดเด่น</th><th>เหมาะกับ</th></tr>
+    <tr><td><a href="https://code.visualstudio.com/download" target="_blank" rel="noopener"><strong>VS Code</strong></a> (แนะนำ)</td><td>ฟรี ใช้กันทั่วโลก มีตัวช่วยเติมโค้ดและเตือนที่ผิด</td>
+      <td>ใช้ต่อได้ยาว ๆ ถึงบทที่ 14–16</td></tr>
+    <tr><td><a href="https://thonny.org/" target="_blank" rel="noopener"><strong>Thonny</strong></a></td><td>หน้าตาเรียบ มี Python มาในตัว กดรันแล้วดูค่าตัวแปรทีละบรรทัดได้</td>
+      <td>อยากเริ่มเร็วที่สุด ไม่อยากตั้งค่าอะไร</td></tr>
+    <tr><td><strong>IDLE</strong></td><td>มากับ Python อยู่แล้ว</td><td>ใช้ชั่วคราวระหว่างยังไม่ได้ลงตัวอื่น</td></tr>
+  </table>
+
+  <p>เลือก VS Code ให้ทำหัวข้อ 0.4 ต่อ · เลือก Thonny ข้ามไปหัวข้อ 0.5 ได้เลย</p>
+
+  <h2>0.4 ตั้งค่า VS Code และ extension</h2>
+
+  <p>VS Code ที่เพิ่งลงยังไม่รู้จัก Python · <strong>extension</strong> คือโปรแกรมเสริมที่เพิ่มความสามารถให้ VS Code
+  เหมือนแอปในมือถือ ติดตั้งเพิ่มได้ทีละตัว</p>
+
+  <h3>ติดตั้ง extension</h3>
+  <ol>
+    <li>กดไอคอน Extensions แถบซ้าย (รูปสี่เหลี่ยม 4 ช่อง) หรือ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>
+      (macOS <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>)</li>
+    <li>พิมพ์ชื่อ extension ในช่องค้นหา</li>
+    <li><strong>ดูชื่อผู้พัฒนาใต้ชื่อ extension ให้ตรง</strong> แล้วกด Install</li>
+  </ol>
+
+  <div class="warn">
+    <b>ค้นคำว่า Python จะเจอหลายตัวชื่อคล้ายกัน</b> ตัวที่ถูกคือผู้พัฒนา <strong>Microsoft</strong>
+    ที่มีเครื่องหมายยืนยัน ✓ และยอดติดตั้งสูงสุด · ติดตั้งเฉพาะตัวที่รู้ว่าทำอะไร
+    extension ทุกตัวเข้าถึงไฟล์ในเครื่องได้
+  </div>
+
+  <h3>ควรลงตัวไหน</h3>
+
+  <table>
+    <tr><th>extension</th><th>ผู้พัฒนา</th><th>ช่วยอะไร</th><th></th></tr>
+    <tr><td><a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python" target="_blank" rel="noopener"><strong>Python</strong></a></td><td>Microsoft</td>
+      <td>ปุ่ม ▶ รันไฟล์, เติมโค้ดให้, ขีดเส้นใต้สีแดงตรงที่ผิดตั้งแต่ยังไม่รัน · ลงแล้วจะได้
+        <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance" target="_blank" rel="noopener">Pylance</a> กับ
+        <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy" target="_blank" rel="noopener">Python Debugger</a> มาด้วย</td><td><strong>ต้องมี</strong></td></tr>
+    <tr><td><a href="https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens" target="_blank" rel="noopener"><strong>Error Lens</strong></a></td><td>Alexander</td>
+      <td>แสดงข้อความ error ต่อท้ายบรรทัดที่ผิดเลย ไม่ต้องเอาเมาส์ไปชี้เส้นแดง</td><td>แนะนำ</td></tr>
+    <tr><td><a href="https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow" target="_blank" rel="noopener"><strong>indent-rainbow</strong></a></td><td>oderwat</td>
+      <td>ระบายสีย่อหน้าแต่ละชั้น เห็นทันทีว่าบรรทัดไหนอยู่ใน if / for ชั้นไหน (บทที่ 3, 6)</td><td>แนะนำ</td></tr>
+  </table>
+
+  <div class="note">
+    <b>ไม่ต้องลง Code Runner</b> ปุ่ม ▶ ของ extension Python ใช้ได้ครบแล้ว · Code Runner
+    ตั้งค่าเริ่มต้นให้รันในแถบ Output ซึ่งพิมพ์ตอบ <code>input()</code> ไม่ได้ ถ้าลงไว้แล้วรันแล้วค้างรอ input
+    ให้ใช้ปุ่ม Run Python File แทน
+  </div>
+
+  <h3>เลือก Python ที่ VS Code จะใช้</h3>
+
+  <p>มุมขวาล่างของ VS Code (ตอนเปิดไฟล์ .py) จะบอกเวอร์ชัน Python ที่ใช้อยู่ เช่น <code>3.13.7</code>
+  ถ้าไม่ขึ้น หรือขึ้นไม่ตรงกับที่ติดตั้ง</p>
+  <ol>
+    <li>กด <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (macOS <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>)</li>
+    <li>พิมพ์ <code>Python: Select Interpreter</code> แล้วกด Enter</li>
+    <li>เลือกตัวที่เลขเวอร์ชันตรงกับที่ติดตั้งจาก python.org</li>
+  </ol>
+  <p>สำคัญมากตอนบทที่ 14 · ถ้าเครื่องมี Python หลายตัว <code>pip install</code> อาจไปลงคนละตัวกับที่ VS Code ใช้
+  แล้วได้ <code>ModuleNotFoundError</code> ทั้งที่ติดตั้งแล้ว</p>
+
+  <h3>ตั้งค่าที่ช่วยให้เรียนง่ายขึ้น</h3>
+  <table>
+    <tr><th>ตั้งค่า</th><th>วิธี</th><th>ทำไม</th></tr>
+    <tr><td>บันทึกอัตโนมัติ</td><td>เมนู File → Auto Save</td><td>ไม่เจอปัญหา "แก้แล้วแต่รันได้ผลเดิม"</td></tr>
+    <tr><td>ขยาย / ย่อตัวอักษร</td><td><kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd></td><td>อ่านง่ายขึ้น เวลาฉายจอหน้าห้อง</td></tr>
+    <tr><td>เปิด / ปิด Terminal</td><td><kbd>Ctrl</kbd>+<kbd>`</kbd></td><td>ใช้พิมพ์ <code>python</code> และ <code>pip</code></td></tr>
+  </table>
+
+  <div class="note">
+    <b>เส้นหยักสีแดงใต้โค้ด</b> คือ VS Code เจอที่ผิดก่อนจะรัน เอาเมาส์ชี้จะเห็นข้อความ (หรือเห็นท้ายบรรทัดเลยถ้าลง Error Lens)
+    อ่านแบบเดียวกับ error ตอนรัน ดู <a href="errors.html">คู่มืออ่าน error</a>
+  </div>
+
+  <h2>0.5 เขียนและรันไฟล์แรก</h2>
+
+  <ol>
+    <li>สร้างโฟลเดอร์สำหรับเก็บงาน เช่น <code>python-lab</code> ไว้ที่ Desktop</li>
+    <li>VS Code: <strong>File → Open Folder</strong> เลือกโฟลเดอร์นั้น</li>
+    <li>สร้างไฟล์ใหม่ชื่อ <code>hello.py</code> · <strong>ต้องลงท้ายด้วย <code>.py</code></strong></li>
+    <li>พิมพ์โค้ดข้างล่าง แล้วบันทึก (<kbd>Ctrl</kbd>+<kbd>S</kbd> · macOS <kbd>⌘</kbd>+<kbd>S</kbd>)</li>
+    <li>กดปุ่ม <strong>▶</strong> มุมขวาบน (Run Python File)</li>
+  </ol>
+
+<pre>print("สวัสดี Python")
+print(2 + 3)</pre>
+
+  <p>ผลจะขึ้นที่แถบ Terminal ด้านล่าง</p>
+
+<pre class="out-box">สวัสดี Python
+5</pre>
+
+  <p>อีกวิธีคือพิมพ์คำสั่งรันเองใน Terminal (ต้องอยู่ในโฟลเดอร์เดียวกับไฟล์)</p>
+
+<pre>python hello.py</pre>
+
+  <div class="note">
+    <b>อ่านโค้ดในเว็บนี้ยังไง</b> · บรรทัดสีจาง ๆ ที่ขึ้นต้นด้วย <code>#</code> ข้าง ๆ โค้ด คือ<strong>ผลลัพธ์</strong>
+    ที่จะเห็นเมื่อรัน ไม่ต้องพิมพ์ตาม · <strong>พิมพ์โค้ดเองทุกตัวอักษร อย่าก๊อบวาง</strong>
+    มือจะจำ และจะได้เจอ error จริงตั้งแต่เนิ่น ๆ
+  </div>
+
+  <h2>0.6 ไฟล์ .py กับโหมดพิมพ์ทีละบรรทัด</h2>
+
+  <p>ถ้าพิมพ์ <code>python</code> เฉย ๆ ใน Terminal จะเข้าโหมดที่มี <code>&gt;&gt;&gt;</code>
+  พิมพ์ทีละบรรทัดแล้วเห็นผลทันที เหมาะกับการลองอะไรสั้น ๆ</p>
+
+<pre>&gt;&gt;&gt; 2 + 3
+5
+&gt;&gt;&gt; exit()          <span class="out"># ออกจากโหมดนี้</span></pre>
+
+  <table>
+    <tr><th></th><th>ไฟล์ .py</th><th>โหมด &gt;&gt;&gt;</th></tr>
+    <tr><td>บันทึกเก็บไว้</td><td>ได้</td><td>ไม่ได้ ปิดแล้วหาย</td></tr>
+    <tr><td>พิมพ์ <code>2 + 3</code> เฉย ๆ</td><td>ไม่แสดงอะไร ต้องใช้ <code>print(2 + 3)</code></td><td>แสดง <code>5</code> ให้เลย</td></tr>
+    <tr><td>ใช้เมื่อ</td><td>ทำโจทย์ ทำงานจริง ทุกบทในเว็บนี้</td><td>ลองคำสั่งสั้น ๆ</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>อย่าพิมพ์ <code>python hello.py</code> ในโหมด <code>&gt;&gt;&gt;</code></b> จะได้ SyntaxError
+    เพราะนั่นเป็นคำสั่งของ Terminal ไม่ใช่โค้ด Python · ถ้าเห็น <code>&gt;&gt;&gt;</code> ให้ <code>exit()</code> ออกมาก่อน
+  </div>
+
+  <h2>0.7 ปัญหาที่เจอบ่อยตอนเริ่ม</h2>
+
+  <table>
+    <tr><th>อาการ</th><th>สาเหตุ</th><th>แก้</th></tr>
+    <tr><td><span class="mono">'python' is not recognized as an internal or external command</span></td>
+      <td>ตอนติดตั้งไม่ได้ติ๊ก Add python.exe to PATH</td>
+      <td>ติดตั้งใหม่แล้วติ๊ก · หรือบน Windows ลองพิมพ์ <code>py</code> แทน <code>python</code></td></tr>
+    <tr><td>พิมพ์ <code>python</code> แล้ว Microsoft Store เด้งขึ้นมา</td>
+      <td>Windows มีทางลัดชื่อ python ที่ชี้ไป Store</td>
+      <td>ติดตั้งจาก python.org แล้วปิดทางลัดที่ Settings → Apps → Advanced app settings → App execution aliases</td></tr>
+    <tr><td><span class="mono">can't open file '...hello.py': [Errno 2] No such file or directory</span></td>
+      <td>Terminal อยู่คนละโฟลเดอร์กับไฟล์ หรือพิมพ์ชื่อไฟล์ผิด</td>
+      <td>ใช้ปุ่ม ▶ ใน VS Code · หรือ <code>cd</code> เข้าโฟลเดอร์ก่อน</td></tr>
+    <tr><td>ไฟล์กลายเป็น <code>hello.py.txt</code></td>
+      <td>Windows ซ่อนนามสกุลไฟล์ แล้วโปรแกรมที่ใช้ต่อ .txt ให้เอง</td>
+      <td>File Explorer → View → ติ๊ก File name extensions แล้วแก้ชื่อไฟล์</td></tr>
+    <tr><td>macOS: <span class="mono">command not found: python</span></td>
+      <td>macOS ใช้ชื่อ <code>python3</code></td>
+      <td>พิมพ์ <code>python3</code> และ <code>pip3</code> แทน</td></tr>
+    <tr><td><span class="mono">'pip' is not recognized</span> (ตอนติดตั้งไลบรารีบทที่ 14)</td>
+      <td>หา pip ไม่เจอ</td>
+      <td>ใช้ <code>python -m pip install ชื่อไลบรารี</code></td></tr>
+    <tr><td><code>pip install</code> สำเร็จแล้ว แต่รันได้ <span class="mono">ModuleNotFoundError</span></td>
+      <td>VS Code ใช้ Python คนละตัวกับที่ pip ติดตั้งให้</td>
+      <td>Python: Select Interpreter เลือกให้ตรง (หัวข้อ 0.4) แล้วติดตั้งใหม่ด้วย <code>python -m pip install</code> ใน Terminal ของ VS Code</td></tr>
+    <tr><td>กดรันแล้วไม่เห็นอะไรเปลี่ยน</td>
+      <td>ยังไม่ได้บันทึกไฟล์</td>
+      <td>บันทึกก่อนรันทุกครั้ง · VS Code: เปิด File → Auto Save</td></tr>
+  </table>
+
+  <p>พอรันได้แล้วเจอ error ระหว่างเขียนโค้ด ให้เปิด <a href="errors.html">คู่มืออ่าน error</a>
+  · ตั้งชื่อไฟล์ห้ามซ้ำกับชื่อ module เช่น <code>random.py</code>, <code>math.py</code>
+  (<a href="errors.html#module">ดูเหตุผล</a>)</p>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">ติดตั้งแค่ VS Code แต่ไม่ได้ติดตั้ง Python จะเกิดอะไร?</div>
+    <button class="choice">รันได้ปกติ เพราะ VS Code มี Python ในตัว</button>
+    <button class="choice" data-correct>พิมพ์โค้ดได้ แต่รันไม่ได้</button>
+    <button class="choice">เปิด VS Code ไม่ได้</button>
+    <button class="choice">รันได้แต่ภาษาไทยเพี้ยน</button>
+    <div class="explain">VS Code เป็นแค่ที่พิมพ์โค้ด คนที่อ่านโค้ดแล้วรันคือ Python ต้องมีทั้งสองอย่าง
+      (ยกเว้น Thonny ที่มี Python มาในตัว)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">พิมพ์ <code>python --version</code> แล้วได้
+      <code>'python' is not recognized as an internal or external command</code> สาเหตุที่เป็นไปได้มากที่สุดคือ?</div>
+    <button class="choice">โค้ดใน hello.py ผิด</button>
+    <button class="choice">ต้องต่ออินเทอร์เน็ตก่อน</button>
+    <button class="choice" data-correct>ตอนติดตั้งไม่ได้ติ๊ก Add python.exe to PATH</button>
+    <button class="choice">ต้องพิมพ์ Python ตัวพิมพ์ใหญ่</button>
+    <div class="explain">Terminal หาโปรแกรม python ไม่เจอ เพราะไม่ได้บอกที่อยู่ไว้ (PATH) · ยังไม่ได้รันโค้ดเลย
+      โค้ดจึงไม่เกี่ยว</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">ในไฟล์ <code>test.py</code> มีบรรทัดเดียวคือ <code>2 + 3</code> รันแล้วเห็นอะไร?</div>
+    <button class="choice"><code>5</code></button>
+    <button class="choice"><code>2 + 3</code></button>
+    <button class="choice" data-correct>ไม่แสดงอะไรเลย</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">Python คำนวณได้ 5 แต่ไม่ได้สั่งให้แสดง · โหมด <code>&gt;&gt;&gt;</code> ถึงจะแสดงให้เอง
+      ในไฟล์ต้องเขียน <code>print(2 + 3)</code></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">บรรทัดสีจาง ๆ <code># สวัสดี Python</code> ข้าง ๆ โค้ดในเว็บนี้คืออะไร?</div>
+    <button class="choice">โค้ดที่ต้องพิมพ์ตาม</button>
+    <button class="choice" data-correct>ผลลัพธ์ที่จะเห็นเมื่อรัน ไม่ต้องพิมพ์</button>
+    <button class="choice">error ที่จะเกิดขึ้น</button>
+    <button class="choice">ชื่อไฟล์</button>
+    <div class="explain">ขึ้นต้นด้วย <code>#</code> คือคอมเมนต์ Python ข้ามไป เว็บนี้ใช้บอกผลลัพธ์ให้ดูเทียบ</div>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — เช็กเครื่องให้พร้อม</h4>
+    <p>ทำให้ครบทุกข้อ แล้วติ๊กในใจ</p>
+    <ol>
+      <li><code>python --version</code> ใน Terminal ขึ้นเลขเวอร์ชัน 3.12 ขึ้นไป</li>
+      <li>สร้างไฟล์ <code>hello.py</code> ในโฟลเดอร์งาน รันด้วยปุ่ม ▶ ได้</li>
+      <li>รันไฟล์เดียวกันด้วยคำสั่ง <code>python hello.py</code> ใน Terminal ได้</li>
+      <li>เข้าโหมด <code>&gt;&gt;&gt;</code> พิมพ์ <code>10 * 3</code> ได้ 30 แล้ว <code>exit()</code> ออกมาได้</li>
+    </ol>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — แนะนำตัว</h4>
+    <p>สร้างไฟล์ <code>about_me.py</code> ให้แสดง 3 บรรทัด: ชื่อ ชื่อเล่น และสิ่งที่อยากเขียนโปรแกรมเป็น
+    แล้วลองลบวงเล็บปิดของบรรทัดแรกทิ้ง รันดูว่า error บอกว่าอะไร แล้วแก้กลับ</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>print("ชื่อ ฟ้าใส ใจดี")
+print("ชื่อเล่น ฟ้า")
+print("อยากเขียนเกมเป็น")
+
+<span class="out"># ลบวงเล็บปิดบรรทัดแรก จะได้
+#     print("ชื่อ ฟ้าใส ใจดี"
+#          ^
+# SyntaxError: '(' was never closed
+# ← Python ชี้ตัวที่เปิดค้างไว้ให้เลย</span></pre>
+    </details>
+  </div>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

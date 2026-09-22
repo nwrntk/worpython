@@ -764,3 +764,20 @@ h2[id] { scroll-margin-top: 1rem; }
 /* โค้ดในหัวตารางต้องคงตัวพิมพ์เดิม ไม่งั้น ch == "a" จะกลายเป็น CH == "A" */
 th code { text-transform: none; letter-spacing: 0; }
 .trace button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ===== ปุ่มลิงก์ดาวน์โหลด (บทที่ 0) ===== */
+.dl { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.2rem 0 1.6rem; }
+.dl-btn {
+  display: flex; flex-direction: column;
+  min-width: 11rem; padding: .7rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-left: 3px solid var(--accent-hot);
+  border-radius: 2px;
+  text-decoration: none; color: var(--ink);
+  transition: transform 150ms, border-color 150ms;
+}
+.dl-btn:hover { transform: translateY(-2px); border-color: var(--accent-hot); }
+.dl-btn b { font-size: 1rem; }
+.dl-btn b::after { content: " ↗"; color: var(--accent-hot); font-weight: 400; }
+.dl-btn span { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-soft); }

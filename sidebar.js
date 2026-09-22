@@ -3,6 +3,7 @@
 
 const PAGES = [
   { group: 'Start',                   file: 'index.html', num: '·',  title: 'หน้าแรก' },
+  { group: 'Start',                   file: 'ch0.html',   num: '0',  title: 'ติดตั้งและรันโปรแกรม' },
   { group: 'I · พื้นฐาน',             file: 'ch1.html',   num: '1',  title: 'print และตัวแปร' },
   { group: 'I · พื้นฐาน',             file: 'ch2.html',   num: '2',  title: 'ชนิดข้อมูล' },
   { group: 'II · การตัดสินใจ',        file: 'ch3.html',   num: '3',  title: 'เงื่อนไข if' },
