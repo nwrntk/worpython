@@ -28,8 +28,14 @@ const at = Math.max(0, PAGES.findIndex(p => p.file === here));
 
 function buildLayout() {
   const main = document.querySelector('main');
+  // หัวข้อย่อยของบทนี้ → ลิงก์ใต้ชื่อบทในเมนู
+  const heads = [...main.querySelectorAll('h2')];
+  heads.forEach((h, i) => { if (!h.id) h.id = 's' + (i + 1); });
 
-  let nav = `<div class="pres-sidebar-title">Python Lab</div>`;
+  const org = 'ภาควิชาวิศวกรรมระบบชีวภาพและเกษตร KMITL';
+  let nav = `<a class="pres-org" href="index.html"><img src="bae_logo.png" alt="โลโก้${org}">
+      <span>ดร.วรนิษฐา กรุงแสนเมือง<small>${org}</small></span></a>
+    <div class="pres-sidebar-title">Python Lab</div>`;
   let lastGroup = null;
   for (const p of PAGES) {
     if (p.group !== lastGroup) {
@@ -39,6 +45,8 @@ function buildLayout() {
     const active = p.file === here ? ' active' : '';
     nav += `<a class="pres-nav-item${active}" href="${p.file}">
       <span class="pres-nav-num">${p.num}</span> ${p.title}</a>`;
+    if (active) nav += `<div class="pres-nav-sub">${heads.map(h =>
+      `<a href="#${h.id}">${h.textContent.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</a>`).join('')}</div>`;
   }
 
   const prev = PAGES[at - 1], next = PAGES[at + 1];
@@ -54,6 +62,7 @@ function buildLayout() {
           <span class="pres-slide-title">${PAGES[at].title}</span>
         </div>
         <div class="pres-topbar-right">
+          <span class="pres-credit">ดร.วรนิษฐา กรุงแสนเมือง <small>· ${org}</small></span>
           <button class="pres-nav-btn pres-print" id="printBtn" title="บันทึกบทนี้เป็น PDF (Ctrl+P)">PDF</button>
           <button class="pres-nav-btn" id="prevBtn" title="บทก่อนหน้า (←)"
             ${prev ? '' : 'disabled'}>&#8592; Prev</button>
@@ -77,6 +86,23 @@ function buildLayout() {
   document.getElementById('prevBtn').onclick = () => go(-1);
   document.getElementById('nextBtn').onclick = () => go(1);
   document.getElementById('printBtn').onclick = () => window.print();
+
+  // เลือกหัวข้อย่อยแล้วเลื่อนไป · จอเล็กปิดเมนูให้ด้วย · ไฮไลต์หัวข้อที่กำลังอ่าน
+  const content = document.getElementById('content');
+  const subs = [...layout.querySelectorAll('.pres-nav-sub a')];
+  layout.querySelector('.pres-nav-sub')?.addEventListener('click', e => {
+    if (e.target.tagName === 'A' && window.innerWidth <= 900) toggleSidebar();
+  });
+  const spy = () => {
+    const top = content.getBoundingClientRect().top + 90;
+    let k = -1;
+    heads.forEach((h, i) => { if (h.getBoundingClientRect().top <= top) k = i; });
+    subs.forEach((a, i) => a.classList.toggle('on', i === k));
+  };
+  content.addEventListener('scroll', spy, { passive: true });
+  // เปิดลิงก์ที่มี #หัวข้อ มาตรง ๆ: เบราว์เซอร์เลื่อนไปก่อนที่เราย้าย main เข้ากรอบ เลยต้องเลื่อนเองอีกที
+  if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({ behavior: 'instant' });
+  spy();
 
   if (window.innerWidth <= 900) document.getElementById('sidebar').classList.add('collapsed');
   document.getElementById('content').focus();   // ให้ลูกศรขึ้น/ลงเลื่อนหน้าได้
@@ -224,6 +250,64 @@ function initStepper() {
     const playBtn = box.querySelector('[data-go="play"]');
     let at = 0, timer = null;
 
+    // โหมดลูกศร (class="stepper ref"): ตัวแปรเป็นป้ายชื่อ ลากลูกศรไปหาก้อนข้อมูล · ป้าย ①② เดียวกัน = ก้อนเดียวกัน
+    const ref = box.classList.contains('ref');
+    if (ref) box.querySelector('.st-label').textContent = 'ตัวแปร → ก้อนข้อมูล';
+    const items = s => {                                 // "[1, 'a, b', 3]" → ['1', "'a, b'", '3']
+      const out = [];
+      let cur = '', q = '', depth = 0;
+      for (const ch of s.slice(1, -1)) {
+        if (q) { if (ch === q) q = ''; }
+        else if (ch === "'" || ch === '"') q = ch;
+        else if ('[({'.includes(ch)) depth++;
+        else if ('])}'.includes(ch)) depth--;
+        else if (ch === ',' && !depth) { out.push(cur.trim()); cur = ''; continue; }
+        cur += ch;
+      }
+      if (cur.trim()) out.push(cur.trim());
+      return out;
+    };
+    const objects = st => {
+      const m = new Map();
+      if (st) for (const f of st.fr) for (const [, v, tag] of f.v) if (tag && !m.has(tag)) m.set(tag, items(v));
+      return m;
+    };
+    const heap = (st, prev) => {
+      const was = objects(prev);
+      return [...objects(st)].map(([tag, els]) => {
+        const old = was.get(tag);
+        return `<div class="rf-obj${old ? '' : ' in'}" data-tag="${tag}"><span class="rf-tag">${tag} list</span><div class="rf-els">${
+          els.length ? els.map((e, i) => `<span class="rf-el${old && old[i] !== e ? ' pop' : ''}">${esc(e)}<small>${i}</small></span>`).join('')
+                     : '<span class="rf-empty">ว่าง</span>'}</div></div>`;
+      }).join('');
+    };
+    const arrows = () => {
+      const rf = vars.querySelector('.rf');
+      if (!rf) return;
+      const svg = rf.querySelector('.rf-svg');
+      // วัดตำแหน่งจาก layout (offset) ไม่ใช่ getBoundingClientRect เพราะ list ใหม่กำลังเลื่อนลงมา (transform) ตอนวาด
+      const box_ = el => {
+        let x = 0, y = 0;
+        for (let e = el; e && e !== rf; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
+        return { left: x, top: y, width: el.offsetWidth, height: el.offsetHeight };
+      };
+      svg.innerHTML = `<defs>${['a', 'f'].map(t => `<marker id="rfm-${t}${box.dataset.rfId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" class="rf-head ${t}"/></marker>`).join('')}</defs>` +
+        [...rf.querySelectorAll('.rf-dot')].map(dot => {
+          const obj = rf.querySelector(`.rf-obj[data-tag="${dot.dataset.to}"]`);
+          if (!obj) return '';
+          const d = box_(dot), o = box_(obj);
+          const x1 = d.left + d.width / 2, y1 = d.top + d.height / 2;
+          const x2 = o.left - 1, y2 = o.top + 18, dx = Math.max(24, (x2 - x1) / 2);
+          const fn = dot.classList.contains('fn');
+          return `<path class="rf-arrow${fn ? ' fn' : ''}${dot.classList.contains('new') ? ' new' : ''}" pathLength="1"
+            d="M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}" marker-end="url(#rfm-${fn ? 'f' : 'a'}${box.dataset.rfId})"/>`;
+        }).join('');
+    };
+    if (ref) {
+      box.dataset.rfId = document.querySelectorAll('[data-rf-id]').length;
+      new ResizeObserver(arrows).observe(vars);         // กว้างเปลี่ยน (เปิดเมนู หมุนจอ ฟอนต์โหลด) → วาดลูกศรใหม่
+    }
+
     const valueOf = (st, frame, name) => {
       const f = st && st.fr.find(x => x.n === frame);
       const v = f && f.v.find(x => x[0] === name);
@@ -245,9 +329,15 @@ function initStepper() {
         ${f.v.length ? f.v.map(([n, v, tag]) => `
           <div class="st-var${prev && valueOf(prev, f.n, n) !== v + tag ? ' chg' : ''}">
             <span class="st-n">${esc(n)}</span>
-            <span class="st-v">${tag ? `<b class="st-tag">${tag}</b>` : ''}${esc(v)}</span>
+            <span class="st-v">${ref && tag
+              ? `<i class="rf-dot${(valueOf(prev, f.n, n) || '').slice(-1) !== tag ? ' new' : ''}${k ? ' fn' : ''}" data-to="${tag}"></i>`
+              : `${tag ? `<b class="st-tag">${tag}</b>` : ''}${esc(v)}`}</span>
           </div>`).join('') : '<div class="st-empty">ยังไม่มีตัวแปร</div>'}
         </div>`).join('');
+      if (ref) {
+        vars.innerHTML = `<div class="rf"><div>${vars.innerHTML}</div><div class="rf-heap">${heap(st, prev)}</div><svg class="rf-svg"></svg></div>`;
+        arrows();
+      }
       out.textContent = st.out || ' ';
       let m;
       if (at === 0) m = 'ยังไม่เริ่ม · กด "ถัดไป" เพื่อรันบรรทัดแรก';
@@ -640,6 +730,159 @@ function initVenn() {
   }
 }
 
+/* ---------- slice: พิมพ์ start:stop:step แล้วดูว่ากล่องไหนถูกเลือก ---------- */
+
+// ตัดแบบเดียวกับ Python (ทดสอบเทียบ Python จริง 4,725 กรณี) · คืน index ที่ถูกเลือกตามลำดับ
+function pySlice(n, a, b, c) {
+  const step = c == null ? 1 : c;
+  const fix = (v, lo, hi, dflt) => {
+    if (v == null) return dflt;
+    if (v < 0) v += n;
+    return Math.min(Math.max(v, lo), hi);
+  };
+  const start = step > 0 ? fix(a, 0, n, 0) : fix(a, -1, n - 1, n - 1);
+  const stop = step > 0 ? fix(b, 0, n, n) : fix(b, -1, n - 1, -1);
+  const idx = [];
+  for (let i = start; step > 0 ? i < stop : i > stop; i += step) idx.push(i);
+  return { start, stop, step, idx };
+}
+
+function initSliceViz() {
+  for (const box of document.querySelectorAll('.sliceviz')) {
+    const { name, seq, str, presets } = JSON.parse(box.querySelector('script').textContent);
+    const n = seq.length;
+    const rep = v => str ? v : String(v);
+    const repr = vals => str ? `'${vals.join('')}'` : `[${vals.join(', ')}]`;
+    box.insertAdjacentHTML('beforeend', `
+      <div class="sl-ops">${presets.map(p => `<button>${vzEsc(p)}</button>`).join('')}</div>
+      <label class="sl-in"><code>${vzEsc(name)}[</code><input spellcheck="false" autocomplete="off" aria-label="พิมพ์ index หรือ start:stop:step"><code>]</code>
+        <span class="sl-hint">พิมพ์เองก็ได้</span></label>
+      <div class="lv-stage sl-stage"><span class="lv-name">${vzEsc(name)}</span>
+        <div class="lv-row">${seq.map((v, i) => `<div class="lv-box"><span class="sl-neg">${i - n}</span>${vzEsc(rep(v))}<span class="lv-i">${i}</span></div>`).join('')}
+        <span class="sl-stop"><b>stop</b></span></div></div>
+      <div class="lv-stage sl-res"><span class="lv-name">ผลลัพธ์</span><div class="lv-row"></div></div>
+      <div class="st-msg lv-msg"></div>`);
+    const input = box.querySelector('input'), boxes = [...box.querySelectorAll('.sl-stage .lv-box')];
+    const stopMark = box.querySelector('.sl-stop'), res = box.querySelector('.sl-res .lv-row');
+    const msg = box.querySelector('.lv-msg');
+    const num = v => v === undefined || v === '' ? null : Number(v);
+
+    function show(text, animate) {
+      box.querySelectorAll('.sl-ops button').forEach(b => b.classList.toggle('on', b.textContent === text));
+      boxes.forEach(b => { b.classList.remove('pick', 'hit'); b.querySelector('.sl-ord')?.remove(); });
+      stopMark.hidden = true;
+      res.innerHTML = '';
+      const m = text.match(/^\s*(-?\d+)?\s*(?::\s*(-?\d+)?\s*(?::\s*(-?\d+)?\s*)?)?$/);
+      if (!m || !text.trim()) {
+        msg.innerHTML = 'พิมพ์ได้ 2 แบบ: เลขตัวเดียว เช่น <code>2</code> <code>-1</code> หรือแบบ slice เช่น <code>1:4</code> <code>::2</code> <code>::-1</code>';
+        return;
+      }
+      if (!text.includes(':')) {                                   // index ตัวเดียว
+        let i = Number(m[1]);
+        const j = i < 0 ? i + n : i;
+        if (j < 0 || j >= n) {
+          msg.innerHTML = `<span class="st-exc">IndexError: ${str ? 'string' : 'list'} index out of range</span> · มีแค่ index 0 ถึง ${n - 1} (หรือ −${n} ถึง −1) · <b>index เกินขอบจะพัง แต่ slice ไม่พัง</b>`;
+          return;
+        }
+        boxes[j].classList.add('hit');
+        res.innerHTML = `<div class="lv-box in-top">${vzEsc(rep(seq[j]))}</div>`;
+        msg.innerHTML = `<code>${vzEsc(name)}[${i}]</code> → <code>${vzEsc(str ? `'${seq[j]}'` : String(seq[j]))}</code>` +
+          (i < 0 ? ` · ติดลบนับจากท้าย: ${i} คือ index ${j}` : '') + ' · <b>ได้ค่าเดียว ไม่ใช่ ' + (str ? 'string' : 'list') + '</b>';
+        return;
+      }
+      const [a, b, c] = [num(m[1]), num(m[2]), num(m[3])];
+      if (c === 0) { msg.innerHTML = '<span class="st-exc">ValueError: slice step cannot be zero</span> · step เป็น 0 ไม่ได้ (เดินไม่ไปไหน)'; return; }
+      const s = pySlice(n, a, b, c), vals = s.idx.map(i => seq[i]);
+      s.idx.forEach((i, k) => {
+        boxes[i].classList.add('pick');
+        boxes[i].insertAdjacentHTML('beforeend', `<span class="sl-ord">${k + 1}</span>`);
+      });
+      // เส้น stop: ขอบกล่องที่ไม่ถูกเอา (เดินขวา = ขอบซ้าย, เดินซ้าย = ขอบขวา)
+      const edge = s.step > 0
+        ? (s.stop < n ? boxes[s.stop].offsetLeft : boxes[n - 1].offsetLeft + boxes[n - 1].offsetWidth)
+        : (s.stop >= 0 ? boxes[s.stop].offsetLeft + boxes[s.stop].offsetWidth : boxes[0].offsetLeft);
+      stopMark.style.left = edge - 1 + 'px';
+      stopMark.hidden = !(s.step > 0 ? s.stop < n : s.stop >= 0);
+      res.innerHTML = vals.map((v, k) => `<div class="lv-box${animate ? ' in-top' : ''}" style="animation-delay:${k * 70}ms">${vzEsc(rep(v))}</div>`).join('');
+      setTimeout(() => res.querySelectorAll('.in-top').forEach(e => e.classList.remove('in-top')), vals.length * 70 + 650);
+      const why = [];
+      if (a == null) why.push(`ละ start → เริ่มที่${s.step > 0 ? 'ตัวแรก' : 'ตัวท้าย'}`);
+      else if (a < 0) why.push(`start ${a} = index ${a + n}`);
+      if (b == null) why.push(`ละ stop → ไปจน${s.step > 0 ? 'สุดท้าย' : 'ถึงตัวแรก'}`);
+      else if (b < 0 && b + n >= 0) why.push(`stop ${b} = index ${b + n}`);
+      if ((a != null && (a >= n || a < -n)) || (b != null && (b > n || b < -n))) why.push('<b>เลขเกินขอบ slice ไม่พัง ตัดเท่าที่มี</b>');
+      if (s.step < 0) why.push('<b>step ติดลบ = เดินถอยหลัง</b>');
+      msg.innerHTML = `<code>${vzEsc(name)}[${vzEsc(text.trim())}]</code> → <code>${vzEsc(repr(vals.map(rep)))}</code> · ` +
+        (vals.length
+          ? `เริ่ม index <b>${s.start}</b> เดินทีละ <b>${s.step}</b> ${s.stop === n || s.stop === -1 ? 'ไปจน<b>สุดขอบ</b>' : `หยุด<b>ก่อน</b> index <b>${s.stop}</b> (ไม่เอาตัวนี้)`}`
+          : '<b>ไม่ได้สักตัว</b> เพราะจุดเริ่มเลยจุดหยุดไปแล้ว') +
+        (why.length ? `<div class="st-note">${why.join(' · ')}</div>` : '');
+    }
+    box.querySelector('.sl-ops').addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') return;
+      input.value = e.target.textContent;
+      show(input.value, !vzCalm());
+    });
+    input.addEventListener('input', () => show(input.value, false));
+    input.value = presets[0];
+    show(presets[0], false);
+  }
+}
+
+/* ---------- convolution: เคอร์เนลเลื่อนทับภาพทีละตำแหน่ง ---------- */
+
+function initConvViz() {
+  for (const box of document.querySelectorAll('.convviz')) {
+    const { img, k, div, out } = JSON.parse(box.querySelector('script').textContent);
+    const R = out.length, C = out[0].length, kn = k.length;
+    const gray = v => `background:rgb(${v},${v},${v});color:${v < 130 ? '#fff' : 'var(--ink)'}`;
+    const steps = [];
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+      const terms = [];
+      let sum = 0;
+      k.forEach((row, i) => row.forEach((w, j) => { terms.push(`${img[r + i][c + j]}×${w}`); sum += img[r + i][c + j] * w; }));
+      steps.push({ r, c, msg: `(${terms.join(' + ')}) ÷ ${div} = ${sum} ÷ ${div} = <b>${out[r][c]}</b>` });
+    }
+    box.insertAdjacentHTML('beforeend', `
+      <div class="cv-wrap">
+        <div><div class="cv-lbl">ภาพเข้า ${img.length}×${img[0].length} · กรอบ = เคอร์เนล ÷ ${div}</div>
+          <div class="cv-grid" style="--n:${img[0].length}">
+            ${img.flat().map(v => `<span style="${gray(v)}">${v}</span>`).join('')}
+            <div class="cv-k" style="--n:${kn}">${k.flat().map(w => `<i>×${w}</i>`).join('')}</div>
+          </div></div>
+        <div class="cv-eq">=</div>
+        <div><div class="cv-lbl">ภาพออก ${R}×${C}</div>
+          <div class="cv-grid cv-out" style="--n:${C}">${out.flat().map(() => '<span></span>').join('')}</div></div>
+      </div>`);
+    const win = box.querySelector('.cv-k'), cells = [...box.querySelectorAll('.cv-out span')];
+    vzControls(box, steps, async (st, anim) => {
+      win.style.transition = anim ? '' : 'none';
+      win.style.transform = `translate(calc(${st.c} * var(--cell)), calc(${st.r} * var(--cell)))`;
+      const cur = st.r * C + st.c;
+      cells.forEach((el, i) => {
+        const v = out[Math.floor(i / C)][i % C];
+        el.textContent = i <= cur ? v : '';
+        el.style.cssText = i <= cur ? gray(v) : '';
+        el.classList.toggle('now', i === cur);
+      });
+      if (anim) await vzWait(450);
+    });
+    // ปุ่มเล่นอัตโนมัติ: กด "ถัดไป" ให้เองจนถึงตำแหน่งสุดท้าย
+    const ctl = box.querySelector('.st-ctl'), next = box.querySelector('.st-next');
+    ctl.querySelector('.st-count').insertAdjacentHTML('beforebegin', '<button class="cv-play" title="เล่นอัตโนมัติ">⏵ เล่น</button>');
+    const play = ctl.querySelector('.cv-play');
+    let timer = null;
+    const stop = () => { clearInterval(timer); timer = null; play.textContent = '⏵ เล่น'; };
+    play.addEventListener('click', () => {
+      if (timer) return stop();
+      if (next.dataset.go === 'first') next.click();
+      play.textContent = '⏸ หยุด';
+      timer = setInterval(() => next.dataset.go === 'first' ? stop() : next.click(), 1300);
+    });
+    ctl.addEventListener('click', e => { if (e.isTrusted && e.target !== play) stop(); });
+  }
+}
+
 /* ---------- boot ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -651,6 +894,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDictViz();
   initSetViz();
   initVenn();
+  initSliceViz();
+  initConvViz();
   buildLayout();
 });
 

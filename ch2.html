@@ -53,8 +53,8 @@ print(float(5))     <span class="out"># 5.0</span></pre>
 
   <p>แปลงไม่ได้จะเกิด error</p>
 
-<pre>int("สวัสดี")     <span class="out"># ValueError: invalid literal for int()</span>
-int("3.5")        <span class="out"># ValueError ← int() รับได้เฉพาะเลขจำนวนเต็มล้วน</span>
+<pre>int("สวัสดี")     <span class="out err"># ValueError: invalid literal for int()</span>
+int("3.5")        <span class="out err"># ValueError ← int() รับได้เฉพาะเลขจำนวนเต็มล้วน</span>
 int(float("3.5")) <span class="out"># 3 ← ต้องแปลงผ่าน float ก่อน</span></pre>
 
   <h2>2.3 ตัวดำเนินการทางคณิตศาสตร์</h2>
@@ -415,12 +415,12 @@ print("สวัสดี " + nmae)
 print("ปีหน้าอายุ " + age + 1)</pre>
     <details>
       <summary>▸ ดูเฉลย</summary>
-<pre><span class="out"># รอบ 1: NameError: name 'nmae' is not defined
-#        → สะกดผิด แก้เป็น name
-# รอบ 2: TypeError: can only concatenate str (not "int") to str
-#        → age เป็น str เอาไป + 1 ไม่ได้ ครอบ int()
-# รอบ 3: TypeError: can only concatenate str (not "int") to str  ← ข้อความเดิม!
-#        → คราวนี้ age เป็น int แล้ว แต่เอา int ไปต่อกับข้อความ ใช้ f-string</span>
+<pre><span class="out err"># รอบ 1: NameError: name 'nmae' is not defined</span>
+<span class="out">#        → สะกดผิด แก้เป็น name</span>
+<span class="out err"># รอบ 2: TypeError: can only concatenate str (not "int") to str</span>
+<span class="out">#        → age เป็น str เอาไป + 1 ไม่ได้ ครอบ int()</span>
+<span class="out err"># รอบ 3: TypeError: can only concatenate str (not "int") to str  ← ข้อความเดิม!</span>
+<span class="out">#        → คราวนี้ age เป็น int แล้ว แต่เอา int ไปต่อกับข้อความ ใช้ f-string</span>
 name = input("ชื่อ: ")
 age = int(input("อายุ: "))
 print("สวัสดี " + name)

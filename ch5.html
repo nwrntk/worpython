@@ -55,10 +55,10 @@ print(colors.index("blue")) <span class="out"># 2</span></pre>
 
 <pre>t = (1, 2, 3)
 t[0] = 99
-<span class="out"># TypeError: 'tuple' object does not support item assignment</span>
+<span class="out err"># TypeError: 'tuple' object does not support item assignment</span>
 
 t.append(4)
-<span class="out"># AttributeError: 'tuple' object has no attribute 'append'</span></pre>
+<span class="out err"># AttributeError: 'tuple' object has no attribute 'append'</span></pre>
 
   <p>ถ้าอยากได้ค่าใหม่ ต้องสร้าง tuple ก้อนใหม่</p>
 
@@ -143,7 +143,7 @@ print(rest)      <span class="out"># [2, 3, 4, 5]</span></pre>
 t[2].append(5)
 print(t)         <span class="out"># (1, 2, [3, 4, 5])  ← เปลี่ยนได้!</span>
 
-t[2] = [9]       <span class="out"># TypeError  ← แต่เปลี่ยนตัวที่ชี้ไม่ได้</span></pre>
+t[2] = [9]       <span class="out err"># TypeError  ← แต่เปลี่ยนตัวที่ชี้ไม่ได้</span></pre>
 
   <h2>5.7 Flowchart กับ Tuple — unpacking ใช้กล่องเดียว</h2>
 

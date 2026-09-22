@@ -32,6 +32,12 @@ print("th" in s)  <span class="out"># True</span>
 for ch in s:
     print(ch, end=".")     <span class="out"># P.y.t.h.o.n.</span></pre>
 
+  <div class="sliceviz">
+    <h4>ดูเป็นภาพ · index และ slice ของ string</h4>
+    <p>ใช้กฎเดียวกับ list ทุกอย่าง · กดปุ่มหรือพิมพ์เอง · ผลของ slice เป็น string ใหม่เสมอ</p>
+    <script type="application/json">{"name": "s", "seq": ["P", "y", "t", "h", "o", "n"], "str": true, "presets": ["0", "-1", "0:3", "2:", "-3:", "::2", "::-1", "1:5:2", "10"]}</script>
+  </div>
+
   <div class="warn">
     <b>String แก้ไม่ได้ (immutable) เหมือน tuple:</b><br>
     <code>s[0] = "J"</code> → <span class="mono">TypeError</span><br>
@@ -51,7 +57,7 @@ print("ab" * 3)              <span class="out"># ababab</span>
 
 <span class="out"># ต่อกับตัวเลขตรง ๆ ไม่ได้</span>
 age = 20
-print("อายุ " + age)         <span class="out"># TypeError!</span>
+print("อายุ " + age)         <span class="out err"># TypeError!</span>
 print("อายุ " + str(age))    <span class="out"># ต้องแปลงเป็น str ก่อน</span></pre>
 
   <h2>11.3 f-string — วิธีที่ควรใช้</h2>

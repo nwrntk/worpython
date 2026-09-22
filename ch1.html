@@ -86,7 +86,7 @@ score = "ดีมาก"    <span class="out"># เปลี่ยนจาก�
     <tr><td>ห้ามขึ้นต้นด้วยตัวเลข</td><td><code>score1</code></td><td><code>1score</code></td></tr>
     <tr><td>ห้ามมีช่องว่าง</td><td><code>first_name</code></td><td><code>first name</code></td></tr>
     <tr><td>ห้ามมีอักขระพิเศษ</td><td><code>total_price</code></td><td><code>total-price</code></td></tr>
-    <tr><td>ห้ามใช้คำสงวน</td><td><code>my_list</code></td><td><code>list</code>, <code>if</code>, <code>for</code></td></tr>
+    <tr><td>ห้ามใช้คำสงวน (ดูด้านล่าง)</td><td><code>class_name</code></td><td><code>class</code>, <code>if</code>, <code>for</code></td></tr>
     <tr><td>ตัวพิมพ์เล็กใหญ่ต่างกัน</td><td colspan="2"><code>Name</code> กับ <code>name</code> คนละตัวแปรกัน</td></tr>
   </table>
 
@@ -95,6 +95,52 @@ score = "ดีมาก"    <span class="out"># เปลี่ยนจาก�
     บอกอะไรไม่ได้เลย ใช้ <code>student_name</code>, <code>total_price</code> แทน<br>
     Python นิยมเขียนตัวพิมพ์เล็กคั่นด้วยขีดล่าง เรียกว่า
     <span class="mono">snake_case</span>
+  </div>
+
+  <h3>คำสงวน (keyword) — คำที่ Python จองไว้แล้ว</h3>
+
+  <p>คำสงวนเป็นส่วนหนึ่งของไวยากรณ์ภาษา Python เช่น <code>if</code> <code>for</code> <code>def</code>
+  จึง<strong>เอามาตั้งเป็นชื่อตัวแปรไม่ได้เด็ดขาด</strong> · Python 3.13 มีทั้งหมด 35 คำ
+  ไม่ต้องท่องจำ เพราะใน VS Code คำพวกนี้จะเป็นสีต่างจากชื่อตัวแปร</p>
+
+  <table>
+    <tr><th>กลุ่ม</th><th>คำสงวน</th><th>เจอในบท</th></tr>
+    <tr><td>ค่าพิเศษ</td><td><code>True</code> <code>False</code> <code>None</code></td><td>2</td></tr>
+    <tr><td>ตรรกะ / ตรวจสอบ</td><td><code>and</code> <code>or</code> <code>not</code> <code>in</code> <code>is</code></td><td>2</td></tr>
+    <tr><td>เงื่อนไข</td><td><code>if</code> <code>elif</code> <code>else</code></td><td>3</td></tr>
+    <tr><td>วนซ้ำ</td><td><code>for</code> <code>while</code> <code>break</code> <code>continue</code> <code>pass</code></td><td>6–8</td></tr>
+    <tr><td>ฟังก์ชัน</td><td><code>def</code> <code>return</code> <code>lambda</code> <code>global</code> <code>nonlocal</code> <code>yield</code></td><td>12</td></tr>
+    <tr><td>ใช้ของคนอื่น</td><td><code>import</code> <code>from</code> <code>as</code></td><td>12</td></tr>
+    <tr><td>จัดการ error / ไฟล์</td><td><code>try</code> <code>except</code> <code>finally</code> <code>raise</code> <code>assert</code> <code>with</code></td><td>13</td></tr>
+    <tr><td>อื่น ๆ</td><td><code>del</code> <code>class</code> <code>async</code> <code>await</code></td><td>—</td></tr>
+  </table>
+
+<pre>class = "ม.4"
+<span class="out err">#     class = "ม.4"
+#           ^
+# SyntaxError: invalid syntax</span>
+
+True = 1
+<span class="out err"># SyntaxError: cannot assign to True</span>
+
+<span class="out"># อยากรู้ว่าคำไหนเป็นคำสงวน ถาม Python ได้เลย</span>
+import keyword
+print(keyword.kwlist)               <span class="out"># ['False', 'None', 'True', 'and', 'as', ...]</span>
+print(keyword.iskeyword("class"))   <span class="out"># True</span>
+print(keyword.iskeyword("list"))    <span class="out"># False</span></pre>
+
+  <div class="warn">
+    <b>กับดัก: ชื่อฟังก์ชันในตัวไม่ใช่คำสงวน แต่ห้ามใช้เหมือนกัน</b><br>
+    <code>list</code> <code>str</code> <code>int</code> <code>print</code> <code>input</code>
+    <code>len</code> <code>sum</code> <code>max</code> <code>min</code> <code>type</code>
+    Python <strong>ยอมให้ตั้งชื่อ</strong> ไม่ขึ้น error ตอนตั้ง แต่ชื่อนั้นจะถูกทับ
+    แล้วพังตอนเรียกใช้ทีหลัง ซึ่งหาสาเหตุยากกว่ามาก
+<pre>sum = 10
+print(sum([1, 2, 3]))
+<span class="out err"># TypeError: 'int' object is not callable</span>
+<span class="out"># ← sum ตอนนี้คือเลข 10 ไม่ใช่ฟังก์ชันหาผลรวมแล้ว</span></pre>
+    ตั้งชื่อให้เจาะจงแทน เช่น <code>total</code>, <code>scores</code>, <code>name_list</code> ·
+    ถ้าเผลอไปแล้วใน <code>&gt;&gt;&gt;</code> ให้พิมพ์ <code>del sum</code> เพื่อคืนชื่อเดิม
   </div>
 
   <h2>1.5 input() — รับค่าจากผู้ใช้</h2>

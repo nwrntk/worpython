@@ -103,7 +103,7 @@ print(lo, hi, round(avg, 2))     <span class="out"># 2 9 5.5</span></pre>
     print(x)
 
 f()                 <span class="out"># 10</span>
-print(x)            <span class="out"># NameError: name 'x' is not defined</span></pre>
+print(x)            <span class="out err"># NameError: name 'x' is not defined</span></pre>
 
   <p>ตัวแปรข้างนอกฟังก์ชันเป็น <strong>global</strong> — อ่านได้ แต่เขียนทับไม่ได้</p>
 
@@ -157,9 +157,9 @@ def add_item_safe(items):
     items.append("ใหม่")
     return items</pre>
 
-  <div class="stepper">
+  <div class="stepper ref">
     <h4>ดูทีละบรรทัด · ส่ง list เข้าฟังก์ชัน</h4>
-    <p>ดูป้าย <b>①</b> <b>②</b>: <code>items</code> ข้างในฟังก์ชันกับ <code>my_list</code> ข้างนอก ชี้ก้อนเดียวกันหรือเปล่า</p>
+    <p>ดูลูกศร: <code>items</code> ข้างในฟังก์ชัน (<b style="color:#6b4fa0">สีม่วง</b>) กับ <code>my_list</code> ข้างนอก ชี้ list ก้อนเดียวกันหรือเปล่า</p>
     <script type="application/json">{"code": ["def add_item(items):", "    items.append(\"ใหม่\")", "", "def add_item_safe(items):", "    items = items[:]", "    items.append(\"ใหม่\")", "    return items", "", "my_list = [\"เก่า\"]", "add_item(my_list)", "print(my_list)", "new_list = add_item_safe(my_list)", "print(my_list)", "print(new_list)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 4, "nx": 9, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 9, "nx": 10, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า']", "①"]]}], "out": ""}, {"ex": 10, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า']", "①"]]}, {"n": "add_item()", "v": [["items", "['เก่า']", "①"]]}], "out": ""}, {"ex": 2, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}, {"n": "add_item()", "v": [["items", "['เก่า', 'ใหม่']", "①"]]}], "out": "", "ret": ["add_item", "None"]}, {"ex": 10, "nx": 11, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}], "out": ""}, {"ex": 11, "nx": 12, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}], "out": "['เก่า', 'ใหม่']\n"}, {"ex": 12, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}, {"n": "add_item_safe()", "v": [["items", "['เก่า', 'ใหม่']", "①"]]}], "out": "['เก่า', 'ใหม่']\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}, {"n": "add_item_safe()", "v": [["items", "['เก่า', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}, {"n": "add_item_safe()", "v": [["items", "['เก่า', 'ใหม่', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n"}, {"ex": 7, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"]]}, {"n": "add_item_safe()", "v": [["items", "['เก่า', 'ใหม่', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n", "ret": ["add_item_safe", "['เก่า', 'ใหม่', 'ใหม่']"]}, {"ex": 12, "nx": 13, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"], ["new_list", "['เก่า', 'ใหม่', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n"}, {"ex": 13, "nx": 14, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"], ["new_list", "['เก่า', 'ใหม่', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n['เก่า', 'ใหม่']\n"}, {"ex": 14, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["my_list", "['เก่า', 'ใหม่']", "①"], ["new_list", "['เก่า', 'ใหม่', 'ใหม่']", "②"]]}], "out": "['เก่า', 'ใหม่']\n['เก่า', 'ใหม่']\n['เก่า', 'ใหม่', 'ใหม่']\n", "end": 1}], "notes": {"2": "items มีป้าย <b>①<\/b> เดียวกับ my_list → append แล้ว my_list ข้างนอกเปลี่ยนด้วย", "5": "<code>items[:]<\/code> ได้ก้อนใหม่ ป้ายเปลี่ยน · ตั้งแต่นี้แก้ items ไม่กระทบ my_list", "13": "my_list ยังเหมือนเดิม เพราะ add_item_safe แก้แค่สำเนา"}}</script>
   </div>
 
