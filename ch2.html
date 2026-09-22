@@ -183,6 +183,24 @@ c = (f - 32) * 5 / 9
 print(f"{c:.1f} °C")</pre></div>
   </div>
 
+  <h2>2.8 เจอ error ทำยังไง</h2>
+
+  <p>บทนี้คือจุดที่จะเริ่มเจอ error บ่อย เช่น เอาค่าจาก <code>input()</code> ไปบวกเลขตรง ๆ</p>
+
+<pre class="err">Traceback (most recent call last):
+  File "main.py", line 2, in &lt;module&gt;
+    print(age + 1)
+          ~~~~^~~
+TypeError: can only concatenate str (not "int") to str</pre>
+
+  <div class="note">
+    <b>อ่านจากล่างขึ้นบน:</b> บรรทัดสุดท้ายบอกชนิด error กับเหตุผล · <code>line 2</code> บอกบรรทัดที่พัง ·
+    <code>^</code> ชี้จุดที่พังพอดี<br>
+    วิธีอ่านเต็ม ๆ และกรณีจริงของ error ทุกชนิด อยู่ใน <a href="errors.html">คู่มืออ่าน error</a> ·
+    บทนี้ดู <a href="errors.html#type">TypeError</a>, <a href="errors.html#value">ValueError</a>
+    และ <a href="errors.html#zero">ZeroDivisionError</a>
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -263,6 +281,21 @@ print(f"{c:.1f} °C")</pre></div>
     <button class="choice">เกิด error</button>
     <button class="choice">5 5</button>
     <div class="explain"><code>text</code> เป็น str การคูณ str ด้วย 2 คือต่อข้อความซ้ำ → "55" · flowchart นี้ขาดกล่อง <code>int(text)</code> ก่อนคำนวณ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q9">รันแล้วผู้ใช้พิมพ์ <code>สิบ</code> ได้ error นี้ ข้อใดอธิบายถูก?</div>
+<pre>Traceback (most recent call last):
+  File "shop.py", line 1, in &lt;module&gt;
+    price = int(input("ราคา: "))
+            ~~~^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'สิบ'</pre>
+    <button class="choice">ลืมใส่ <code>int()</code> ครอบ input</button>
+    <button class="choice">ชื่อตัวแปร <code>price</code> สะกดผิด</button>
+    <button class="choice" data-correct>ข้อความ "สิบ" แปลงเป็นจำนวนเต็มไม่ได้</button>
+    <button class="choice">โค้ดเขียนผิดไวยากรณ์</button>
+    <div class="explain">อ่านบรรทัดล่างสุด: <code>ValueError</code> = ชนิดถูก (เป็น str) แต่ค่า 'สิบ' แปลงเป็น int ไม่ได้ ·
+      โค้ดไม่ได้ผิด แต่ต้องดักค่าที่ผู้ใช้พิมพ์ผิด (บทที่ 7 และ 13)</div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -369,6 +402,31 @@ h = total // 60
 m = total % 60
 print(f"{h} ชั่วโมง {m} นาที")</pre></div>
   </div>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 6 — แก้บั๊กด้วยการอ่าน error</h4>
+    <p>โค้ดนี้มีบั๊ก 3 จุด ให้รันแล้ว<strong>อ่าน error ทีละตัว</strong> แก้ทีละจุดแล้วรันใหม่
+    จนได้ <code>สวัสดี ฟ้า</code> กับ <code>ปีหน้าอายุ 21</code> (พิมพ์ชื่อ ฟ้า อายุ 20)</p>
+<pre>name = input("ชื่อ: ")
+age = input("อายุ: ")
+print("สวัสดี " + nmae)
+print("ปีหน้าอายุ " + age + 1)</pre>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre><span class="out"># รอบ 1: NameError: name 'nmae' is not defined
+#        → สะกดผิด แก้เป็น name
+# รอบ 2: TypeError: can only concatenate str (not "int") to str
+#        → age เป็น str เอาไป + 1 ไม่ได้ ครอบ int()
+# รอบ 3: TypeError: can only concatenate str (not "int") to str  ← ข้อความเดิม!
+#        → คราวนี้ age เป็น int แล้ว แต่เอา int ไปต่อกับข้อความ ใช้ f-string</span>
+name = input("ชื่อ: ")
+age = int(input("อายุ: "))
+print("สวัสดี " + name)
+print(f"ปีหน้าอายุ {age + 1}")</pre>
+      <p>รอบ 2 กับ 3 ข้อความ error เหมือนกันเป๊ะ แต่สาเหตุต่างกัน ·
+      ดู <code>^</code> ว่าชี้ตรงไหนทุกครั้ง อย่าเดาจากข้อความอย่างเดียว</p>
     </details>
   </div>
 </main>

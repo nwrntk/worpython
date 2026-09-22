@@ -19,6 +19,7 @@ const PAGES = [
   { group: 'VIII · Lib สำคัญ',        file: 'ch14.html',  num: '14', title: 'OpenCV — ประมวลผลภาพ' },
   { group: 'VIII · Lib สำคัญ',        file: 'ch15.html',  num: '15', title: 'ภาพดิจิทัลและการประมวลผล' },
   { group: 'VIII · Lib สำคัญ',        file: 'ch16.html',  num: '16', title: 'Matplotlib — พล็อตกราฟ' },
+  { group: 'อ้างอิง',                 file: 'errors.html', num: '!', title: 'คู่มืออ่าน error' },
 ];
 
 const here = location.pathname.split('/').pop() || 'index.html';

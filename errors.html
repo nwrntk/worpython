@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มืออ่าน error — Python Lab</title>
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Reference</div>
+  <h1>คู่มืออ่าน error</h1>
+  <p class="lead">error คือ Python บอกเราว่าพังตรงไหน เพราะอะไร · หน้านี้รวมวิธีอ่าน
+  และกรณีจริงที่เจอบ่อย ข้อความ error ทุกอันได้จากการรันโค้ดจริงด้วย Python 3.13</p>
+
+  <table>
+    <tr><th>ชนิด error</th><th>แปลคร่าว ๆ</th><th>เริ่มเจอ</th></tr>
+    <tr><td><a href="#syntax"><code>SyntaxError</code></a></td><td>เขียนผิดไวยากรณ์ Python อ่านไม่ออก</td><td>บทที่ 1</td></tr>
+    <tr><td><a href="#indent"><code>IndentationError</code></a></td><td>ย่อหน้าผิด</td><td>บทที่ 3</td></tr>
+    <tr><td><a href="#name"><code>NameError</code></a></td><td>ไม่รู้จักชื่อนี้</td><td>บทที่ 1</td></tr>
+    <tr><td><a href="#type"><code>TypeError</code></a></td><td>ชนิดข้อมูลใช้กับคำสั่งนี้ไม่ได้</td><td>บทที่ 2</td></tr>
+    <tr><td><a href="#value"><code>ValueError</code></a></td><td>ชนิดถูก แต่ค่าใช้ไม่ได้</td><td>บทที่ 2</td></tr>
+    <tr><td><a href="#zero"><code>ZeroDivisionError</code></a></td><td>หารด้วยศูนย์</td><td>บทที่ 2</td></tr>
+    <tr><td><a href="#index"><code>IndexError</code></a></td><td>ตำแหน่งเกินขอบเขต</td><td>บทที่ 4</td></tr>
+    <tr><td><a href="#key"><code>KeyError</code></a></td><td>ไม่มี key นี้ใน dict</td><td>บทที่ 9</td></tr>
+    <tr><td><a href="#attr"><code>AttributeError</code></a></td><td>ข้อมูลชนิดนี้ไม่มีเมธอด / คุณสมบัตินี้</td><td>บทที่ 4</td></tr>
+    <tr><td><a href="#unbound"><code>UnboundLocalError</code></a></td><td>ใช้ตัวแปรในฟังก์ชันก่อนจะมีค่า</td><td>บทที่ 12</td></tr>
+    <tr><td><a href="#file"><code>FileNotFoundError</code></a></td><td>หาไฟล์ไม่เจอ</td><td>บทที่ 13</td></tr>
+    <tr><td><a href="#module"><code>ModuleNotFoundError</code></a></td><td>หาไลบรารีไม่เจอ</td><td>บทที่ 14</td></tr>
+    <tr><td><a href="#logic">ไม่มี error แต่ผลผิด</a></td><td>โปรแกรมทำตามที่เขียน แต่ไม่ใช่ที่ตั้งใจ</td><td>ทุกบท</td></tr>
+  </table>
+
+  <h2 id="read">อ่าน Traceback 4 ขั้น</h2>
+
+<pre>price = 120
+qty = 3
+total = price * qty + " บาท"
+print(total)</pre>
+
+<pre class="err">Traceback (most recent call last):
+  File "shop.py", line 3, in &lt;module&gt;         <span class="out">← ② ไฟล์ไหน บรรทัดที่เท่าไร</span>
+    total = price * qty + " บาท"                <span class="out">← ③ โค้ดบรรทัดนั้น</span>
+            ~~~~~~~~~~~~^~~~~~~~                <span class="out">← ④ ^ ชี้จุดที่พังพอดี</span>
+TypeError: unsupported operand type(s) for +: 'int' and 'str'   <span class="out">← ① อ่านบรรทัดนี้ก่อน</span></pre>
+
+  <ol>
+    <li><strong>อ่านจากล่างขึ้นบน</strong> บรรทัดสุดท้ายคือ<em>ชนิด error</em> กับเหตุผล ·
+      ที่นี่คือ <code>TypeError</code> เอา int มา <code>+</code> กับ str ไม่ได้</li>
+    <li>ดู <code>line 3</code> แล้วไปที่บรรทัดนั้นในโค้ด</li>
+    <li>ดูเครื่องหมาย <code>^</code> ว่าชี้ตรงไหน · ที่นี่ชี้ <code>+</code></li>
+    <li>แก้ แล้วรันใหม่ · เช่น <code>total = f"{price * qty} บาท"</code></li>
+  </ol>
+
+  <div class="note">
+    <b>แก้ทีละตัว แล้วรันใหม่ทุกครั้ง</b> Python หยุดที่ error ตัวแรกที่เจอ
+    บรรทัดหลังจากนั้นยังไม่ได้รันเลย แก้เสร็จอาจเจอ error ตัวถัดไป เป็นเรื่องปกติ
+  </div>
+
+  <div class="warn">
+    <b>SyntaxError กับ IndentationError ไม่มีคำว่า Traceback</b> เพราะโปรแกรมยังไม่ได้เริ่มรันเลยสักบรรทัด
+    Python อ่านโค้ดไม่ออกตั้งแต่แรก · ถ้าหาที่ผิดในบรรทัดที่บอกไม่เจอ ให้ดู<strong>บรรทัดก่อนหน้า</strong>ด้วย
+  </div>
+
+  <h3>error ที่มีหลายชั้น</h3>
+
+  <p>ถ้า error เกิดในฟังก์ชัน Traceback จะมี <code>File ...</code> หลายก้อน
+  กฎเดิม: <strong>อ่านจากล่างขึ้นบน</strong> ก้อนล่างสุดคือจุดที่พังจริง ก้อนบนคือทางที่เดินมาถึง</p>
+
+<pre>def average(nums):
+    return sum(nums) / len(nums)
+
+scores = []
+print(average(scores))</pre>
+
+<pre class="err">Traceback (most recent call last):
+  File "avg.py", line 5, in &lt;module&gt;           <span class="out">← ถูกเรียกมาจากตรงนี้ (ต้นเหตุ: list ว่าง)</span>
+    print(average(scores))
+          ~~~~~~~^^^^^^^^
+  File "avg.py", line 2, in average             <span class="out">← พังจริงตรงนี้</span>
+    return sum(nums) / len(nums)
+           ~~~~~~~~~~^~~~~~~~~~~
+ZeroDivisionError: division by zero</pre>
+
+  <h2 id="phrases">วลีที่เจอบ่อยในข้อความ error</h2>
+
+  <table>
+    <tr><th>ในข้อความมีคำว่า</th><th>แปลว่า</th></tr>
+    <tr><td><span class="mono">was never closed</span></td><td>เปิดวงเล็บ / เครื่องหมายคำพูด แล้วไม่ปิด</td></tr>
+    <tr><td><span class="mono">expected ':'</span></td><td>ลืมโคลอนท้าย if / for / while / def</td></tr>
+    <tr><td><span class="mono">Perhaps you forgot a comma? · Did you mean ...?</span></td><td>Python เดาให้แล้ว ลองตามที่มันแนะนำ</td></tr>
+    <tr><td><span class="mono">is not defined</span></td><td>ไม่มีชื่อนี้ สะกดผิด / ยังไม่ได้สร้าง / ลืมใส่คำพูด</td></tr>
+    <tr><td><span class="mono">unsupported operand · can only concatenate</span></td><td>ใช้ + - * / กับข้อมูลต่างชนิดกัน</td></tr>
+    <tr><td><span class="mono">not supported between instances of</span></td><td>เปรียบเทียบข้อมูลต่างชนิดกัน เช่น str กับ int</td></tr>
+    <tr><td><span class="mono">invalid literal for int()</span></td><td>ข้อความนี้แปลงเป็นตัวเลขไม่ได้</td></tr>
+    <tr><td><span class="mono">out of range</span></td><td>ขอตำแหน่งที่ไม่มีอยู่จริง</td></tr>
+    <tr><td><span class="mono">has no attribute</span></td><td>ข้อมูลชนิดนี้ไม่มีเมธอดชื่อนี้ ดูชนิดที่อยู่หน้าคำนี้</td></tr>
+    <tr><td><span class="mono">'NoneType' object ...</span></td><td>ตัวแปรเป็น None ย้อนไปดูว่าได้ค่านี้มาจากไหน</td></tr>
+    <tr><td><span class="mono">missing 1 required positional argument</span></td><td>เรียกฟังก์ชันโดยส่งค่าไม่ครบ</td></tr>
+    <tr><td><span class="mono">not subscriptable · does not support item assignment</span></td><td>ใช้ <code>[ ]</code> กับข้อมูลที่ทำแบบนั้นไม่ได้</td></tr>
+  </table>
+  <h2 id="syntax">SyntaxError</h2>
+  <p class="lead">เขียนผิดไวยากรณ์ Python อ่านไม่ออก · เริ่มเจอบทที่ 1</p>
+
+  <div class="case">
+    <h4>ลืมปิดวงเล็บ</h4>
+<pre>print(&quot;สวัสดี&quot;
+print(&quot;ลาก่อน&quot;)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 1
+    print(&quot;สวัสดี&quot;
+         ^
+SyntaxError: &#x27;(&#x27; was never closed</pre>
+    <p><b>สาเหตุ:</b> เปิด <code>(</code> แล้วไม่ปิด<br><b>แก้:</b> ปิดวงเล็บให้ครบคู่ · Python ชี้ตัวที่เปิดค้างไว้ให้แล้ว</p>
+  </div>
+
+  <div class="case">
+    <h4>ลืมปิดเครื่องหมายคำพูด</h4>
+<pre>print(&quot;สวัสดี)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 1
+    print(&quot;สวัสดี)
+          ^
+SyntaxError: unterminated string literal (detected at line 1)</pre>
+    <p><b>สาเหตุ:</b> ข้อความเปิดด้วย <code>"</code> แต่ไม่มีตัวปิด<br><b>แก้:</b> ใส่ <code>"</code> ปิดท้ายข้อความ</p>
+  </div>
+
+  <div class="case">
+    <h4>ลืมโคลอนท้าย if</h4>
+<pre>score = 80
+if score &gt;= 50
+    print(&quot;ผ่าน&quot;)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 2
+    if score &gt;= 50
+                  ^
+SyntaxError: expected &#x27;:&#x27;</pre>
+    <p><b>สาเหตุ:</b> บรรทัด <code>if</code> / <code>for</code> / <code>while</code> / <code>def</code> ต้องจบด้วย <code>:</code><br><b>แก้:</b> เติม <code>:</code> ตรงที่ <code>^</code> ชี้</p>
+  </div>
+
+  <div class="case">
+    <h4>ใช้ = แทน == ใน if</h4>
+<pre>score = 80
+if score = 100:
+    print(&quot;เต็ม&quot;)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 2
+    if score = 100:
+       ^^^^^^^^^^^
+SyntaxError: invalid syntax. Maybe you meant &#x27;==&#x27; or &#x27;:=&#x27; instead of &#x27;=&#x27;?</pre>
+    <p><b>สาเหตุ:</b> <code>=</code> คือกำหนดค่า ส่วนการเปรียบเทียบต้องใช้ <code>==</code><br><b>แก้:</b> เปลี่ยนเป็น <code>if score == 100:</code> · Python บอกให้แล้วใน "Maybe you meant '=='"</p>
+  </div>
+
+  <div class="case">
+    <h4>ลืมจุลภาคใน list</h4>
+<pre>nums = [10 20, 30]</pre>
+<pre class="err">  File &quot;main.py&quot;, line 1
+    nums = [10 20, 30]
+            ^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?</pre>
+    <p><b>สาเหตุ:</b> สมาชิกใน list ต้องคั่นด้วย <code>,</code><br><b>แก้:</b> เป็น <code>[10, 20, 30]</code> · Python เดาให้แล้วว่า "forgot a comma"</p>
+  </div>
+
+  <h2 id="indent">IndentationError</h2>
+  <p class="lead">ย่อหน้าผิด · เริ่มเจอบทที่ 3</p>
+
+  <div class="case">
+    <h4>ลืมย่อหน้าใต้ for</h4>
+<pre>for i in range(3):
+print(i)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 2
+    print(i)
+    ^^^^^
+IndentationError: expected an indented block after &#x27;for&#x27; statement on line 1</pre>
+    <p><b>สาเหตุ:</b> บรรทัดที่อยู่ใน loop / if ต้องย่อหน้าเข้าไป<br><b>แก้:</b> ย่อหน้า <code>print(i)</code> เข้าไป 4 ช่อง</p>
+  </div>
+
+  <div class="case">
+    <h4>ย่อหน้าโดยไม่มีเหตุ</h4>
+<pre>name = &quot;ฟ้า&quot;
+    print(name)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 2
+    print(name)
+IndentationError: unexpected indent</pre>
+    <p><b>สาเหตุ:</b> บรรทัดธรรมดาที่ไม่ได้อยู่ใต้ if / for ห้ามย่อหน้า<br><b>แก้:</b> ลบช่องว่างหน้าบรรทัดออก</p>
+  </div>
+
+  <div class="case">
+    <h4>ย่อหน้าไม่เท่ากัน</h4>
+<pre>if True:
+        print(&quot;a&quot;)
+    print(&quot;b&quot;)</pre>
+<pre class="err">  File &quot;main.py&quot;, line 3
+    print(&quot;b&quot;)
+              ^
+IndentationError: unindent does not match any outer indentation level</pre>
+    <p><b>สาเหตุ:</b> บรรทัดแรกย่อ 8 ช่อง บรรทัดถัดไปย่อ 4 ช่อง ไม่ตรงกับระดับไหนเลย<br><b>แก้:</b> ใช้ 4 ช่องเท่ากันทุกบรรทัด · อย่าผสม Tab กับ Space</p>
+  </div>
+
+  <h2 id="name">NameError</h2>
+  <p class="lead">ไม่รู้จักชื่อนี้ · เริ่มเจอบทที่ 1</p>
+
+  <div class="case">
+    <h4>สะกดชื่อตัวแปรผิด</h4>
+<pre>name = &quot;ฟ้า&quot;
+print(nmae)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(nmae)
+          ^^^^
+NameError: name &#x27;nmae&#x27; is not defined</pre>
+    <p><b>สาเหตุ:</b> สร้าง <code>name</code> แต่เรียก <code>nmae</code><br><b>แก้:</b> เทียบตัวสะกดกับตอนสร้างทีละตัวอักษร</p>
+  </div>
+
+  <div class="case">
+    <h4>ลืมใส่เครื่องหมายคำพูด</h4>
+<pre>print(สวัสดี)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    print(สวัสดี)
+          ^^^^^^
+NameError: name &#x27;สวัสดี&#x27; is not defined</pre>
+    <p><b>สาเหตุ:</b> ไม่มีคำพูดครอบ Python จึงคิดว่า <code>สวัสดี</code> เป็นชื่อตัวแปร<br><b>แก้:</b> <code>print("สวัสดี")</code></p>
+  </div>
+
+  <div class="case">
+    <h4>สะกดชื่อฟังก์ชันผิด</h4>
+<pre>pritn(&quot;hello&quot;)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    pritn(&quot;hello&quot;)
+    ^^^^^
+NameError: name &#x27;pritn&#x27; is not defined. Did you mean: &#x27;print&#x27;?</pre>
+    <p><b>สาเหตุ:</b> ไม่มีฟังก์ชันชื่อ <code>pritn</code><br><b>แก้:</b> Python เดาให้แล้ว "Did you mean: 'print'?"</p>
+  </div>
+
+  <div class="case">
+    <h4>ใช้ตัวแปรก่อนสร้าง</h4>
+<pre>print(total)
+total = 100</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    print(total)
+          ^^^^^
+NameError: name &#x27;total&#x27; is not defined</pre>
+    <p><b>สาเหตุ:</b> Python รันจากบนลงล่าง ตอนบรรทัด 1 ยังไม่มี <code>total</code><br><b>แก้:</b> ย้ายบรรทัดที่สร้างตัวแปรขึ้นไปก่อน</p>
+  </div>
+
+  <h2 id="type">TypeError</h2>
+  <p class="lead">ชนิดข้อมูลใช้กับคำสั่งนี้ไม่ได้ · เริ่มเจอบทที่ 2</p>
+
+  <div class="case">
+    <h4>เอาค่าจาก input ไปบวกเลข</h4>
+<pre>age = input(&quot;อายุ: &quot;)
+print(age + 1)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(age + 1)
+          ~~~~^~~
+TypeError: can only concatenate str (not &quot;int&quot;) to str</pre>
+    <p><b>สาเหตุ:</b> <code>input()</code> ได้ str เสมอ แม้ผู้ใช้จะพิมพ์ตัวเลข<br><b>แก้:</b> ครอบด้วย <code>int()</code> ตอนรับค่า</p>
+<pre class="fix">age = int(input(&quot;อายุ: &quot;))
+print(age + 1)</pre>
+  </div>
+
+  <div class="case">
+    <h4>เอาตัวเลขไปต่อข้อความ</h4>
+<pre>price = 120
+print(price + &quot; บาท&quot;)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(price + &quot; บาท&quot;)
+          ~~~~~~^~~~~~~~
+TypeError: unsupported operand type(s) for +: &#x27;int&#x27; and &#x27;str&#x27;</pre>
+    <p><b>สาเหตุ:</b> บวก int กับ str ไม่ได้<br><b>แก้:</b> ใช้ f-string</p>
+<pre class="fix">price = 120
+print(f&quot;{price} บาท&quot;)</pre>
+  </div>
+
+  <div class="case">
+    <h4>เปรียบเทียบข้อความกับตัวเลข</h4>
+<pre>score = input(&quot;คะแนน: &quot;)
+if score &gt;= 50:
+    print(&quot;ผ่าน&quot;)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    if score &gt;= 50:
+       ^^^^^^^^^^^
+TypeError: &#x27;&gt;=&#x27; not supported between instances of &#x27;str&#x27; and &#x27;int&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>score</code> เป็น str เทียบกับ 50 ที่เป็น int ไม่ได้<br><b>แก้:</b> แปลงก่อน <code>score = int(input("คะแนน: "))</code></p>
+  </div>
+
+  <div class="case">
+    <h4>หาความยาวของตัวเลข</h4>
+<pre>n = 12345
+print(len(n))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(len(n))
+          ~~~^^^
+TypeError: object of type &#x27;int&#x27; has no len()</pre>
+    <p><b>สาเหตุ:</b> <code>len()</code> ใช้กับ str / list / dict ได้ แต่ไม่ใช่ int<br><b>แก้:</b> <code>len(str(n))</code> ถ้าอยากนับจำนวนหลัก</p>
+  </div>
+
+  <div class="case">
+    <h4>ส่งค่าเข้าฟังก์ชันไม่ครบ</h4>
+<pre>def area(w, h):
+    return w * h
+
+print(area(5))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 4, in &lt;module&gt;
+    print(area(5))
+          ~~~~^^^
+TypeError: area() missing 1 required positional argument: &#x27;h&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>area</code> ต้องการ 2 ค่า (w, h) แต่ส่งมาค่าเดียว<br><b>แก้:</b> <code>area(5, 3)</code> · ข้อความบอกชื่อพารามิเตอร์ที่ขาดให้ด้วย</p>
+  </div>
+
+  <div class="case">
+    <h4>แก้ตัวอักษรใน string</h4>
+<pre>word = &quot;cat&quot;
+word[0] = &quot;b&quot;</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    word[0] = &quot;b&quot;
+    ~~~~^^^
+TypeError: &#x27;str&#x27; object does not support item assignment</pre>
+    <p><b>สาเหตุ:</b> string แก้ไขไม่ได้ (immutable)<br><b>แก้:</b> สร้างใหม่แทน <code>word = "b" + word[1:]</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ใช้ [ ] กับตัวเลข</h4>
+<pre>n = 2026
+print(n[0])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(n[0])
+          ~^^^
+TypeError: &#x27;int&#x27; object is not subscriptable</pre>
+    <p><b>สาเหตุ:</b> int ไม่มีตำแหน่งให้ดึง<br><b>แก้:</b> <code>str(n)[0]</code> ถ้าอยากได้หลักแรก</p>
+  </div>
+
+  <h2 id="value">ValueError</h2>
+  <p class="lead">ชนิดถูก แต่ค่าใช้ไม่ได้ · เริ่มเจอบทที่ 2</p>
+
+  <div class="case">
+    <h4>ผู้ใช้พิมพ์ตัวอักษร</h4>
+<pre>n = int(input(&quot;จำนวน: &quot;))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    n = int(input(&quot;จำนวน: &quot;))
+        ~~~^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: &#x27;สิบ&#x27;</pre>
+    <p><b>สาเหตุ:</b> ข้อความ "สิบ" แปลงเป็น int ไม่ได้ · โค้ดไม่ผิด แต่ค่าที่ได้รับผิด<br><b>แก้:</b> ตรวจก่อนด้วย <code>.isdigit()</code> (บทที่ 7) หรือดักด้วย try-except (บทที่ 13)</p>
+  </div>
+
+  <div class="case">
+    <h4>ผู้ใช้พิมพ์ทศนิยมใส่ int()</h4>
+<pre>n = int(input(&quot;จำนวน: &quot;))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    n = int(input(&quot;จำนวน: &quot;))
+        ~~~^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: &#x27;3.5&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>int()</code> แปลงข้อความ "3.5" ตรง ๆ ไม่ได้<br><b>แก้:</b> ใช้ <code>float()</code> ถ้ายอมให้มีทศนิยม</p>
+  </div>
+
+  <div class="case">
+    <h4>ผู้ใช้กด Enter เฉย ๆ</h4>
+<pre>n = int(input(&quot;จำนวน: &quot;))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    n = int(input(&quot;จำนวน: &quot;))
+        ~~~^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: &#x27;&#x27;</pre>
+    <p><b>สาเหตุ:</b> ได้ข้อความว่าง <code>''</code> ซึ่งไม่ใช่ตัวเลข<br><b>แก้:</b> เช็กว่าว่างไหมก่อนแปลง หรือวน while จนกว่าจะได้ค่า</p>
+  </div>
+
+  <div class="case">
+    <h4>จำนวนตัวแปรไม่เท่าจำนวนค่า</h4>
+<pre>a, b = [1, 2, 3]</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    a, b = [1, 2, 3]
+    ^^^^
+ValueError: too many values to unpack (expected 2)</pre>
+    <p><b>สาเหตุ:</b> มี 3 ค่า แต่รับไว้ 2 ตัวแปร (บทที่ 5)<br><b>แก้:</b> ให้จำนวนเท่ากัน <code>a, b, c = [1, 2, 3]</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ลบของที่ไม่มีใน list</h4>
+<pre>nums = [1, 2, 3]
+nums.remove(5)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    nums.remove(5)
+    ~~~~~~~~~~~^^^
+ValueError: list.remove(x): x not in list</pre>
+    <p><b>สาเหตุ:</b> <code>remove</code> หาค่า 5 ไม่เจอ<br><b>แก้:</b> เช็กก่อน <code>if 5 in nums: nums.remove(5)</code></p>
+  </div>
+
+  <h2 id="zero">ZeroDivisionError</h2>
+  <p class="lead">หารด้วยศูนย์ · เริ่มเจอบทที่ 2</p>
+
+  <div class="case">
+    <h4>ตัวหารเป็น 0</h4>
+<pre>total = 100
+count = 0
+print(total / count)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 3, in &lt;module&gt;
+    print(total / count)
+          ~~~~~~^~~~~~~
+ZeroDivisionError: division by zero</pre>
+    <p><b>สาเหตุ:</b> หารด้วย 0 ไม่ได้ในคณิตศาสตร์<br><b>แก้:</b> เช็กก่อน <code>if count &gt; 0:</code></p>
+  </div>
+
+  <div class="case">
+    <h4>หาค่าเฉลี่ยของ list ว่าง</h4>
+<pre>scores = []
+print(sum(scores) / len(scores))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(sum(scores) / len(scores))
+          ~~~~~~~~~~~~^~~~~~~~~~~~~
+ZeroDivisionError: division by zero</pre>
+    <p><b>สาเหตุ:</b> <code>len([])</code> คือ 0<br><b>แก้:</b> เช็ก <code>if scores:</code> ก่อนหาร (list ว่าง = เท็จ)</p>
+  </div>
+
+  <h2 id="index">IndexError</h2>
+  <p class="lead">ตำแหน่งเกินขอบเขต · เริ่มเจอบทที่ 4</p>
+
+  <div class="case">
+    <h4>ขอตำแหน่งเกินจำนวนสมาชิก</h4>
+<pre>fruits = [&quot;มะม่วง&quot;, &quot;ส้ม&quot;, &quot;กล้วย&quot;]
+print(fruits[3])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(fruits[3])
+          ~~~~~~^^^
+IndexError: list index out of range</pre>
+    <p><b>สาเหตุ:</b> มี 3 ตัว index คือ 0, 1, 2 ไม่มี 3<br><b>แก้:</b> ตัวสุดท้ายใช้ <code>fruits[-1]</code> หรือ <code>fruits[len(fruits) - 1]</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ดึงตัวแรกจาก list ว่าง</h4>
+<pre>queue = []
+print(queue[0])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(queue[0])
+          ~~~~~^^^
+IndexError: list index out of range</pre>
+    <p><b>สาเหตุ:</b> list ว่างไม่มีแม้แต่ตำแหน่ง 0<br><b>แก้:</b> เช็ก <code>if queue:</code> ก่อน</p>
+  </div>
+
+  <div class="case">
+    <h4>loop เกินไปรอบเดียว (off-by-one)</h4>
+<pre>nums = [10, 20, 30]
+for i in range(len(nums) + 1):
+    print(nums[i])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 3, in &lt;module&gt;
+    print(nums[i])
+          ~~~~^^^
+IndexError: list index out of range</pre>
+    <p><b>สาเหตุ:</b> <code>range(len(nums) + 1)</code> ให้ i = 0, 1, 2, 3 ซึ่ง 3 ไม่มี<br><b>แก้:</b> ใช้ <code>range(len(nums))</code> หรือดีกว่านั้น <code>for n in nums:</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ตำแหน่งเกินความยาว string</h4>
+<pre>word = &quot;cat&quot;
+print(word[5])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(word[5])
+          ~~~~^^^
+IndexError: string index out of range</pre>
+    <p><b>สาเหตุ:</b> "cat" มี 3 ตัว index สูงสุดคือ 2<br><b>แก้:</b> เช็ก <code>len(word)</code> ก่อน</p>
+  </div>
+
+  <h2 id="key">KeyError</h2>
+  <p class="lead">ไม่มี key นี้ใน dict · เริ่มเจอบทที่ 9</p>
+
+  <div class="case">
+    <h4>ขอ key ที่ไม่มี</h4>
+<pre>stock = {&quot;apple&quot;: 5, &quot;orange&quot;: 3}
+print(stock[&quot;banana&quot;])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(stock[&quot;banana&quot;])
+          ~~~~~^^^^^^^^^^
+KeyError: &#x27;banana&#x27;</pre>
+    <p><b>สาเหตุ:</b> ไม่มี "banana" ใน dict<br><b>แก้:</b> ใช้ <code>stock.get("banana", 0)</code> หรือเช็ก <code>if "banana" in stock:</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ตัวพิมพ์เล็กใหญ่ไม่ตรง</h4>
+<pre>stock = {&quot;apple&quot;: 5}
+print(stock[&quot;Apple&quot;])</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(stock[&quot;Apple&quot;])
+          ~~~~~^^^^^^^^^
+KeyError: &#x27;Apple&#x27;</pre>
+    <p><b>สาเหตุ:</b> "Apple" กับ "apple" เป็นคนละ key กัน<br><b>แก้:</b> ปรับให้เหมือนกันก่อน <code>stock[name.lower()]</code></p>
+  </div>
+
+  <div class="case">
+    <h4>นับของโดยไม่ได้สร้าง key ก่อน</h4>
+<pre>counts = {}
+for w in [&quot;a&quot;, &quot;b&quot;, &quot;a&quot;]:
+    counts[w] += 1</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 3, in &lt;module&gt;
+    counts[w] += 1
+    ~~~~~~^^^
+KeyError: &#x27;a&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>+= 1</code> ต้องอ่านค่าเดิมก่อน แต่รอบแรกยังไม่มี key<br><b>แก้:</b> <code>counts[w] = counts.get(w, 0) + 1</code> (บทที่ 9)</p>
+  </div>
+
+  <h2 id="attr">AttributeError</h2>
+  <p class="lead">ข้อมูลชนิดนี้ไม่มีเมธอด / คุณสมบัตินี้ · เริ่มเจอบทที่ 4</p>
+
+  <div class="case">
+    <h4>ใช้ชื่อเมธอดจากภาษาอื่น</h4>
+<pre>nums = [1, 2]
+nums.push(3)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    nums.push(3)
+    ^^^^^^^^^
+AttributeError: &#x27;list&#x27; object has no attribute &#x27;push&#x27;</pre>
+    <p><b>สาเหตุ:</b> list ของ Python ไม่มี <code>push</code><br><b>แก้:</b> ใช้ <code>nums.append(3)</code></p>
+  </div>
+
+  <div class="case">
+    <h4>ใช้เมธอดของ list กับ string</h4>
+<pre>name = &quot;ฟ้า&quot;
+name.append(&quot;ใส&quot;)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    name.append(&quot;ใส&quot;)
+    ^^^^^^^^^^^
+AttributeError: &#x27;str&#x27; object has no attribute &#x27;append&#x27;</pre>
+    <p><b>สาเหตุ:</b> string ไม่มี <code>append</code> · ดูชนิดที่อยู่หน้า "object"<br><b>แก้:</b> ต่อข้อความด้วย <code>name = name + "ใส"</code></p>
+  </div>
+
+  <div class="case">
+    <h4>เอาผลของ .sort() ไปเก็บ</h4>
+<pre>nums = [3, 1, 2]
+nums = nums.sort()
+nums.append(4)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 3, in &lt;module&gt;
+    nums.append(4)
+    ^^^^^^^^^^^
+AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;append&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>.sort()</code> เรียงใน list เดิมแล้วคืน <code>None</code><br><b>แก้:</b> เรียกเฉย ๆ <code>nums.sort()</code> หรือใช้ <code>nums = sorted(nums)</code></p>
+  </div>
+
+  <div class="case">
+    <h4>OpenCV อ่านรูปไม่ได้แล้วเอาไปใช้ต่อ</h4>
+<pre>img = None   # จำลอง: cv2.imread คืน None เมื่ออ่านไฟล์ไม่ได้
+print(img.shape)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(img.shape)
+          ^^^^^^^^^
+AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;shape&#x27;</pre>
+    <p><b>สาเหตุ:</b> <code>cv2.imread</code> ไม่ error เมื่อหาไฟล์ไม่เจอ แต่คืน <code>None</code> เงียบ ๆ (บทที่ 14)<br><b>แก้:</b> เช็ก <code>if img is None:</code> ทันทีหลังอ่าน · ถ้าส่ง None เข้าฟังก์ชันของ cv2 จะได้ <code>cv2.error</code> ที่มีคำว่า <span class="mono">!_src.empty()</span> ซึ่งก็คือสาเหตุเดียวกัน</p>
+  </div>
+
+  <h2 id="unbound">UnboundLocalError</h2>
+  <p class="lead">ใช้ตัวแปรในฟังก์ชันก่อนจะมีค่า · เริ่มเจอบทที่ 12</p>
+
+  <div class="case">
+    <h4>แก้ตัวแปรข้างนอกจากในฟังก์ชัน</h4>
+<pre>count = 0
+
+def add():
+    count += 1
+
+add()</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 6, in &lt;module&gt;
+    add()
+    ~~~^^
+  File &quot;main.py&quot;, line 4, in add
+    count += 1
+    ^^^^^
+UnboundLocalError: cannot access local variable &#x27;count&#x27; where it is not associated with a value</pre>
+    <p><b>สาเหตุ:</b> ในฟังก์ชัน <code>count += 1</code> ทำให้ Python ถือว่า count เป็นตัวแปรภายใน ซึ่งยังไม่มีค่า (บทที่ 12)<br><b>แก้:</b> ส่งเข้า-คืนค่าแทน</p>
+<pre class="fix">count = 0
+
+def add(n):
+    return n + 1
+
+count = add(count)</pre>
+  </div>
+
+  <h2 id="file">FileNotFoundError</h2>
+  <p class="lead">หาไฟล์ไม่เจอ · เริ่มเจอบทที่ 13</p>
+
+  <div class="case">
+    <h4>เปิดไฟล์ที่หาไม่เจอ</h4>
+<pre>f = open(&quot;data.txt&quot;, encoding=&quot;utf-8&quot;)</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    f = open(&quot;data.txt&quot;, encoding=&quot;utf-8&quot;)
+FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</pre>
+    <p><b>สาเหตุ:</b> ไม่มีไฟล์ หรือไฟล์อยู่คนละโฟลเดอร์กับที่รันโปรแกรม<br><b>แก้:</b> เช็กชื่อไฟล์และนามสกุล · วางไฟล์ไว้โฟลเดอร์เดียวกับโค้ด · ดักด้วย <code>except FileNotFoundError</code> (บทที่ 13)</p>
+  </div>
+
+  <h2 id="module">ModuleNotFoundError</h2>
+  <p class="lead">หาไลบรารีไม่เจอ · เริ่มเจอบทที่ 14</p>
+
+  <div class="case">
+    <h4>import ชื่อผิด หรือยังไม่ได้ติดตั้ง</h4>
+<pre>import opencv</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 1, in &lt;module&gt;
+    import opencv
+ModuleNotFoundError: No module named &#x27;opencv&#x27;</pre>
+    <p><b>สาเหตุ:</b> ไม่มีไลบรารีชื่อนี้ในเครื่อง · ชื่อตอนติดตั้งกับชื่อตอน import อาจไม่เหมือนกัน<br><b>แก้:</b> ติดตั้ง <code>pip install opencv-python</code> แต่ตอนใช้เขียน <code>import cv2</code> (บทที่ 14)</p>
+  </div>
+
+  <h2 id="logic">ไม่มี error แต่ผลผิด</h2>
+  <p class="lead">อันตรายที่สุด เพราะ Python ไม่เตือนอะไรเลย ต้องเช็กผลเองทุกครั้ง</p>
+
+  <div class="case">
+    <h4>ลืมจุลภาคระหว่างข้อความใน list</h4>
+<pre>fruits = ["มะม่วง" "ส้ม", "กล้วย"]
+print(fruits)
+print(len(fruits))</pre>
+<pre class="out-box">['มะม่วงส้ม', 'กล้วย']
+2</pre>
+    <p><b>สาเหตุ:</b> ข้อความสองก้อนที่วางติดกันถูกต่อเป็นก้อนเดียวเงียบ ๆ ได้ 2 ตัวแทนที่จะเป็น 3<br>
+    <b>แก้:</b> ใส่ <code>,</code> ให้ครบ · ถ้าเป็นตัวเลข <code>[10 20]</code> จะได้ SyntaxError แต่ข้อความไม่เตือน</p>
+  </div>
+
+  <div class="case">
+    <h4>print ย่อหน้าผิดชั้น</h4>
+<pre>total = 0
+for n in [10, 20, 30]:
+    total += n
+    print(total)</pre>
+<pre class="out-box">10
+30
+60</pre>
+    <p><b>สาเหตุ:</b> อยากได้ผลรวมบรรทัดเดียว แต่ <code>print</code> อยู่ใน loop จึงพิมพ์ทุกรอบ<br>
+    <b>แก้:</b> ถอย <code>print(total)</code> ออกมาให้ตรงกับ <code>for</code> · ดู flowchart ว่ากล่องอยู่ในวงไหน (บทที่ 6)</p>
+  </div>
+
+  <div class="case">
+    <h4>ใช้ / กับ // สลับกัน หรือคูณข้อความ</h4>
+<pre>print(7 / 2)
+print(7 // 2)
+print("5" * 3)</pre>
+<pre class="out-box">3.5
+3
+555</pre>
+    <p><b>สาเหตุ:</b> <code>/</code> ได้ทศนิยม · <code>//</code> ปัดเศษทิ้ง · str คูณเลขคือต่อซ้ำ ไม่ใช่คูณ<br>
+    <b>แก้:</b> เลือกตัวดำเนินการให้ตรงงาน และแปลง input เป็นตัวเลขก่อนคำนวณ (บทที่ 2)</p>
+  </div>
+
+  <div class="case">
+    <h4>loop ไม่มีวันจบ</h4>
+<pre>i = 1
+while i &lt;= 5:
+    print(i)</pre>
+    <p><b>สาเหตุ:</b> ไม่มีบรรทัดไหนเปลี่ยนค่า <code>i</code> เงื่อนไขจึงจริงตลอดไป โปรแกรมค้าง พิมพ์ 1 ไม่หยุด<br>
+    <b>แก้:</b> กด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด แล้วเติม <code>i += 1</code> ใน loop (บทที่ 7)</p>
+  </div>
+
+  <h2 id="checklist">เช็กลิสต์เวลาเจอ error</h2>
+  <ol>
+    <li>อ่าน<strong>บรรทัดสุดท้าย</strong>: ชนิด error คืออะไร แล้วเปิดหาในหน้านี้</li>
+    <li>ไปที่<strong>เลขบรรทัด</strong>ที่บอก ดู <code>^</code> ว่าชี้ตรงไหน</li>
+    <li>หาไม่เจอ? ดู<strong>บรรทัดก่อนหน้า</strong> (วงเล็บ / คำพูดที่ลืมปิด)</li>
+    <li>ไม่แน่ใจว่าตัวแปรเป็นชนิดอะไร? <code>print(type(x), x)</code> ก่อนบรรทัดที่พัง</li>
+    <li>แก้ทีละจุด แล้ว<strong>รันใหม่</strong>ทุกครั้ง</li>
+  </ol>
+</main>
+
+<script src="sidebar.js"></script>
+</body>
+</html>
