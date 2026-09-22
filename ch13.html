@@ -13,6 +13,32 @@
   <h1>File I/O &amp; Exception</h1>
   <p class="lead">เก็บข้อมูลลงไฟล์ให้ไม่หายตอนปิดโปรแกรม และกันโปรแกรมพังเวลาเจอเรื่องไม่คาดคิด</p>
 
+  <h2>ไฟล์ตัวอย่างของบทนี้</h2>
+
+  <p>โค้ดในบทนี้อ่านไฟล์ ถ้าไม่มีไฟล์จะได้ <a href="errors.html#file"><code>FileNotFoundError</code></a>
+  · ดาวน์โหลดไฟล์ข้างล่างไปลองได้เลย</p>
+
+  <div class="dl">
+    <a class="dl-btn file" href="files/data.txt" download><b>data.txt</b><span>ตัวเลขบรรทัดละตัว</span></a>
+    <a class="dl-btn file" href="files/scores.csv" download><b>scores.csv</b><span>ชื่อ,คะแนน 6 คน</span></a>
+    <a class="dl-btn file" href="files/scores_bad.csv" download><b>scores_bad.csv</b><span>มีบรรทัดเสียปน</span></a>
+    <a class="dl-btn file" href="files/notes.txt" download><b>notes.txt</b><span>บันทึก 3 รายการ</span></a>
+  </div>
+
+  <table>
+    <tr><th>ไฟล์</th><th>ข้างในมีอะไร</th><th>ใช้กับ</th></tr>
+    <tr><td><code>data.txt</code></td><td>ตัวเลข 12, 7, 30, 5, 46 บรรทัดละตัว (รวมกันได้ 100)</td><td>13.1, 13.5, 13.7</td></tr>
+    <tr><td><code>scores.csv</code></td><td><code>ชื่อ,คะแนน</code> 6 คน</td><td>13.3, 13.6, โจทย์ 3</td></tr>
+    <tr><td><code>scores_bad.csv</code></td><td>เหมือนข้างบน แต่มีบรรทัดว่าง คะแนนเป็นตัวหนังสือ ขาดคะแนน และมีช่องเกิน</td><td>ลองโค้ด 13.6 กับโจทย์ 3 ว่ารับมือได้ไหม</td></tr>
+    <tr><td><code>notes.txt</code></td><td>บันทึก 3 รายการ บรรทัดละรายการ</td><td>โจทย์ 4</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>วางไฟล์ไว้โฟลเดอร์เดียวกับไฟล์ .py</b> และเปิดโฟลเดอร์นั้นใน VS Code (File → Open Folder, <a href="ch0.html">บทที่ 0</a>)
+    · ถ้าวางคนละที่ Python หาไม่เจอ แม้ไฟล์จะอยู่ในเครื่อง ·
+    ถ้ากดลิงก์แล้วเบราว์เซอร์เปิดไฟล์ขึ้นมาแทนการดาวน์โหลด ให้คลิกขวาที่ปุ่ม → Save link as
+  </div>
+
   <h2>13.1 อ่านไฟล์</h2>
 
   <p>ใช้ <code>with open(...)</code> เสมอ — Python จะปิดไฟล์ให้อัตโนมัติเมื่อจบบล็อก
@@ -94,6 +120,11 @@ with open("scores.csv", encoding="utf-8") as f:
         loaded[name] = int(s)        <span class="out"># ที่อ่านมาเป็น str ต้องแปลง</span>
 
 print(loaded)      <span class="out"># {'ฟ้า': 85, 'นล': 92, 'อาร์ม': 78}</span></pre>
+
+  <div class="warn">
+    <b>โค้ดนี้เขียนทับ <code>scores.csv</code> ด้วยโหมด <code>"w"</code></b> ไฟล์ตัวอย่าง 6 คนจะเหลือ 3 คน
+    อยากได้ของเดิมคืนให้ดาวน์โหลดใหม่
+  </div>
 
   <div class="note">
     <b>ข้อมูลจากไฟล์เป็น string เสมอ</b> — เลข 85 ที่อ่านมาคือ <code>"85"</code>
@@ -185,6 +216,14 @@ def save_scores(filename, scores):
 scores = read_scores("scores.csv")
 scores["มิน"] = 95
 save_scores("scores.csv", scores)</pre>
+
+  <div class="note">
+    <b>ลองกับ <code>scores_bad.csv</code></b> · <code>read_scores("scores_bad.csv")</code> ได้แค่
+    <code>{'ฟ้า': 85, 'นล': 92}</code> เพราะ <code>try</code> ครอบทั้ง loop พอเจอบรรทัดเสียบรรทัดแรก
+    ก็กระโดดออกไป except ทันที คนที่เหลือไม่ถูกอ่านเลย · เทียบกับเฉลยโจทย์ 3 ที่วาง <code>try</code>
+    ไว้<em>ใน</em> loop ทีละบรรทัด จะข้ามแค่บรรทัดเสียและได้ครบ 4 คน
+    · <strong>ตำแหน่งของ try กำหนดว่าพังแล้วเสียหายแค่ไหน</strong>
+  </div>
 
   <p>รับ input แบบวนจนกว่าจะถูก — รวม while + try</p>
 
@@ -357,7 +396,8 @@ except ZeroDivisionError:
 
   <div class="lab">
     <h4>โจทย์ 3 — สรุปคะแนนจากไฟล์</h4>
-    <p>สร้างไฟล์ <code>scores.csv</code> ที่มีข้อมูล <code>ชื่อ,คะแนน</code> บรรทัดละคน (อย่างน้อย 5 คน)
+    <p>สร้างไฟล์ <code>scores.csv</code> ที่มีข้อมูล <code>ชื่อ,คะแนน</code> บรรทัดละคน (อย่างน้อย 5 คน
+    หรือใช้<a href="files/scores.csv" download>ไฟล์ตัวอย่าง</a>)
     แล้วเขียนโปรแกรมอ่านมาสรุป: จำนวนคน, คะแนนเฉลี่ย, คนที่ได้สูงสุด
     โดยต้องดัก <code>FileNotFoundError</code> และข้ามบรรทัดที่รูปแบบผิดได้</p>
     <details>
@@ -384,7 +424,14 @@ if scores:
     print("เฉลี่ย:", round(sum(scores.values()) / len(scores), 2))
     print("สูงสุด:", max(scores, key=scores.get))
 else:
-    print("ไม่มีข้อมูลให้สรุป")</pre>
+    print("ไม่มีข้อมูลให้สรุป")
+
+<span class="out"># กับ scores.csv:     จำนวนคน: 6 · เฉลี่ย: 83.67 · สูงสุด: มิน
+# กับ scores_bad.csv (แก้ชื่อไฟล์ในโค้ด):
+# ข้ามบรรทัดที่ 4 (รูปแบบผิด): อาร์ม,เจ็ดสิบแปด
+# ข้ามบรรทัดที่ 6 (รูปแบบผิด): ต้น
+# ข้ามบรรทัดที่ 7 (รูปแบบผิด): ใบเตย,88,เกินมา
+# จำนวนคน: 4 · เฉลี่ย: 85.75 · สูงสุด: มิน</span></pre>
     </details>
   </div>
 
@@ -393,7 +440,8 @@ else:
     <p>ทำโปรแกรมจดบันทึกที่ข้อมูลอยู่ครบแม้ปิดโปรแกรมไปแล้ว —
     รวมทุกอย่างที่เรียนมา 13 บท:</p>
     <ol>
-      <li>ตอนเปิดโปรแกรม อ่านบันทึกเดิมจาก <code>notes.txt</code> (ถ้ายังไม่มีไฟล์ให้เริ่มจากว่าง)</li>
+      <li>ตอนเปิดโปรแกรม อ่านบันทึกเดิมจาก <code>notes.txt</code> (ถ้ายังไม่มีไฟล์ให้เริ่มจากว่าง ·
+        ลองทั้งแบบไม่มีไฟล์ และแบบใช้<a href="files/notes.txt" download>ไฟล์ตัวอย่าง</a>)</li>
       <li>เมนู: 1) เพิ่มบันทึก 2) ลบตามเลขลำดับ 3) ค้นหาคำ 4) แสดงทั้งหมด 5) ออก</li>
       <li>ทุกครั้งที่แก้ไข ให้บันทึกลงไฟล์ทันที</li>
     </ol>

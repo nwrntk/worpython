@@ -781,3 +781,72 @@ th code { text-transform: none; letter-spacing: 0; }
 .dl-btn b { font-size: 1rem; }
 .dl-btn b::after { content: " ↗"; color: var(--accent-hot); font-weight: 400; }
 .dl-btn span { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-soft); }
+.dl-btn.file b::after { content: " ↓"; }
+
+/* ===== พิมพ์ / บันทึกเป็น PDF: หน้ายาวต่อเนื่อง ไม่มี sidebar ===== */
+
+
+@media print {
+  /* เครดิตท้ายทุกหน้า + เลขหน้า */
+  @page {
+    margin: 14mm 12mm 18mm;
+    @bottom-left {
+      content: "ดร.วรนิษฐา กรุงแสนเมือง · ภาควิชาวิศวกรรมระบบชีวภาพและเกษตร KMITL";
+      font-family: "IBM Plex Sans Thai", sans-serif; font-size: 8pt; color: #4e6d86;
+    }
+    @bottom-right {
+      content: counter(page) " / " counter(pages);
+      font-family: "IBM Plex Sans Thai", sans-serif; font-size: 8pt; color: #4e6d86;
+    }
+  }
+
+  /* เครดิตหัวหน้าแรก (เผื่อตั้งค่าหัว/ท้ายกระดาษของเบราว์เซอร์ทับท้ายหน้า) */
+  main::before {
+    content: "ดร.วรนิษฐา กรุงแสนเมือง · ภาควิชาวิศวกรรมระบบชีวภาพและเกษตร KMITL";
+    display: block;
+    font-family: var(--font-ui); font-size: 8.5pt; color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule); padding-bottom: .4rem; margin-bottom: 1rem;
+  }
+
+  html, body { height: auto !important; overflow: visible !important; background: #fff !important; }
+  .pres-layout, .pres-stage, .pres-content, main { background: #fff !important; }
+  body { font-size: 11pt; line-height: 1.7; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .pres-layout, .pres-stage, .pres-content {
+    display: block !important; height: auto !important; overflow: visible !important;
+  }
+  .pres-sidebar, .pres-topbar, .pres-hint, .pager, .score,
+  .trace button, .trace-msg, .lab summary { display: none !important; }
+
+  main { max-width: none; padding: 0; }
+  h1 { font-size: 22pt; }
+  h2 { font-size: 15pt; margin-top: 1.6rem; break-after: avoid; }
+  h3, h4 { break-after: avoid; }
+
+  /* ไม่ตัดกลางกล่องเล็ก ๆ ข้ามหน้า */
+  pre, figure, table, tr, .note, .warn, .quiz, .case, .trace, .dl { break-inside: avoid; }
+  pre { white-space: pre-wrap; word-break: break-word; }
+
+  a { color: inherit; text-decoration: none; }
+  .copyright { border: 0; }
+}
+
+/* ฟอนต์โค้ดรวม >= != -> เป็นสัญลักษณ์ตัวเดียว (ligature) นักเรียนจะพิมพ์ตามผิด · ปิดทุกที่ที่เป็นโค้ด */
+pre, code, kbd, .mono, .trace td, .trace input { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+/* ตารางไล่รอบบนจอแคบ: ให้ช่องเติมหดได้ ไม่ดันจอให้เลื่อนข้าง */
+.trace { overflow-x: auto; }
+@media (max-width: 600px) {
+  .trace { padding: .8rem .8rem 1rem; }
+  .trace input { min-width: 2.2rem; padding: .15rem .25rem; }
+  .trace th, .trace td { padding: .4rem .45rem; }
+}
+
+/* ตารางบนจอแคบ: ตารางที่กว้างเกินให้ปัดเลื่อนข้างในกรอบตัวเอง หน้าไม่เลื่อนตาม · คำไม่ถูกหั่นกลางคำ */
+@media (max-width: 600px) {
+  table { display: block; overflow-x: auto; font-size: .8rem; -webkit-overflow-scrolling: touch; }
+  th, td { padding: .45rem .55rem; }
+  th { letter-spacing: .04em; }
+  .trace td:first-child { white-space: nowrap; }
+}

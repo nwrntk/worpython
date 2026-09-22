@@ -54,6 +54,7 @@ function buildLayout() {
           <span class="pres-slide-title">${PAGES[at].title}</span>
         </div>
         <div class="pres-topbar-right">
+          <button class="pres-nav-btn pres-print" id="printBtn" title="บันทึกบทนี้เป็น PDF (Ctrl+P)">PDF</button>
           <button class="pres-nav-btn" id="prevBtn" title="บทก่อนหน้า (←)"
             ${prev ? '' : 'disabled'}>&#8592; Prev</button>
           <span class="pres-counter">${at + 1} / ${PAGES.length}</span>
@@ -75,6 +76,7 @@ function buildLayout() {
   document.getElementById('toggleSidebar').onclick = toggleSidebar;
   document.getElementById('prevBtn').onclick = () => go(-1);
   document.getElementById('nextBtn').onclick = () => go(1);
+  document.getElementById('printBtn').onclick = () => window.print();
 
   if (window.innerWidth <= 900) document.getElementById('sidebar').classList.add('collapsed');
   document.getElementById('content').focus();   // ให้ลูกศรขึ้น/ลงเลื่อนหน้าได้
@@ -180,6 +182,18 @@ function initTrace() {
     });
   }
 }
+
+/* ---------- พิมพ์ / PDF: กางเฉลยที่พับไว้ตอนพิมพ์ แล้วพับคืนหลังพิมพ์ ---------- */
+
+let foldedForPrint = [];
+addEventListener('beforeprint', () => {
+  foldedForPrint = [...document.querySelectorAll('details:not([open])')];
+  for (const d of foldedForPrint) d.open = true;
+});
+addEventListener('afterprint', () => {
+  for (const d of foldedForPrint) d.open = false;
+  foldedForPrint = [];
+});
 
 /* ---------- boot ---------- */
 
