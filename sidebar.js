@@ -195,12 +195,131 @@ addEventListener('afterprint', () => {
   foldedForPrint = [];
 });
 
+/* ---------- เดินโค้ดทีละบรรทัด (ข้อมูลจากการรัน Python จริง อยู่ใน <script type="application/json">) ---------- */
+
+function initStepper() {
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  for (const box of document.querySelectorAll('.stepper')) {
+    const data = JSON.parse(box.querySelector('script').textContent);
+    const { code, steps, notes = {} } = data;
+    box.insertAdjacentHTML('beforeend', `
+      <div class="st-grid">
+        <ol class="st-code">${code.map(l => `<li><code>${esc(l) || ' '}</code></li>`).join('')}</ol>
+        <div class="st-side">
+          <div class="st-label">ตัวแปร</div><div class="st-vars"></div>
+          <div class="st-label">ผลที่ print</div><pre class="st-out"></pre>
+        </div>
+      </div>
+      <div class="st-msg"></div>
+      <div class="st-ctl">
+        <button data-go="first" title="กลับจุดเริ่ม">⏮</button>
+        <button data-go="-1" title="ย้อน 1 ขั้น">◀ ย้อน</button>
+        <button data-go="1" class="st-next" title="ไปขั้นถัดไป">ถัดไป ▶</button>
+        <button data-go="play" title="เล่นอัตโนมัติ">⏵ เล่น</button>
+        <span class="st-count"></span>
+      </div>`);
+    const lis = [...box.querySelectorAll('.st-code li')];
+    const vars = box.querySelector('.st-vars'), out = box.querySelector('.st-out');
+    const msg = box.querySelector('.st-msg'), count = box.querySelector('.st-count');
+    const playBtn = box.querySelector('[data-go="play"]');
+    let at = 0, timer = null;
+
+    const valueOf = (st, frame, name) => {
+      const f = st && st.fr.find(x => x.n === frame);
+      const v = f && f.v.find(x => x[0] === name);
+      return v ? v[1] + v[2] : undefined;
+    };
+
+    function show() {
+      const st = steps[at], prev = steps[at - 1];
+      lis.forEach((li, i) => {
+        li.classList.toggle('ex', i + 1 === st.ex);
+        li.classList.toggle('nx', i + 1 === st.nx);
+        li.classList.toggle('err', !!st.exc && i + 1 === st.ex);
+        li.querySelector('.st-chip')?.remove();
+        if (st.cond && i + 1 === st.ex)                 // ป้าย True / False ท้ายบรรทัดเงื่อนไข
+          li.insertAdjacentHTML('beforeend', `<span class="st-chip ${st.cond.val ? 't' : 'f'}">${st.cond.val ? '✔ True' : '✘ False'}</span>`);
+      });
+      vars.innerHTML = st.fr.map((f, k) => `
+        <div class="st-frame${k ? ' fn' : ''}"><div class="st-fname">${esc(f.n)}</div>
+        ${f.v.length ? f.v.map(([n, v, tag]) => `
+          <div class="st-var${prev && valueOf(prev, f.n, n) !== v + tag ? ' chg' : ''}">
+            <span class="st-n">${esc(n)}</span>
+            <span class="st-v">${tag ? `<b class="st-tag">${tag}</b>` : ''}${esc(v)}</span>
+          </div>`).join('') : '<div class="st-empty">ยังไม่มีตัวแปร</div>'}
+        </div>`).join('');
+      out.textContent = st.out || ' ';
+      let m;
+      if (at === 0) m = 'ยังไม่เริ่ม · กด "ถัดไป" เพื่อรันบรรทัดแรก';
+      else if (st.end) m = `ทำบรรทัด ${st.ex} แล้ว · <b>จบโปรแกรม</b>`;
+      else if (st.exc) m = `บรรทัด <b>${st.ex}</b> เกิด error <span class="st-exc">${esc(st.exc)}</span>`;
+      else if (st.jump) m = `ข้ามบรรทัดที่เหลือใน <code>try</code> ทันที · ไปบรรทัด <b>${st.nx}</b> (except ที่ตรงกับชนิด error)`;
+      else if (st.ret) m = `ฟังก์ชัน <code>${esc(st.ret[0])}()</code> จบแล้ว คืนค่า <b>${esc(st.ret[1])}</b> กลับไปให้คนเรียก`;
+      else m = `เพิ่งทำบรรทัด <b>${st.ex}</b> · ต่อไปบรรทัด <b>${st.nx}</b>`;
+      if (st.cond) {
+        const c = st.cond, v = `<b class="st-bool ${c.val ? 't' : 'f'}">${c.val ? 'True' : 'False'}</b>`;   // แบบ Python ไม่ใช่ true/false
+        m += `<div class="st-cond">เงื่อนไข <code>${esc(c.expr)}</code>` +
+             (c.sub !== c.expr ? ` → <code>${esc(c.sub)}</code>` : '') + ` → ${v}` +
+             (c.short ? `<span class="st-short">${c.short === 'or'
+                 ? 'or: ข้อแรกจริงแล้ว คำตอบเป็น True แน่นอน Python ไม่ดูข้อหลังเลย'
+                 : 'and: ข้อแรกเท็จแล้ว คำตอบเป็น False แน่นอน Python ไม่ดูข้อหลังเลย'}</span>` : '') +
+             `</div>`;
+      }
+      if (notes[st.ex] && at > 0 && !st.ret && !st.exc && !st.jump) m += `<div class="st-note">${notes[st.ex]}</div>`;
+      msg.innerHTML = m;
+      count.textContent = `ขั้น ${at} / ${steps.length - 1}`;
+      box.querySelector('[data-go="-1"]').disabled = at === 0;
+      const next = box.querySelector('.st-next'), last = at === steps.length - 1;
+      next.dataset.go = last ? 'first' : '1';          // ขั้นสุดท้าย: ปุ่มถัดไปกลายเป็นเริ่มใหม่
+      next.textContent = last ? '↺ เริ่มใหม่' : 'ถัดไป ▶';
+    }
+
+    // จองความสูงเท่าขั้นที่สูงที่สุดไว้ตั้งแต่แรก ปุ่มจะได้ไม่เลื่อนลงเวลา output หรือตัวแปรเพิ่ม
+    const grid = box.querySelector('.st-grid');
+    function reserve() {
+      const keep = at;
+      grid.style.minHeight = msg.style.minHeight = '';
+      let gh = 0, mh = 0;
+      for (at = 0; at < steps.length; at++) {
+        show();
+        gh = Math.max(gh, grid.offsetHeight);
+        mh = Math.max(mh, msg.offsetHeight);
+      }
+      at = keep;
+      grid.style.minHeight = gh + 'px';
+      msg.style.minHeight = mh + 'px';
+      show();
+      box.querySelectorAll('.st-var.chg').forEach(el => el.classList.remove('chg'));
+    }
+    const stop = () => { clearInterval(timer); timer = null; playBtn.textContent = '⏵ เล่น'; };
+    box.querySelector('.st-ctl').addEventListener('click', e => {
+      const go = e.target.dataset.go;
+      if (!go) return;
+      if (go === 'play') {
+        if (timer) return stop();
+        if (at === steps.length - 1) at = 0;
+        playBtn.textContent = '⏸ หยุด';
+        timer = setInterval(() => { if (at < steps.length - 1) { at++; show(); } else stop(); }, 900);
+        return;
+      }
+      stop();
+      at = go === 'first' ? 0 : Math.min(steps.length - 1, Math.max(0, at + Number(go)));
+      show();
+    });
+    reserve();
+    document.fonts?.ready.then(reserve);              // ฟอนต์โหลดเสร็จทีหลัง ความสูงเปลี่ยนได้
+    let t;
+    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(reserve, 200); });
+  }
+}
+
 /* ---------- boot ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
   buildPager();
   initQuiz();
   initTrace();
+  initStepper();
   buildLayout();
 });
 
