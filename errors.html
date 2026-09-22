@@ -27,7 +27,7 @@
     <tr><td><a href="#attr"><code>AttributeError</code></a></td><td>ข้อมูลชนิดนี้ไม่มีเมธอด / คุณสมบัตินี้</td><td>บทที่ 4</td></tr>
     <tr><td><a href="#unbound"><code>UnboundLocalError</code></a></td><td>ใช้ตัวแปรในฟังก์ชันก่อนจะมีค่า</td><td>บทที่ 12</td></tr>
     <tr><td><a href="#file"><code>FileNotFoundError</code></a></td><td>หาไฟล์ไม่เจอ</td><td>บทที่ 13</td></tr>
-    <tr><td><a href="#module"><code>ModuleNotFoundError</code></a></td><td>หาไลบรารีไม่เจอ</td><td>บทที่ 14</td></tr>
+    <tr><td><a href="#module"><code>ModuleNotFoundError</code></a></td><td>หาไลบรารีไม่เจอ</td><td>บทที่ 12</td></tr>
     <tr><td><a href="#logic">ไม่มี error แต่ผลผิด</a></td><td>โปรแกรมทำตามที่เขียน แต่ไม่ใช่ที่ตั้งใจ</td><td>ทุกบท</td></tr>
   </table>
 
@@ -240,6 +240,18 @@ total = 100</pre>
           ^^^^^
 NameError: name &#x27;total&#x27; is not defined</pre>
     <p><b>สาเหตุ:</b> Python รันจากบนลงล่าง ตอนบรรทัด 1 ยังไม่มี <code>total</code><br><b>แก้:</b> ย้ายบรรทัดที่สร้างตัวแปรขึ้นไปก่อน</p>
+  </div>
+
+  <div class="case">
+    <h4>import แบบ from แล้วเรียกผ่านชื่อ module</h4>
+<pre>from math import sqrt
+print(math.sqrt(16))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 2, in &lt;module&gt;
+    print(math.sqrt(16))
+          ^^^^
+NameError: name &#x27;math&#x27; is not defined. Did you forget to import &#x27;math&#x27;?</pre>
+    <p><b>สาเหตุ:</b> <code>from math import sqrt</code> นำเข้าแค่ <code>sqrt</code> ไม่ได้นำเข้าชื่อ <code>math</code> (บทที่ 12)<br><b>แก้:</b> เรียก <code>sqrt(16)</code> ตรง ๆ หรือเปลี่ยนเป็น <code>import math</code></p>
   </div>
 
   <h2 id="type">TypeError</h2>
@@ -609,7 +621,7 @@ FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</pr
   </div>
 
   <h2 id="module">ModuleNotFoundError</h2>
-  <p class="lead">หาไลบรารีไม่เจอ · เริ่มเจอบทที่ 14</p>
+  <p class="lead">หาไลบรารีไม่เจอ · เริ่มเจอบทที่ 12</p>
 
   <div class="case">
     <h4>import ชื่อผิด หรือยังไม่ได้ติดตั้ง</h4>
@@ -619,6 +631,21 @@ FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</pr
     import opencv
 ModuleNotFoundError: No module named &#x27;opencv&#x27;</pre>
     <p><b>สาเหตุ:</b> ไม่มีไลบรารีชื่อนี้ในเครื่อง · ชื่อตอนติดตั้งกับชื่อตอน import อาจไม่เหมือนกัน<br><b>แก้:</b> ติดตั้ง <code>pip install opencv-python</code> แต่ตอนใช้เขียน <code>import cv2</code> (บทที่ 14)</p>
+  </div>
+
+  <div class="case">
+    <h4>ตั้งชื่อไฟล์ซ้ำกับ module</h4>
+<pre>import random
+
+print(random.randint(1, 6))</pre>
+<pre class="err">Traceback (most recent call last):
+  File &quot;random.py&quot;, line 1, in &lt;module&gt;
+    import random
+  File &quot;random.py&quot;, line 3, in &lt;module&gt;
+    print(random.randint(1, 6))
+          ^^^^^^^^^^^^^^
+AttributeError: module &#x27;random&#x27; has no attribute &#x27;randint&#x27; (consider renaming &#x27;random.py&#x27; since it has the same name as the standard library module named &#x27;random&#x27; and prevents importing that standard library module)</pre>
+    <p><b>สาเหตุ:</b> ไฟล์ชื่อ <code>random.py</code> ทำให้ <code>import random</code> ไปเจอไฟล์ตัวเองแทน module จริง · error เป็น AttributeError แต่ต้นเหตุคือชื่อไฟล์<br><b>แก้:</b> เปลี่ยนชื่อไฟล์ เช่น <code>dice.py</code> · ห้ามตั้งชื่อไฟล์ว่า <code>random.py</code>, <code>math.py</code>, <code>cv2.py</code> · Python 3.13 บอกให้แล้วใน "consider renaming"</p>
   </div>
 
   <h2 id="logic">ไม่มี error แต่ผลผิด</h2>

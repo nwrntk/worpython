@@ -209,9 +209,107 @@ print(f"BMI = {b:.1f}")</pre></div>
     เช่นมี if แล้วแต่ละทาง return ค่าต่างกัน
   </div>
 
+  <h2>12.10 import — ใช้ฟังก์ชันที่มีคนเขียนไว้แล้ว</h2>
+
+  <p>ฟังก์ชันที่เราเขียนเก็บไว้ในไฟล์ได้ ไฟล์ <code>.py</code> ที่รวมฟังก์ชันไว้ให้คนอื่นเรียกใช้เรียกว่า
+  <strong>module</strong> · Python มี module มาให้หลายร้อยตัว (เรียกว่า standard library)
+  แค่ <code>import</code> ก็ใช้ได้เลย ไม่ต้องเขียนเอง</p>
+
+<pre>import math
+
+print(math.sqrt(16))       <span class="out"># 4.0     รากที่สอง</span>
+print(math.pi)             <span class="out"># 3.141592653589793</span>
+print(math.ceil(4.1))      <span class="out"># 5       ปัดขึ้น</span>
+print(math.floor(4.9))     <span class="out"># 4       ปัดลง</span>
+print(math.pow(2, 10))     <span class="out"># 1024.0</span></pre>
+
+  <p>อ่านว่า "ฟังก์ชัน <code>sqrt</code> <em>ที่อยู่ใน</em> <code>math</code>" · จุด <code>.</code> คือ "ของ"
+  แบบเดียวกับ <code>nums.append()</code> ที่แปลว่า append ของ nums</p>
+
+  <h3>import ได้ 3 แบบ</h3>
+
+<pre><span class="out"># แบบ 1: นำเข้าทั้ง module เรียกผ่านชื่อ module</span>
+import math
+print(math.sqrt(25))       <span class="out"># 5.0</span>
+
+<span class="out"># แบบ 2: หยิบมาเฉพาะที่ใช้ เรียกชื่อตรง ๆ ได้เลย</span>
+from math import sqrt, pi
+print(sqrt(25), pi)        <span class="out"># 5.0 3.141592653589793</span>
+
+<span class="out"># แบบ 3: ตั้งชื่อย่อ</span>
+import math as m
+print(m.sqrt(9))           <span class="out"># 3.0</span></pre>
+
+  <table>
+    <tr><th>แบบ</th><th>เรียกใช้</th><th>เหมาะกับ</th></tr>
+    <tr><td><code>import math</code></td><td><code>math.sqrt(9)</code></td><td>ค่าเริ่มต้นที่ดีที่สุด อ่านแล้วรู้ทันทีว่าฟังก์ชันมาจากไหน</td></tr>
+    <tr><td><code>from math import sqrt</code></td><td><code>sqrt(9)</code></td><td>ใช้ไม่กี่ตัวแต่เรียกบ่อย</td></tr>
+    <tr><td><code>import numpy as np</code></td><td><code>np.array(...)</code></td><td>ชื่อยาว และมีชื่อย่อที่ทุกคนใช้กัน (บทที่ 14–16)</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>from ... import แล้วอย่าเรียกผ่านชื่อ module</b> · <code>from math import sqrt</code> นำเข้าแค่ <code>sqrt</code>
+    ถ้าเขียน <code>math.sqrt(16)</code> จะได้ <code>NameError: name 'math' is not defined</code>
+  </div>
+
+  <h3>random — สุ่มค่า</h3>
+
+<pre>import random
+
+print(random.randint(1, 6))                       <span class="out"># เลขเต็ม 1 ถึง 6 (รวม 6)</span>
+print(random.choice(["หิน", "กระดาษ", "กรรไกร"]))  <span class="out"># หยิบมา 1 ตัวจาก list</span>
+print(random.random())                            <span class="out"># ทศนิยม 0.0 ถึงไม่ถึง 1.0</span>
+
+cards = [1, 2, 3, 4, 5]
+random.shuffle(cards)                             <span class="out"># สลับลำดับใน list เดิม</span>
+print(cards)</pre>
+
+  <div class="note">
+    <b>ผลสุ่มเปลี่ยนทุกครั้งที่รัน</b> ถ้าอยากได้ผลเดิมทุกครั้งตอนทดสอบ ใส่ <code>random.seed(1)</code>
+    ไว้ก่อน · สังเกตว่า <code>randint(1, 6)</code> <em>รวม</em> 6 ต่างจาก <code>range(1, 6)</code> ที่ไม่รวม 6
+  </div>
+
+  <h3>ทำ module ของตัวเอง</h3>
+
+  <p>ไฟล์ <code>.py</code> ทุกไฟล์คือ module · เก็บฟังก์ชันที่ใช้บ่อยไว้ไฟล์หนึ่ง แล้ว import จากไฟล์อื่นได้
+  <strong>สองไฟล์ต้องอยู่โฟลเดอร์เดียวกัน</strong></p>
+
+<pre><span class="out"># ไฟล์ mytools.py</span>
+def vat(price):
+    """คืนราคารวม VAT 7%"""
+    return price * 1.07
+
+RATE = 0.07</pre>
+
+<pre><span class="out"># ไฟล์ main.py (โฟลเดอร์เดียวกัน)</span>
+import mytools              <span class="out"># ไม่ต้องใส่ .py</span>
+
+print(mytools.vat(100))     <span class="out"># 107.0</span>
+print(mytools.RATE)         <span class="out"># 0.07</span></pre>
+
+  <h3>module ที่ต้องติดตั้งเพิ่ม</h3>
+
+  <p>module ที่ไม่ได้มากับ Python ต้องติดตั้งก่อนด้วยคำสั่ง <code>pip</code> ใน Terminal
+  (ไม่ใช่ในไฟล์ .py) · <strong>ชื่อตอนติดตั้งกับชื่อตอน import อาจไม่เหมือนกัน</strong></p>
+
+  <table>
+    <tr><th>module</th><th>ติดตั้ง</th><th>import</th><th>ใช้ในบท</th></tr>
+    <tr><td>math, random</td><td>มากับ Python</td><td><code>import math</code></td><td>ทุกบท</td></tr>
+    <tr><td>NumPy</td><td><code>pip install numpy</code></td><td><code>import numpy as np</code></td><td>14–15</td></tr>
+    <tr><td>OpenCV</td><td><code>pip install opencv-python</code></td><td><code>import cv2</code></td><td>14–15</td></tr>
+    <tr><td>Matplotlib</td><td><code>pip install matplotlib</code></td><td><code>import matplotlib.pyplot as plt</code></td><td>16</td></tr>
+  </table>
+
+  <div class="warn">
+    <b>ห้ามตั้งชื่อไฟล์ซ้ำกับ module</b> เช่น เซฟไฟล์ฝึกว่า <code>random.py</code> แล้วในไฟล์เขียน
+    <code>import random</code> Python จะ import ไฟล์ตัวเองแทน แล้วได้
+    <code>AttributeError: module 'random' has no attribute 'randint'</code> · ตั้งชื่ออื่น เช่น <code>dice.py</code> ·
+    ดูกรณีนี้และ <code>ModuleNotFoundError</code> ได้ใน <a href="errors.html#module">คู่มืออ่าน error</a>
+  </div>
+
   <div class="note">
     <b>error ที่จะเริ่มเจอในบทนี้</b><br>
-    · <a href="errors.html#type"><code>TypeError</code></a> — ส่งค่าเข้าฟังก์ชันไม่ครบ<br>· <a href="errors.html#unbound"><code>UnboundLocalError</code></a> — แก้ตัวแปรข้างนอกจากในฟังก์ชัน<br>
+    · <a href="errors.html#type"><code>TypeError</code></a> — ส่งค่าเข้าฟังก์ชันไม่ครบ<br>· <a href="errors.html#unbound"><code>UnboundLocalError</code></a> — แก้ตัวแปรข้างนอกจากในฟังก์ชัน<br>· <a href="errors.html#module"><code>ModuleNotFoundError</code></a> — import ชื่อผิด ยังไม่ติดตั้ง หรือตั้งชื่อไฟล์ซ้ำกับ module<br>
     ดูทุกชนิดได้ที่ <a href="errors.html">คู่มืออ่าน error</a>
   </div>
 
@@ -322,6 +420,16 @@ print(f"BMI = {b:.1f}")</pre></div>
     <button class="choice" data-correct>สี่เหลี่ยมมีเส้นข้าง (predefined process)</button>
     <button class="choice">สี่เหลี่ยมข้าวหลามตัด</button>
     <div class="explain">กล่องมีเส้นข้างบอกว่า "ไส้ในวาดแยกไว้อีกรูป" · วงรีใช้ในรูปของฟังก์ชันเอง (ชื่อฟังก์ชัน / return)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q10">โค้ดข้อใด<strong>เกิด error</strong>?</div>
+    <button class="choice"><code>import math</code> แล้ว <code>math.sqrt(16)</code></button>
+    <button class="choice" data-correct><code>from math import sqrt</code> แล้ว <code>math.sqrt(16)</code></button>
+    <button class="choice"><code>from math import sqrt</code> แล้ว <code>sqrt(16)</code></button>
+    <button class="choice"><code>import math as m</code> แล้ว <code>m.sqrt(16)</code></button>
+    <div class="explain"><code>from math import sqrt</code> นำเข้าแค่ชื่อ <code>sqrt</code> ไม่มีชื่อ <code>math</code>
+      ให้เรียก → <code>NameError: name 'math' is not defined</code></div>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -558,6 +666,30 @@ print(computegrade(score))
         return True
     return False</pre></div>
   </div>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 8 — ทอยลูกเต๋า 1,000 ครั้ง</h4>
+    <p>ทอยลูกเต๋า 2 ลูก 1,000 ครั้ง นับว่าผลรวมแต่ละค่า (2 ถึง 12) ออกกี่ครั้ง แล้วพิมพ์เป็นกราฟดาว
+    (ดาว 1 ดวงต่อ 10 ครั้ง) · ใช้ <code>random</code> กับการนับด้วย dict (บทที่ 9)
+    แล้วสังเกตว่าผลรวมไหนออกบ่อยที่สุด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import random
+
+counts = {}
+for _ in range(1000):
+    total = random.randint(1, 6) + random.randint(1, 6)
+    counts[total] = counts.get(total, 0) + 1
+
+for s in sorted(counts):
+    print(f"{s:2} {counts[s]:4} " + "*" * (counts[s] // 10))
+
+<span class="out"># ตัวอย่างผล (สุ่ม ตัวเลขเปลี่ยนทุกครั้ง)
+#  2   29 **
+#  7  142 **************   ← 7 ออกบ่อยสุด เพราะมีวิธีได้ 7 มากที่สุด (6 แบบ)
+# 12   44 ****</span></pre>
     </details>
   </div>
 </main>

@@ -295,6 +295,63 @@ print(total)</pre></div>
     <em>loop ชั้นที่ใกล้ที่สุด</em> (กรอบฟ้า) ไม่ทะลุออกกรอบม่วง
   </div>
 
+  <h2>6.10 ตารางไล่รอบ (Trace table)</h2>
+
+  <p>flowchart บอกว่าโปรแกรม<em>เดินทางไหน</em> ส่วนตารางไล่รอบบอกว่า<strong>ตัวแปรแต่ละตัวมีค่าเท่าไรในแต่ละรอบ</strong>
+  เป็นวิธีอ่าน loop ที่ได้ผลที่สุด ใช้แค่กระดาษกับปากกา</p>
+
+<pre>total = 0
+for n in [3, 8, 5, 6]:
+    if n % 2 == 0:
+        total = total + n
+print(total)</pre>
+
+  <table>
+    <tr><th>รอบ</th><th><code>n</code></th><th><code>n % 2 == 0</code></th><th><code>total</code> ตอนจบรอบ</th></tr>
+    <tr><td>ก่อน loop</td><td>—</td><td>—</td><td>0</td></tr>
+    <tr><td>1</td><td>3</td><td>False</td><td>0</td></tr>
+    <tr><td>2</td><td>8</td><td>True</td><td>8</td></tr>
+    <tr><td>3</td><td>5</td><td>False</td><td>8</td></tr>
+    <tr><td>4</td><td>6</td><td>True</td><td>14</td></tr>
+    <tr><td>ของหมด</td><td colspan="3">ออกจาก loop → <code>print(total)</code> แสดง <strong>14</strong></td></tr>
+  </table>
+
+  <h3>วิธีทำ 5 ขั้น</h3>
+  <ol>
+    <li><strong>ตั้งคอลัมน์:</strong> ตัวแปรทุกตัวที่เปลี่ยนค่าใน loop + เงื่อนไขที่ถาม + สิ่งที่ print (ถ้ามี)</li>
+    <li><strong>แถวแรก = ก่อนเข้า loop</strong> จดค่าเริ่มต้น เช่น <code>total = 0</code></li>
+    <li><strong>1 แถว = 1 รอบ</strong> = เดินครบ 1 วงของเส้นวนกลับใน flowchart · จดค่า ณ ตอนจบรอบ</li>
+    <li><strong>ค่าไม่เปลี่ยนก็เขียนซ้ำ</strong> อย่าเว้นว่าง จะได้ไม่ต้องย้อนหาว่าค่าล่าสุดคืออะไร</li>
+    <li><strong>แถวสุดท้าย = ตอนออกจาก loop</strong> ของหมด หรือเงื่อนไขเป็นเท็จ แล้วดูว่าบรรทัดหลัง loop ได้ค่าอะไร</li>
+  </ol>
+
+  <div class="note">
+    <b>ใช้หาบั๊ก:</b> ไล่ตารางด้วยมือก่อน แล้วรันจริงเทียบ ถ้าไม่ตรงกันแถวไหน บรรทัดที่เปลี่ยนค่าในรอบนั้นคือจุดที่ผิด ·
+    ให้ Python ไล่ให้ดูก็ได้ ใส่ <code>print(n, total)</code> ไว้บรรทัดสุดท้ายใน loop
+  </div>
+
+  <div class="trace">
+    <h4>ลองไล่เอง</h4>
+    <p>เติมช่องว่างให้ครบ แล้วกด "ตรวจคำตอบ" · พิมพ์ <code>True</code> / <code>False</code> ในช่องเงื่อนไข</p>
+<pre>count = 0
+for ch in "banana":
+    if ch == "a":
+        count += 1
+print(count)</pre>
+  <table>
+    <tr><th>รอบ</th><th><code>ch</code></th><th><code>ch == "a"</code></th><th><code>count</code> ตอนจบรอบ</th></tr>
+    <tr><td>ก่อน loop</td><td>—</td><td>—</td><td>0</td></tr>
+    <tr><td>1</td><td>b</td><td>False</td><td>0</td></tr>
+    <tr><td>2</td><td><input data-a="a" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="1" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>3</td><td><input data-a="n" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="False" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="1" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>4</td><td><input data-a="a" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="2" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>5</td><td><input data-a="n" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="False" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="2" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>6</td><td><input data-a="a" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="3" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>ของหมด</td><td>ออกจาก loop</td><td>—</td><td><input data-a="3" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+  </table>
+    <button class="trace-check">ตรวจคำตอบ</button><button class="trace-show">ดูเฉลย</button><span class="trace-msg"></span>
+  </div>
+
   <div class="note">
     <b>error ที่จะเริ่มเจอในบทนี้</b><br>
     · <a href="errors.html#index"><code>IndexError</code></a> — loop เกินไปรอบเดียว<br>

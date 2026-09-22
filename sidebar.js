@@ -138,11 +138,54 @@ function initQuiz() {
   }
 }
 
+/* ---------- ตารางไล่รอบ: เติมช่องแล้วกดตรวจ ---------- */
+
+function initTrace() {
+  // เทียบแบบไม่สนช่องว่าง ตัวพิมพ์เล็กใหญ่ และเครื่องหมายคำพูดครอบ (b กับ "b" ถือว่าเท่ากัน)
+  const norm = s => s.trim().toLowerCase().replace(/^['"]|['"]$/g, '');
+  for (const box of document.querySelectorAll('.trace')) {
+    const inputs = [...box.querySelectorAll('input[data-a]')];
+    const msg = box.querySelector('.trace-msg');
+    const mark = i => {
+      const ok = norm(i.value) === norm(i.dataset.a);
+      i.classList.toggle('right', ok);
+      i.classList.toggle('wrong', !ok);
+      return ok;
+    };
+    box.querySelector('.trace-check').addEventListener('click', () => {
+      const ok = inputs.filter(mark).length;
+      msg.textContent = ok === inputs.length
+        ? `ถูกทุกช่อง ${ok}/${inputs.length}`
+        : `ถูก ${ok}/${inputs.length} ช่อง · ช่องสีแดงลองไล่ใหม่ตั้งแต่แถวนั้น`;
+    });
+    // ดูเฉลย ↔ ปิดเฉลย: ตอนปิด คืนค่าที่ผู้เรียนพิมพ์ไว้ (ยังไม่ได้พิมพ์ = ช่องว่าง)
+    const check = box.querySelector('.trace-check');
+    const show = box.querySelector('.trace-show');
+    let saved = null;
+    show.addEventListener('click', () => {
+      if (!saved) {
+        saved = inputs.map(i => i.value);
+        for (const i of inputs) { i.value = i.dataset.a; i.readOnly = true; mark(i); }
+        show.textContent = 'ปิดเฉลย';
+        check.disabled = true;
+        msg.textContent = 'เฉลยแล้ว · เทียบกับที่คิดไว้ว่าผิดตั้งแต่แถวไหน';
+      } else {
+        inputs.forEach((i, k) => { i.value = saved[k]; i.readOnly = false; i.classList.remove('right', 'wrong'); });
+        saved = null;
+        show.textContent = 'ดูเฉลย';
+        check.disabled = false;
+        msg.textContent = '';
+      }
+    });
+  }
+}
+
 /* ---------- boot ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
   buildPager();
   initQuiz();
+  initTrace();
   buildLayout();
 });
 

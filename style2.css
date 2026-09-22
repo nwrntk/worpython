@@ -712,3 +712,55 @@ pre.err::before { content: "ERROR"; }
 pre.fix::before { content: "แก้แล้ว"; color: var(--good); }
 pre.out-box::before { content: "ผลที่ได้"; }
 h2[id] { scroll-margin-top: 1rem; }
+
+/* ===== ตารางไล่รอบแบบเติมเอง ===== */
+
+.trace {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  padding: 1rem 1.3rem 1.2rem;
+  margin: 1.6rem 0;
+  max-width: 76ch;
+}
+.trace h4 {
+  font-family: var(--font-ui);
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent-hot);
+  margin: 0 0 .4rem;
+}
+.trace table { margin: .8rem 0; }
+.trace td { font-family: var(--font-mono); font-size: .85rem; }
+.trace input {
+  width: 100%;
+  min-width: 3.5rem;
+  font: inherit;
+  padding: .15rem .35rem;
+  border: 1px solid var(--rule-2);
+  border-radius: 2px;
+  background: #fffdf5;
+  color: var(--ink);
+}
+.trace input.right { border-color: var(--good); background: #eef7f1; color: var(--good); }
+.trace input.wrong { border-color: var(--wrong); background: #fdf1f0; color: var(--wrong); }
+.trace button {
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: .35rem .9rem;
+  margin-right: .4rem;
+  border: 1px solid var(--accent-hot);
+  border-radius: 2px;
+  background: var(--accent-hot);
+  color: #fff;
+  cursor: pointer;
+}
+.trace button.trace-show { background: none; color: var(--accent-hot); }
+.trace-msg { font-family: var(--font-ui); font-size: .8rem; color: var(--ink-soft); margin-left: .3rem; }
+
+/* โค้ดในหัวตารางต้องคงตัวพิมพ์เดิม ไม่งั้น ch == "a" จะกลายเป็น CH == "A" */
+th code { text-transform: none; letter-spacing: 0; }
+.trace button:disabled { opacity: .4; cursor: not-allowed; }

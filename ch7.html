@@ -228,6 +228,37 @@ print("จบโปรแกรม")</pre></div>
     <tr><td>ถ้าลืมทางออก</td><td>ลืมเปลี่ยนค่า = วนไม่จบ</td><td>ลืม break = วนไม่จบ</td></tr>
   </table>
 
+  <h2>7.9 ตารางไล่รอบของ while</h2>
+
+  <p>ไล่แบบเดียวกับบทที่ 6 (หัวข้อ 6.10) แต่ <code>while</code> ต้องมี<strong>คอลัมน์เงื่อนไขเป็นคอลัมน์แรก</strong>
+  เพราะทุกรอบเริ่มจากการถามเงื่อนไข · แถวที่เงื่อนไขเป็น False คือแถวสุดท้ายเสมอ
+  และจำนวนแถวที่เป็น True = จำนวนรอบที่วนจริง</p>
+
+  <div class="trace">
+    <h4>ลองไล่เอง · หาผลรวมของแต่ละหลัก</h4>
+    <p>โปรแกรมนี้รวมเลขทุกหลักของ 527 · เติมช่องให้ครบ ช่องที่ไม่ได้คำนวณในรอบนั้นใส่ <code>-</code></p>
+<pre>n = 527
+total = 0
+while n &gt; 0:
+    total = total + n % 10
+    n = n // 10
+print(total)</pre>
+  <table>
+    <tr><th>รอบ</th><th><code>n &gt; 0</code></th><th><code>n % 10</code></th><th><code>total</code></th><th><code>n</code> ตอนจบรอบ</th></tr>
+    <tr><td>ก่อน loop</td><td>—</td><td>—</td><td>0</td><td>527</td></tr>
+    <tr><td>1</td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="7" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="7" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="52" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>2</td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="2" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="9" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="5" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>3</td><td><input data-a="True" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="5" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="14" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="0" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+    <tr><td>4</td><td><input data-a="False" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="-" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="14" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td><td><input data-a="0" aria-label="ช่องเติมคำตอบ" autocomplete="off" spellcheck="false"></td></tr>
+  </table>
+    <button class="trace-check">ตรวจคำตอบ</button><button class="trace-show">ดูเฉลย</button><span class="trace-msg"></span>
+  </div>
+
+  <div class="note">
+    <b>สังเกตคอลัมน์ n:</b> <code>n // 10</code> ตัดหลักขวาสุดทิ้งทุกรอบ 527 → 52 → 5 → 0
+    loop จึงวนเท่ากับจำนวนหลักพอดี · ถ้าลืมบรรทัดนี้ คอลัมน์ n จะเป็น 527 ทุกแถว = วนไม่จบ
+  </div>
+
   <hr>
 
   <h2>แบบทดสอบ · เลือกตอบ</h2>
@@ -363,7 +394,7 @@ else:
   <div class="lab">
     <h4>โจทย์ 3 — เกมทายเลข</h4>
     <p>โปรแกรมสุ่มเลข 1–100 (ใช้ <code>import random</code> กับ
-    <code>random.randint(1, 100)</code>) ให้ผู้ใช้ทายไปเรื่อย ๆ
+    <code>random.randint(1, 100)</code> · วิธีใช้ random อยู่ใน <a href="ch12.html">หัวข้อ 12.10</a>) ให้ผู้ใช้ทายไปเรื่อย ๆ
     ตอบว่า "สูงไป" หรือ "ต่ำไป" ทุกครั้ง จนกว่าจะทายถูก
     แล้วบอกว่าใช้ไปกี่ครั้ง</p>
     <details>
