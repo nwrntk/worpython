@@ -931,3 +931,149 @@ pre, code, kbd, .mono, .trace td, .trace input { font-variant-ligatures: none; f
 .st-short { display: block; margin-top: .2rem; font-size: .8rem; color: var(--ink-soft); }
 /* .st-code li code ใช้ font: inherit ซึ่งรีเซ็ตการปิด ligature → ปิดซ้ำให้แน่ */
 .st-code, .st-code code, .st-cond code, .st-exc { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+/* ===== list เป็นกล่อง ===== */
+
+.listviz {
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-top: 3px solid var(--accent-hot);
+  border-radius: 2px;
+  padding: 1rem 1.2rem 1.1rem;
+  margin: 1.8rem 0;
+}
+.listviz h4 { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .04em; color: var(--accent-hot); margin: 0 0 .3rem; }
+.listviz > p { margin: 0 0 .8rem; font-size: .92rem; }
+.lv-grid { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.6fr); gap: 1rem; align-items: start; }
+.lv-code li { padding-left: 2.6rem; }
+.lv-code li::before { left: .5rem; }
+
+.lv-stage {
+  position: relative;
+  display: flex; align-items: center; gap: .6rem;
+  min-height: 7.2rem; padding: 2.2rem .8rem 1rem;
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 2px;
+  overflow-x: auto; overflow-y: hidden;
+}
+.lv-name { flex-shrink: 0; white-space: nowrap; font-family: var(--font-mono); font-weight: 700; color: var(--accent-hot); font-size: .95rem; }
+.lv-name::after { content: " ="; color: var(--ink-soft); font-weight: 400; }
+.lv-row { display: flex; gap: .3rem; }
+.lv-box, .lv-ghost {
+  position: relative; flex-shrink: 0; width: 2.35rem; height: 2.35rem;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 2px solid var(--accent); border-radius: 4px;
+  font-family: var(--font-mono); font-weight: 600; font-size: .95rem; color: var(--ink);
+  transition: background .2s, border-color .2s;
+}
+.lv-i { position: absolute; bottom: -1.35rem; left: 0; right: 0; text-align: center;
+  font-size: .68rem; font-weight: 400; color: var(--ink-soft); }
+.lv-box.scan { background: #fff3cc; border-color: #e0b64a; }
+.lv-box.hit { background: #ffd9d4; border-color: var(--wrong); }
+.lv-box.lv-set { animation: lv-set .7s ease-out; }
+@keyframes lv-set { 0% { transform: scale(1); background: #ffe9a8; } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.lv-box.in-top { animation: lv-in-top .5s cubic-bezier(.3, .7, .3, 1) both; }
+@keyframes lv-in-top { from { transform: translateY(-2.4rem); opacity: 0; } to { transform: none; opacity: 1; } }
+.lv-box.in-right { animation: lv-in-right .5s cubic-bezier(.3, .7, .3, 1) both; }
+@keyframes lv-in-right { from { transform: translateX(3rem); opacity: 0; } to { transform: none; opacity: 1; } }
+.lv-ghost { position: absolute; margin: 0; transition: transform .7s ease-in, opacity .7s ease-in; }
+.lv-ghost.out { transform: translateY(-2.6rem) scale(.9); opacity: 0; }
+.lv-ghost .lv-i { display: none; }
+
+.lv-vars { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; min-height: 1.8rem; }
+.lv-var { font-family: var(--font-mono); font-size: .8rem; padding: .15rem .55rem; border: 1px solid var(--rule-2); border-radius: 2px; background: #fff; }
+.lv-var b { color: var(--accent-hot); }
+.lv-var.new { background: #e3f1e8; border-color: var(--good); animation: lv-set .7s ease-out; }
+.lv-msg { min-height: 3.2rem; }
+
+@media (max-width: 700px) {
+  .lv-grid { grid-template-columns: minmax(0, 1fr); }
+  .lv-stage { overflow-x: auto; }
+  .lv-box, .lv-ghost { width: 2.2rem; height: 2.2rem; font-size: .85rem; }
+}
+@media print { .listviz .st-ctl, .listviz .lv-msg { display: none !important; } .listviz { break-inside: avoid; } }
+.lv-code, .lv-code code, .lv-box, .lv-var { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+/* ===== dict / set / แผนภาพเซต (ใช้กรอบเดียวกับ .listviz) ===== */
+
+.dictviz, .setviz, .vennviz {
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-top: 3px solid var(--accent-hot);
+  border-radius: 2px;
+  padding: 1rem 1.2rem 1.1rem;
+  margin: 1.8rem 0;
+}
+.dictviz h4, .setviz h4, .vennviz h4 { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .04em; color: var(--accent-hot); margin: 0 0 .3rem; }
+.dictviz > p, .setviz > p, .vennviz > p { margin: 0 0 .8rem; font-size: .92rem; }
+
+/* dict: แถว ป้าย key → กล่อง value */
+.dv-stage { align-items: flex-start; padding-top: 1rem; min-height: 9.5rem; }
+.dv-rows { display: flex; flex-direction: column; gap: .35rem; }
+.dv-row {
+  display: flex; align-items: center; gap: .45rem;
+  font-family: var(--font-mono); font-size: .85rem;
+  transition: background .2s;
+}
+.dv-key { padding: .25rem .6rem; background: var(--accent-hot); color: #fff; border-radius: 4px 0 0 4px; font-weight: 600; }
+.dv-arrow { color: var(--ink-soft); }
+.dv-val { padding: .25rem .6rem; background: #fff; border: 2px solid var(--accent); border-radius: 4px; min-width: 3rem; }
+.dv-row.ok .dv-key { background: var(--good); box-shadow: 0 0 0 3px #bfe3cc; }
+.dv-row.ok .dv-val { border-color: var(--good); background: #e3f1e8; }
+.dv-row.hit .dv-key { background: var(--wrong); }
+.dv-row.hit .dv-val { border-color: var(--wrong); background: #ffd9d4; }
+.dv-row.lv-set .dv-val { animation: lv-set .7s ease-out; }
+.dv-row.in-top { animation: lv-in-top .5s cubic-bezier(.3, .7, .3, 1) both; }
+.dv-miss { opacity: .75; }
+.dv-miss .dv-key { background: none; color: var(--wrong); border: 2px dashed var(--wrong); }
+.dv-miss .dv-val { border: 2px dashed var(--wrong); color: var(--wrong); font-family: var(--font-ui); font-size: .78rem; }
+.dv-row.lv-ghost { position: absolute; }
+
+/* set ตัดค่าซ้ำ */
+.sv-stage { min-height: 6rem; }
+.sv-list .lv-box.used { opacity: .35; }
+.sv-list .lv-box.scan { background: #fff3cc; border-color: #e0b64a; opacity: 1; }
+.sv-list .lv-box.hit { background: #ffd9d4; border-color: var(--wrong); opacity: 1; }
+.sv-flow { text-align: center; font-family: var(--font-ui); font-size: .85rem; color: var(--ink-soft); margin: .35rem 0; }
+.sv-set { min-height: 5rem; border-radius: 2.5rem; padding: 1rem 1.2rem; flex-wrap: wrap; }
+.sv-bubbles { display: flex; flex-wrap: wrap; gap: .4rem; flex: 1; }
+.sv-ball {
+  width: 2.3rem; height: 2.3rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 2px solid var(--good); color: var(--ink);
+  font-family: var(--font-mono); font-weight: 600;
+}
+.sv-ball.in-top { animation: lv-in-top .5s cubic-bezier(.3, .7, .3, 1) both; }
+.sv-ball.dup { animation: sv-dup .6s ease-in-out; border-color: var(--wrong); background: #ffd9d4; }
+@keyframes sv-dup { 0%, 100% { transform: none; } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+.sv-len { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-soft); }
+
+/* แผนภาพเซต */
+.vn-svg { display: block; width: 100%; max-width: 420px; margin: 0 auto; }
+.vn-fill, .vn-lens { fill: var(--accent-hot); fill-opacity: 0; transition: fill-opacity .45s, fill .45s; }
+.vn-ring { fill: none; stroke: var(--accent); stroke-width: 2; }
+.vn-lbl { font-family: var(--font-mono); font-size: 18px; font-weight: 700; fill: var(--accent-hot); }
+.vn-num { font-family: var(--font-mono); font-size: 17px; font-weight: 600; text-anchor: middle; dominant-baseline: central;
+  fill: var(--ink-soft); transition: fill .3s, font-size .3s; }
+.vn-num.in { fill: #fff; font-size: 19px; }
+.vennviz[data-op="union"] .vn-fill, .vennviz[data-op="union"] .vn-lens { fill-opacity: .8; }
+.vennviz[data-op="intersection"] .vn-lens { fill-opacity: .8; }
+.vennviz[data-op="difference"] .vn-a { fill-opacity: .8; }
+.vennviz[data-op="difference"] .vn-lens,
+.vennviz[data-op="symmetric"] .vn-lens { fill: var(--paper); fill-opacity: 1; }
+.vennviz[data-op="symmetric"] .vn-fill { fill-opacity: .8; }
+.vn-ops { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin: .7rem 0 .5rem; }
+.vn-ops button {
+  font-family: var(--font-mono); font-size: .85rem; font-weight: 600; padding: .3rem .8rem;
+  border: 1px solid var(--accent-hot); border-radius: 2px; background: #fff; color: var(--accent-hot); cursor: pointer;
+}
+.vn-ops button.on { background: var(--accent-hot); color: #fff; }
+.vn-res { text-align: center; font-size: .9rem; }
+.vn-res code { font-family: var(--font-mono); }
+.vn-name { font-family: var(--font-ui); font-size: .75rem; color: var(--ink-soft); margin-left: .3rem; }
+
+.dictviz .lv-code, .dv-row, .sv-ball, .vn-ops button, .vn-res code { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+@media print { .dictviz .st-ctl, .setviz .st-ctl, .dictviz .lv-msg, .setviz .lv-msg { display: none !important; }
+  .dictviz, .setviz, .vennviz { break-inside: avoid; } }
+.dictviz .lv-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.dv-row.lv-ghost.out { transform: translateX(4rem); opacity: 0; }

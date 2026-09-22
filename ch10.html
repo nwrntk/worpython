@@ -45,6 +45,12 @@ print(len(unique))         <span class="out"># 7 → มีค่าไม่ซ
 <span class="out"># อยากได้ list กลับคืน (และเรียงด้วย)</span>
 print(sorted(set(nums)))   <span class="out"># [1, 2, 3, 4, 5, 6, 9]</span></pre>
 
+  <div class="setviz">
+    <h4>ดูเป็นภาพ · set(nums) ตัดค่าซ้ำยังไง</h4>
+    <p>ส่งตัวเลขจาก list เข้า set ทีละตัว · ตัวที่มีอยู่แล้วจะถูกปฏิเสธ</p>
+    <script type="application/json">{"nums": [3, 1, 4, 1, 5, 9, 2, 6, 5, 3], "steps": [{"i": -1, "members": [], "msg": "list มี 10 ตัว มีค่าซ้ำปนอยู่ · กด \"ถัดไป\" ส่งเข้า set ทีละตัว"}, {"i": 0, "v": 3, "dup": false, "members": [3], "msg": "<b>3<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 1, "v": 1, "dup": false, "members": [3, 1], "msg": "<b>1<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 2, "v": 4, "dup": false, "members": [3, 1, 4], "msg": "<b>4<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 3, "v": 1, "dup": true, "members": [3, 1, 4], "msg": "<b>1<\/b> มีอยู่ใน set แล้ว → <b>ไม่เพิ่ม<\/b> (set เก็บค่าละตัวเดียว)"}, {"i": 4, "v": 5, "dup": false, "members": [3, 1, 4, 5], "msg": "<b>5<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 5, "v": 9, "dup": false, "members": [3, 1, 4, 5, 9], "msg": "<b>9<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 6, "v": 2, "dup": false, "members": [3, 1, 4, 5, 9, 2], "msg": "<b>2<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 7, "v": 6, "dup": false, "members": [3, 1, 4, 5, 9, 2, 6], "msg": "<b>6<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 8, "v": 5, "dup": true, "members": [3, 1, 4, 5, 9, 2, 6], "msg": "<b>5<\/b> มีอยู่ใน set แล้ว → <b>ไม่เพิ่ม<\/b> (set เก็บค่าละตัวเดียว)"}, {"i": 9, "v": 3, "dup": true, "members": [3, 1, 4, 5, 9, 2, 6], "msg": "<b>3<\/b> มีอยู่ใน set แล้ว → <b>ไม่เพิ่ม<\/b> (set เก็บค่าละตัวเดียว)"}, {"i": 10, "members": [3, 1, 4, 5, 9, 2, 6], "end": 1, "msg": "ครบแล้ว · list 10 ตัว เหลือค่าไม่ซ้ำ <b>7<\/b> ตัว = <code>len(set(nums))<\/code>"}]}</script>
+  </div>
+
   <p>เทียบกับการเขียนเองด้วย list — set สั้นกว่ามาก</p>
 
 <pre><span class="out"># วิธีเดิม</span>
@@ -84,6 +90,12 @@ print(a | b)    <span class="out"># {1,2,3,4,5,6}  union         — รวม�
 print(a &amp; b)    <span class="out"># {3, 4}         intersection  — เฉพาะที่มีทั้งคู่</span>
 print(a - b)    <span class="out"># {1, 2}         difference    — มีใน a แต่ไม่มีใน b</span>
 print(a ^ b)    <span class="out"># {1,2,5,6}      symmetric diff— มีข้างเดียวเท่านั้น</span></pre>
+
+  <div class="vennviz">
+    <h4>ดูเป็นภาพ · การดำเนินการแบบเซต</h4>
+    <p>กดปุ่มคำสั่งด้านล่าง ส่วนที่เป็นผลลัพธ์จะถูกระบายสี</p>
+    <script type="application/json">{"a": [1, 2, 3, 4], "b": [3, 4, 5, 6], "steps": [{"code": "a, b", "res": null, "msg": "วงซ้าย = a · วงขวา = b · ตรงกลางคือค่าที่มีทั้งสองวง"}, {"code": "a | b", "name": "union", "res": [1, 2, 3, 4, 5, 6], "msg": "รวมทั้งสองวง · ทุกตัวที่อยู่ใน a <b>หรือ<\/b> b"}, {"code": "a & b", "name": "intersection", "res": [3, 4], "msg": "เฉพาะตรงกลางที่<b>มีทั้งคู่<\/b>"}, {"code": "a - b", "name": "difference", "res": [1, 2], "msg": "มีใน a แต่<b>ไม่มีใน b<\/b> · ส่วนของ a ที่ไม่ทับกับ b"}, {"code": "a ^ b", "name": "symmetric difference", "res": [1, 2, 5, 6], "msg": "มี<b>ข้างเดียวเท่านั้น<\/b> · ทุกอย่างยกเว้นตรงกลาง"}]}</script>
+  </div>
 
   <p>เขียนเป็นชื่อเต็มก็ได้ ความหมายเดียวกัน</p>
 

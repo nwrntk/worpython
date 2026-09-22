@@ -313,6 +313,333 @@ function initStepper() {
   }
 }
 
+/* ---------- list เป็นกล่อง: เมธอดแต่ละตัวขยับกล่องยังไง (FLIP animation) ---------- */
+
+function initListViz() {
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (const box of document.querySelectorAll('.listviz')) {
+    const { name, code, steps } = JSON.parse(box.querySelector('script').textContent);
+    box.insertAdjacentHTML('beforeend', `
+      <div class="lv-grid">
+        <ol class="st-code lv-code">${code.map(l => `<li><code>${esc(l)}</code></li>`).join('')}</ol>
+        <div>
+          <div class="lv-stage"><span class="lv-name">${esc(name)}</span><div class="lv-row"></div></div>
+          <div class="lv-vars"></div>
+        </div>
+      </div>
+      <div class="st-msg lv-msg"></div>
+      <div class="st-ctl">
+        <button data-go="first" title="กลับจุดเริ่ม">⏮</button>
+        <button data-go="-1" title="ย้อน 1 ขั้น">◀ ย้อน</button>
+        <button data-go="1" class="st-next" title="คำสั่งถัดไป">ถัดไป ▶</button>
+        <span class="st-count"></span>
+      </div>`);
+    const stage = box.querySelector('.lv-stage'), row = box.querySelector('.lv-row');
+    const lis = [...box.querySelectorAll('.lv-code li')];
+    const msg = box.querySelector('.lv-msg'), vars = box.querySelector('.lv-vars');
+    const count = box.querySelector('.st-count'), next = box.querySelector('.st-next');
+    const buttons = [...box.querySelectorAll('.st-ctl button')];
+    let at = 0, busy = false;
+
+    function paint(st) {
+      lis.forEach((li, i) => li.classList.toggle('ex', i + 1 === st.line));
+      vars.innerHTML = Object.entries(st.vars).map(([k, v]) =>
+        `<span class="lv-var${st.target === k ? ' new' : ''}"><b>${esc(k)}</b> = ${esc(v)}</span>`).join('');
+      msg.innerHTML = st.msg;
+      count.textContent = `คำสั่ง ${at + 1} / ${steps.length}`;
+      buttons[1].disabled = at === 0;
+      const last = at === steps.length - 1;
+      next.dataset.go = last ? 'first' : '1';
+      next.textContent = last ? '↺ เริ่มใหม่' : 'ถัดไป ▶';
+    }
+
+    // วางกล่องตามสถานะ st · animate = true ให้กล่องไหลจากตำแหน่งเดิม
+    function place(st, animate) {
+      const before = new Map([...row.children].map(el => [el.dataset.id, el.getBoundingClientRect()]));
+      const els = new Map([...row.children].map(el => [el.dataset.id, el]));
+      const keep = new Set(st.items.map(([id]) => String(id)));
+      const sr = stage.getBoundingClientRect();
+      for (const [id, el] of els) {
+        if (keep.has(id)) continue;
+        if (animate) {                                        // กล่องที่ถูกดึงออก: ลอยขึ้นแล้วหาย
+          const r = before.get(id), ghost = el.cloneNode(true);
+          ghost.classList.add('lv-ghost');
+          ghost.style.left = r.left - sr.left + 'px';
+          ghost.style.top = r.top - sr.top + 'px';
+          stage.appendChild(ghost);
+          requestAnimationFrame(() => ghost.classList.add('out'));
+          setTimeout(() => ghost.remove(), 900);
+        }
+        el.remove();
+      }
+      let entered = 0;
+      st.items.forEach(([id, v], i) => {
+        let el = els.get(String(id));
+        if (!el) {
+          el = document.createElement('div');
+          el.className = 'lv-box';
+          el.dataset.id = id;
+          if (animate) {
+            el.classList.add(st.kind === 'extend' ? 'in-right' : 'in-top');
+            el.style.animationDelay = (st.kind === 'extend' ? entered++ * 180 : 150) + 'ms';
+            const delay = parseInt(el.style.animationDelay) || 0;
+            setTimeout(() => { el.classList.remove('in-right', 'in-top'); el.style.animationDelay = ''; }, delay + 650);
+          }
+        } else if (animate && el.dataset.v !== String(v)) {
+          el.classList.remove('lv-set'); void el.offsetWidth; el.classList.add('lv-set');
+        }
+        el.classList.remove('hit', 'scan');
+        el.dataset.v = v;
+        el.innerHTML = `<span class="lv-v">${esc(v)}</span><span class="lv-i">${i}</span>`;
+        row.appendChild(el);
+      });
+      if (!animate) return;
+      for (const el of row.children) {                        // กล่องที่ยังอยู่: ไหลจากที่เดิมไปที่ใหม่
+        const o = before.get(el.dataset.id);
+        if (!o) continue;
+        const n = el.getBoundingClientRect(), dx = o.left - n.left, dy = o.top - n.top;
+        if (!dx && !dy) continue;
+        el.style.transition = 'none';
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          el.style.transition = 'transform .55s cubic-bezier(.3, .7, .3, 1)';
+          el.style.transform = '';
+        }));
+      }
+    }
+
+    async function goTo(k, animate) {
+      if (busy) return;
+      busy = true;
+      buttons.forEach(b => b.disabled = true);
+      const st = steps[k];
+      const forward = animate && !calm && k === at + 1;
+      if (forward && st.scan) {                               // remove / index: ไล่หาจากซ้ายทีละกล่อง
+        const boxes = [...row.children];
+        for (const i of st.scan) {
+          boxes.forEach(b => b.classList.remove('scan'));
+          boxes[i].classList.add(i === st.hit ? 'hit' : 'scan');
+          await wait(i === st.hit ? 450 : 320);
+        }
+        boxes.forEach(b => b.classList.remove('scan'));
+      } else if (forward && st.kind === 'pop') {
+        row.children[st.hit].classList.add('hit');
+        await wait(350);
+      }
+      at = k;
+      place(st, forward);
+      if (forward && st.kind === 'index') row.children[st.hit].classList.add('hit');
+      paint(st);
+      if (forward) await wait(650);
+      busy = false;
+      buttons.forEach(b => b.disabled = false);
+      paint(st);
+    }
+
+    box.querySelector('.st-ctl').addEventListener('click', e => {
+      const go = e.target.dataset.go;
+      if (!go) return;
+      goTo(go === 'first' ? 0 : Math.max(0, Math.min(steps.length - 1, at + Number(go))), go === '1');
+    });
+    place(steps[0], false);
+    paint(steps[0]);
+  }
+}
+
+/* ---------- dict เป็นลิ้นชัก / set ตัดค่าซ้ำ / แผนภาพเซต ---------- */
+
+const vzEsc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const vzWait = ms => new Promise(r => setTimeout(r, ms));
+const vzCalm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// วางลูกตามลำดับ entries = [{id, html}] · animate: ลูกที่อยู่ต่อไหลจากที่เดิม ลูกที่หายลอยออก ลูกใหม่ใส่คลาส enter
+function vzPlace(stage, holder, entries, animate, enter = 'in-top', cls = 'lv-box') {
+  const before = new Map([...holder.children].map(el => [el.dataset.id, el.getBoundingClientRect()]));
+  const els = new Map([...holder.children].map(el => [el.dataset.id, el]));
+  const keep = new Set(entries.map(e => String(e.id)));
+  const sr = stage.getBoundingClientRect();
+  for (const [id, el] of els) {
+    if (keep.has(id)) continue;
+    if (animate) {
+      const r = before.get(id), ghost = el.cloneNode(true);
+      ghost.classList.add('lv-ghost');
+      Object.assign(ghost.style, { left: r.left - sr.left + stage.scrollLeft + 'px', top: r.top - sr.top + 'px', width: r.width + 'px' });
+      stage.appendChild(ghost);
+      requestAnimationFrame(() => ghost.classList.add('out'));
+      setTimeout(() => ghost.remove(), 900);
+    }
+    el.remove();
+  }
+  for (const e of entries) {
+    let el = els.get(String(e.id));
+    if (!el) {
+      el = document.createElement('div');
+      el.className = cls;
+      el.dataset.id = e.id;
+      if (animate) {
+        el.classList.add(enter);
+        // ถอดคลาสด้วยตัวจับเวลาด้วย เผื่อ animationend ไม่ถูกยิง (แท็บพื้นหลัง / เบราว์เซอร์ข้ามอนิเมชัน)
+        setTimeout(() => el.classList.remove(enter), 700);
+      }
+    }
+    el.classList.remove('hit', 'scan', 'ok', 'dup');
+    if (el.dataset.html !== e.html) { el.innerHTML = e.html; el.dataset.html = e.html; }
+    holder.appendChild(el);
+  }
+  if (!animate) return;
+  for (const el of holder.children) {
+    const o = before.get(el.dataset.id);
+    if (!o) continue;
+    const n = el.getBoundingClientRect(), dx = o.left - n.left, dy = o.top - n.top;
+    if (!dx && !dy) continue;
+    el.style.transition = 'none';
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.transition = 'transform .55s cubic-bezier(.3, .7, .3, 1)';
+      el.style.transform = '';
+    }));
+  }
+}
+
+// ปุ่ม ⏮ ◀ ▶ ร่วมกัน · show(step, animate) คืน Promise เมื่ออนิเมชันจบ
+function vzControls(box, steps, show) {
+  box.insertAdjacentHTML('beforeend', `
+    <div class="st-msg lv-msg"></div>
+    <div class="st-ctl">
+      <button data-go="first" title="กลับจุดเริ่ม">⏮</button>
+      <button data-go="-1" title="ย้อน 1 ขั้น">◀ ย้อน</button>
+      <button data-go="1" class="st-next" title="ขั้นถัดไป">ถัดไป ▶</button>
+      <span class="st-count"></span>
+    </div>`);
+  const buttons = [...box.querySelectorAll('.st-ctl button')], next = box.querySelector('.st-next');
+  const msg = box.querySelector('.lv-msg'), count = box.querySelector('.st-count');
+  let at = 0, busy = false;
+  const paint = () => {
+    msg.innerHTML = steps[at].msg;
+    count.textContent = `ขั้น ${at + 1} / ${steps.length}`;
+    buttons[1].disabled = at === 0;
+    const last = at === steps.length - 1;
+    next.dataset.go = last ? 'first' : '1';
+    next.textContent = last ? '↺ เริ่มใหม่' : 'ถัดไป ▶';
+  };
+  box.querySelector('.st-ctl').addEventListener('click', async e => {
+    const go = e.target.dataset.go;
+    if (!go || busy) return;
+    const k = go === 'first' ? 0 : Math.max(0, Math.min(steps.length - 1, at + Number(go)));
+    const forward = go === '1' && !vzCalm();
+    busy = true;
+    buttons.forEach(b => b.disabled = true);
+    at = k;
+    await show(steps[k], forward);
+    busy = false;
+    buttons.forEach(b => b.disabled = false);
+    paint();
+  });
+  show(steps[0], false);
+  paint();
+}
+
+function initDictViz() {
+  for (const box of document.querySelectorAll('.dictviz')) {
+    const { name, code, steps } = JSON.parse(box.querySelector('script').textContent);
+    box.insertAdjacentHTML('beforeend', `
+      <div class="lv-grid">
+        <ol class="st-code lv-code">${code.map(l => `<li><code>${vzEsc(l)}</code></li>`).join('')}</ol>
+        <div>
+          <div class="lv-stage dv-stage"><span class="lv-name">${vzEsc(name)}</span><div class="dv-rows"></div></div>
+          <div class="lv-vars"></div>
+        </div>
+      </div>`);
+    const stage = box.querySelector('.dv-stage'), rows = box.querySelector('.dv-rows');
+    const lis = [...box.querySelectorAll('.lv-code li')], vars = box.querySelector('.lv-vars');
+    const rowOf = key => [...rows.children].find(r => r.dataset.id === key);
+    vzControls(box, steps, async (st, anim) => {
+      lis.forEach((li, i) => li.classList.toggle('ex', i + 1 === st.line));
+      if (anim) {
+        const row = rowOf(st.key);
+        if (['get', 'in', 'del', 'pop'].includes(st.kind) && row) {    // กระโดดไปที่ key ตรง ๆ ไม่ไล่ทีละแถว
+          row.classList.add(st.kind === 'get' || st.kind === 'in' ? 'ok' : 'hit');
+          await vzWait(600);
+        } else if (st.kind === 'getdef') {                              // หา key ไม่เจอ
+          rows.insertAdjacentHTML('beforeend', `<div class="dv-row dv-miss"><span class="dv-key">${vzEsc(st.key)}</span><span class="dv-val">✗ ไม่มี key นี้</span></div>`);
+          await vzWait(1100);
+        }
+      }
+      rows.querySelector('.dv-miss')?.remove();
+      vzPlace(stage, rows, st.rows.map(([k, v]) => ({
+        id: k, html: `<span class="dv-key">${vzEsc(k)}</span><span class="dv-arrow">→</span><span class="dv-val">${vzEsc(v)}</span>`
+      })), anim, 'in-top', 'dv-row');
+      if (anim && st.kind === 'upd') { const r = rowOf(st.key); r.classList.remove('lv-set'); void r.offsetWidth; r.classList.add('lv-set'); }
+      if (anim && (st.kind === 'get' || st.kind === 'in')) rowOf(st.key)?.classList.add('ok');
+      vars.innerHTML = Object.entries(st.vars).map(([k, v]) =>
+        `<span class="lv-var${anim && st.target === k ? ' new' : ''}"><b>${vzEsc(k)}</b> = ${vzEsc(v)}</span>`).join('');
+      if (anim) await vzWait(650);
+    });
+  }
+}
+
+function initSetViz() {
+  for (const box of document.querySelectorAll('.setviz')) {
+    const { nums, steps } = JSON.parse(box.querySelector('script').textContent);
+    box.insertAdjacentHTML('beforeend', `
+      <div class="lv-stage sv-stage">
+        <span class="lv-name">nums</span>
+        <div class="lv-row sv-list">${nums.map((n, i) => `<div class="lv-box" data-i="${i}"><span class="lv-v">${n}</span><span class="lv-i">${i}</span></div>`).join('')}</div>
+      </div>
+      <div class="sv-flow">↓ <code>set(nums)</code></div>
+      <div class="lv-stage sv-set"><span class="lv-name">unique</span><div class="sv-bubbles"></div><span class="sv-len"></span></div>`);
+    const listBoxes = [...box.querySelectorAll('.sv-list .lv-box')];
+    const set = box.querySelector('.sv-set'), bubbles = box.querySelector('.sv-bubbles'), len = box.querySelector('.sv-len');
+    vzControls(box, steps, async (st, anim) => {
+      listBoxes.forEach((b, i) => {
+        b.classList.toggle('scan', i === st.i && !st.dup);
+        b.classList.toggle('used', i < st.i || !!st.end);
+        b.classList.toggle('hit', i === st.i && !!st.dup);
+      });
+      vzPlace(set, bubbles, st.members.map(v => ({ id: v, html: String(v) })), anim, 'in-top', 'sv-ball');
+      if (st.dup) [...bubbles.children].find(x => x.dataset.id === String(st.v))?.classList.add('dup');
+      len.textContent = `len = ${st.members.length}`;
+      if (anim) await vzWait(600);
+    });
+  }
+}
+
+function initVenn() {
+  for (const box of document.querySelectorAll('.vennviz')) {
+    const { a, b, steps } = JSON.parse(box.querySelector('script').textContent);
+    const both = a.filter(x => b.includes(x)), onlyA = a.filter(x => !b.includes(x)), onlyB = b.filter(x => !a.includes(x));
+    const col = (vals, x) => vals.map((v, i) => `<text class="vn-num" data-v="${v}" x="${x}" y="${100 + (i - (vals.length - 1) / 2) * 28}">${v}</text>`).join('');
+    const id = 'vn' + Math.random().toString(36).slice(2, 7);
+    box.insertAdjacentHTML('beforeend', `
+      <svg class="vn-svg" viewBox="0 0 360 200" role="img" aria-label="แผนภาพเซต a และ b">
+        <defs><clipPath id="${id}"><circle cx="135" cy="100" r="82"/></clipPath></defs>
+        <circle class="vn-fill vn-a" cx="135" cy="100" r="82"/>
+        <circle class="vn-fill vn-b" cx="225" cy="100" r="82"/>
+        <circle class="vn-lens" cx="225" cy="100" r="82" clip-path="url(#${id})"/>
+        <circle class="vn-ring" cx="135" cy="100" r="82"/><circle class="vn-ring" cx="225" cy="100" r="82"/>
+        <text class="vn-lbl" x="62" y="26">a</text><text class="vn-lbl" x="292" y="26">b</text>
+        ${col(onlyA, 100)}${col(both, 180)}${col(onlyB, 260)}
+      </svg>
+      <div class="vn-ops">${steps.map((s, i) => `<button data-k="${i}">${i ? vzEsc(s.code) : 'a, b'}</button>`).join('')}</div>
+      <div class="vn-res"></div>
+      <div class="st-msg lv-msg"></div>`);
+    const show = k => {
+      const st = steps[k];
+      box.dataset.op = st.name ? st.name.split(' ')[0] : 'none';
+      box.querySelectorAll('.vn-ops button').forEach((bt, i) => bt.classList.toggle('on', i === k));
+      box.querySelectorAll('.vn-num').forEach(t => t.classList.toggle('in', !!st.res && st.res.includes(+t.dataset.v)));
+      box.querySelector('.vn-res').innerHTML = st.res
+        ? `<code>${vzEsc(st.code)}</code> → <code>{${st.res.join(', ')}}</code> <span class="vn-name">${vzEsc(st.name)}</span>`
+        : `<code>a = {${a.join(', ')}}</code> · <code>b = {${b.join(', ')}}</code>`;
+      box.querySelector('.lv-msg').innerHTML = st.msg;
+    };
+    box.querySelector('.vn-ops').addEventListener('click', e => { if (e.target.dataset.k) show(+e.target.dataset.k); });
+    show(0);
+  }
+}
+
 /* ---------- boot ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -320,6 +647,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuiz();
   initTrace();
   initStepper();
+  initListViz();
+  initDictViz();
+  initSetViz();
+  initVenn();
   buildLayout();
 });
 
