@@ -22,6 +22,7 @@ const PAGES = [
   { group: 'VIII · Lib สำคัญ',        file: 'ch16.html',  num: '16', title: 'Matplotlib — พล็อตกราฟ' },
   { group: 'อ้างอิง',                 file: 'errors.html', num: '!', title: 'คู่มืออ่าน error' },
   { group: 'อ้างอิง',                 file: 'debug.html',  num: '?', title: 'วิธีหาบั๊ก' },
+  { group: 'อ้างอิง',                 file: 'compare.html', num: '=', title: 'เทียบให้ชัด' },
 ];
 
 const here = location.pathname.split('/').pop() || 'index.html';
@@ -139,7 +140,10 @@ function buildPager() {
 /* ---------- quiz ---------- */
 
 function initQuiz() {
-  const quizzes = [...document.querySelectorAll('.quiz')];
+  // จุดเช็กกลางบท (.check) ใช้กลไกเดียวกัน แต่ไม่นับรวมคะแนนแบบทดสอบท้ายบท
+  for (const quiz of document.querySelectorAll('.quiz.check')) bindQuiz(quiz);
+
+  const quizzes = [...document.querySelectorAll('.quiz:not(.check)')];
   if (!quizzes.length) return;
 
   let answered = 0, correct = 0;
@@ -150,22 +154,23 @@ function initQuiz() {
   paint();
   quizzes[quizzes.length - 1].after(score);
 
-  for (const quiz of quizzes) {
-    const choices = [...quiz.querySelectorAll('.choice')];
-    for (const c of choices) c.addEventListener('click', () => {
-      if (quiz.dataset.done) return;
-      quiz.dataset.done = '1';
-      answered++;
-      if (c.hasAttribute('data-correct')) correct++;
-      for (const o of choices) {
-        o.classList.add('locked');
-        if (o.hasAttribute('data-correct')) o.classList.add('right');
-      }
-      if (!c.hasAttribute('data-correct')) c.classList.add('wrong');
-      quiz.querySelector('.explain')?.classList.add('show');
-      paint();
-    });
-  }
+  for (const quiz of quizzes) bindQuiz(quiz, ok => { answered++; correct += ok; paint(); });
+}
+
+// กดได้ครั้งเดียว: ล็อกตัวเลือก ทำสีถูก/ผิด แล้วกางคำอธิบาย
+function bindQuiz(quiz, onAnswer) {
+  const choices = [...quiz.querySelectorAll('.choice')];
+  for (const c of choices) c.addEventListener('click', () => {
+    if (quiz.dataset.done) return;
+    quiz.dataset.done = '1';
+    for (const o of choices) {
+      o.classList.add('locked');
+      if (o.hasAttribute('data-correct')) o.classList.add('right');
+    }
+    if (!c.hasAttribute('data-correct')) c.classList.add('wrong');
+    quiz.querySelector('.explain')?.classList.add('show');
+    onAnswer?.(c.hasAttribute('data-correct') ? 1 : 0);
+  });
 }
 
 /* ---------- ตารางไล่รอบ: เติมช่องแล้วกดตรวจ ---------- */

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 8 · Loop Patterns — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -155,6 +155,15 @@ print('total After :', total)
   <div class="warn">
     <b>ตัวแปรสะสมต้องอยู่นอก loop</b> — ถ้าเขียน <code>total = 0</code> ไว้ข้างใน
     มันจะถูกล้างเป็น 0 ทุกรอบ ผลลัพธ์จะได้แค่ค่าตัวสุดท้าย
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C10">ถ้าเผลอเขียน <code>total = 0</code> ไว้<b>ข้างใน</b> loop ที่บวก [10, 20, 30] ผลลัพธ์สุดท้ายคือ?</div>
+    <button class="choice" data-correct>30 เพราะค่าถูกล้างทุกรอบ</button>
+    <button class="choice">60 เหมือนเดิม</button>
+    <button class="choice">0</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">ตัวแปรสะสมต้องตั้งค่าเริ่มต้น<b>ก่อนเข้า loop</b> ไม่งั้นทุกรอบจะเริ่มนับใหม่ เหลือแค่ค่าสุดท้าย</div>
   </div>
 
   <h2>8.5 Average — หาค่าเฉลี่ย</h2>
@@ -676,6 +685,6 @@ print(count, avg)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

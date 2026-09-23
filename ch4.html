@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 4 · List — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -85,6 +85,15 @@ print(nums[::-1])   <span class="out"># [60,50,40,30,20,10] → กลับด�
     <code>[30, 40, 50, 60]</code>
   </div>
 
+  <div class="quiz check">
+    <div class="q" data-n="C4"><code>nums = [10, 20, 30, 40, 50]</code> แล้ว <code>nums[1:4]</code> ได้อะไร?</div>
+    <button class="choice" data-correct>[20, 30, 40]</button>
+    <button class="choice">[20, 30, 40, 50]</button>
+    <button class="choice">[10, 20, 30, 40]</button>
+    <button class="choice">[20, 30]</button>
+    <div class="explain">เริ่มที่ index 1 และหยุด<b>ก่อน</b> index 4 จึงได้ index 1, 2, 3</div>
+  </div>
+
   <h2>4.4 List แก้ไขได้ (Mutable)</h2>
 
 <pre>colors = ["red", "green", "blue"]
@@ -159,6 +168,15 @@ print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี�
     <h4>ดูทีละบรรทัด · b = a ไม่ได้ก๊อบปี้</h4>
     <p>ตัวแปรเป็นแค่<b>ป้ายชื่อ</b> ลูกศรชี้ไปที่ list ก้อนไหน · <strong>ลูกศรสองเส้นชี้ก้อนเดียวกัน = แก้ทางไหนก็เปลี่ยนทั้งคู่</strong></p>
     <script type="application/json">{"code": ["a = [1, 2, 3]", "b = a", "b.append(4)", "print(a)", "c = a[:]", "c.append(99)", "print(a)", "print(c)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"]]}], "out": ""}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 7, "nx": 8, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n[1, 2, 3, 4]\n"}, {"ex": 8, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n[1, 2, 3, 4]\n[1, 2, 3, 4, 99]\n", "end": 1}], "notes": {"2": "b ได้ป้าย <b>①<\/b> เหมือน a = ชื่อสองชื่อชี้ list ก้อนเดียวกัน ยังไม่มี list ก้อนที่สอง", "3": "append ผ่าน b แต่ a เปลี่ยนด้วย เพราะเป็นก้อนเดียวกัน", "5": "<code>a[:]<\/code> สร้าง list ก้อนใหม่ c จึงได้ป้าย <b>②<\/b>", "6": "แก้ c (ก้อน ②) แล้ว a (ก้อน ①) ไม่เปลี่ยน"}}</script>
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C5"><code>a = [1, 2]</code> → <code>b = a</code> → <code>b.append(3)</code> · แล้ว <code>a</code> เป็นอะไร?</div>
+    <button class="choice" data-correct>[1, 2, 3]</button>
+    <button class="choice">[1, 2]</button>
+    <button class="choice">เกิด error</button>
+    <button class="choice">[3]</button>
+    <div class="explain"><code>b = a</code> ไม่ได้ก๊อบปี้ · ชื่อสองชื่อชี้ list ก้อนเดียวกัน แก้ทางไหนก็เปลี่ยนทั้งคู่ · ถ้าอยากได้ก้อนใหม่ใช้ <code>a[:]</code></div>
   </div>
 
   <h2>4.7 List ซ้อน List — ตาราง 2 มิติ</h2>
@@ -443,6 +461,6 @@ print(max(scores), min(scores), avg)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

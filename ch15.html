@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 15 · ภาพดิจิทัลและการประมวลผล — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -240,6 +240,15 @@ out = cv2.filter2D(img, -1, sharpen)</pre>
   <div class="note">
     <b>เบลอ · คม · หาขอบ · ตรวจลาย — ทั้งหมดคือ convolution ตัวเดียวกัน</b>
     ต่างกันแค่ตัวเลขในเคอร์เนล นี่คือเหตุผลที่ CNN ในงาน AI ถึงชื่อ “Convolutional”
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C18">เบลอ ทำให้คม และหาขอบ ต่างกันตรงไหนในเชิงการคำนวณ?</div>
+    <button class="choice" data-correct>ใช้ convolution เหมือนกัน ต่างแค่ตัวเลขในเคอร์เนล</button>
+    <button class="choice">ใช้คนละสูตรกันคนละแบบ</button>
+    <button class="choice">ต่างกันที่ขนาดภาพ</button>
+    <button class="choice">ต่างกันที่รูปแบบไฟล์</button>
+    <div class="explain">ทั้งสามอย่างคือการเลื่อนเคอร์เนลไปคูณแล้วบวกเหมือนกันหมด · เปลี่ยนน้ำหนักในเคอร์เนล = เปลี่ยนฟิลเตอร์</div>
   </div>
 
   <h2>15.7 Binarization — หาเกณฑ์ T ให้อัตโนมัติ</h2>
@@ -774,6 +783,6 @@ for (const range of document.querySelectorAll('.fig input[type=range]')) {
 }
 </script>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 2 · ชนิดข้อมูล — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -56,6 +56,15 @@ print(float(5))     <span class="out"># 5.0</span></pre>
 <pre>int("สวัสดี")     <span class="out err"># ValueError: invalid literal for int()</span>
 int("3.5")        <span class="out err"># ValueError ← int() รับได้เฉพาะเลขจำนวนเต็มล้วน</span>
 int(float("3.5")) <span class="out"># 3 ← ต้องแปลงผ่าน float ก่อน</span></pre>
+
+  <div class="quiz check">
+    <div class="q" data-n="C2">ผู้ใช้พิมพ์ 20 ใส่ <code>age = input("อายุ: ")</code> แล้วสั่ง <code>age + 1</code> จะได้อะไร?</div>
+    <button class="choice" data-correct><span class="mono">TypeError</span></button>
+    <button class="choice">21</button>
+    <button class="choice">"201"</button>
+    <button class="choice">20</button>
+    <div class="explain"><code>input()</code> คืน<b>ข้อความ</b>เสมอ แม้พิมพ์ตัวเลข · ข้อความบวกตัวเลขไม่ได้ ต้อง <code>int(input(...))</code> ก่อน</div>
+  </div>
 
   <h2>2.3 ตัวดำเนินการทางคณิตศาสตร์</h2>
 
@@ -439,6 +448,6 @@ print(f"ปีหน้าอายุ {age + 1}")</pre>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

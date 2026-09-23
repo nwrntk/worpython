@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 14 · OpenCV — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -94,6 +94,15 @@ cv2.imwrite("crop.jpg", crop)</pre>
     <b>ทำไมภาพถึงเป็นตัวเลข และ 0-255 มาจากไหน</b> —
     เรื่อง sampling, quantization และรูปแบบภาพทั้ง 4 แบบ (เทา · ไบนารี · RGB · HSV) อยู่ใน
     <a href="ch15.html">บทที่ 15</a>
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C17">ภาพสี 480 สูง × 640 กว้าง · <code>img.shape</code> ได้อะไร?</div>
+    <button class="choice" data-correct>(480, 640, 3)</button>
+    <button class="choice">(640, 480, 3)</button>
+    <button class="choice">(3, 480, 640)</button>
+    <button class="choice">(480, 640)</button>
+    <div class="explain">ลำดับคือ <b>สูง, กว้าง, จำนวนช่องสี</b> · ต่างจากที่เราพูดกันว่า "640×480" และ OpenCV เก็บสีเป็น <b>BGR</b> ไม่ใช่ RGB</div>
   </div>
 
   <h2>14.4 แปลงสี ย่อขยาย และหมุน</h2>
@@ -533,6 +542,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

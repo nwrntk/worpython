@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 9 · Dictionary — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -96,6 +96,15 @@ print(85 in scores.values())    <span class="out"># True  → ถ้าจะเ
     <h4>ดูเป็นภาพ · dict ทำอะไรกับลิ้นชัก</h4>
     <p>โค้ดจาก 9.2 และ 9.3 · สังเกตว่าตอนอ่านค่า dict <strong>กระโดดไปที่ key ตรง ๆ</strong> ต่างจาก list ที่ต้องไล่หาทีละช่อง</p>
     <script type="application/json">{"name": "student", "code": ["student = {'name': 'ฟ้าใส', 'age': 20}", "x = student[\"name\"]", "student[\"gpa\"] = 3.45", "student[\"age\"] = 21", "e = student.get(\"email\", \"ไม่ระบุ\")", "ok = \"name\" in student", "del student[\"gpa\"]", "g = student.pop(\"age\")"], "steps": [{"line": 1, "kind": "init", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"]], "vars": {}, "msg": "dict เหมือนตู้ลิ้นชัก · <b>ป้ายหน้าลิ้นชักคือ key<\/b> ของข้างในคือ value"}, {"line": 2, "kind": "get", "key": "'name'", "msg": "อ่านค่าของ key <code>\"name\"<\/code> · dict <b>กระโดดไปหา key ได้เลย<\/b> ไม่ต้องไล่ทีละช่องแบบ list", "found": true, "target": "x", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"]], "vars": {"x": "'ฟ้าใส'"}}, {"line": 3, "kind": "new", "key": "'gpa'", "msg": "key <code>\"gpa\"<\/code> ยังไม่มี → <b>เพิ่มแถวใหม่<\/b>", "found": false, "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"], ["'gpa'", "3.45"]], "vars": {"x": "'ฟ้าใส'"}}, {"line": 4, "kind": "upd", "key": "'age'", "msg": "key <code>\"age\"<\/code> มีอยู่แล้ว → <b>แก้ค่าเดิม<\/b> · เขียนเหมือนการเพิ่มเป๊ะ ต่างกันแค่ key มีอยู่หรือยัง", "found": true, "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "21"], ["'gpa'", "3.45"]], "vars": {"x": "'ฟ้าใส'"}}, {"line": 5, "kind": "getdef", "key": "'email'", "msg": "หา key <code>\"email\"<\/code> ไม่เจอ → <code>.get()<\/code> คืนค่าสำรอง <code>\"ไม่ระบุ\"<\/code> แทนการพัง · ถ้าเขียน <code>student[\"email\"]<\/code> จะได้ KeyError", "found": false, "target": "e", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "21"], ["'gpa'", "3.45"]], "vars": {"x": "'ฟ้าใส'", "e": "'ไม่ระบุ'"}}, {"line": 6, "kind": "in", "key": "'name'", "msg": "<code>in<\/code> เช็กที่ <b>key<\/b> · มี <code>\"name\"<\/code> → True", "found": true, "target": "ok", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "21"], ["'gpa'", "3.45"]], "vars": {"x": "'ฟ้าใส'", "e": "'ไม่ระบุ'", "ok": "True"}}, {"line": 7, "kind": "del", "key": "'gpa'", "msg": "ลบทั้งแถว (ทั้ง key และ value)", "found": true, "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "21"]], "vars": {"x": "'ฟ้าใส'", "e": "'ไม่ระบุ'", "ok": "True"}}, {"line": 8, "kind": "pop", "key": "'age'", "msg": "<code>pop(\"age\")<\/code> ลบแถว แล้ว<b>คืนค่า<\/b> 21 ให้ <code>g<\/code>", "found": true, "target": "g", "rows": [["'name'", "'ฟ้าใส'"]], "vars": {"x": "'ฟ้าใส'", "e": "'ไม่ระบุ'", "ok": "True", "g": "21"}}]}</script>
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C11"><code>d = {"name": "ฟ้า"}</code> แล้วสั่ง <code>d["email"]</code> จะได้อะไร?</div>
+    <button class="choice" data-correct><span class="mono">KeyError</span></button>
+    <button class="choice">None</button>
+    <button class="choice">ข้อความว่าง</button>
+    <button class="choice">False</button>
+    <div class="explain">เรียก key ที่ไม่มีด้วยวงเล็บเหลี่ยมจะพัง · ใช้ <code>d.get("email")</code> ได้ <code>None</code> แทน หรือใส่ค่าสำรองก็ได้</div>
   </div>
 
   <h2>9.4 วน loop บน dict</h2>
@@ -465,6 +474,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

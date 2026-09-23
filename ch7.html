@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 7 · while loop — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -38,6 +38,15 @@ while i &lt;= 5:
     <code>i = 1</code><br><code>while i &lt;= 5:</code><br>
     <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code> ← <code>i</code> เป็น 1 ตลอด เงื่อนไขจริงตลอด<br>
     ถ้าเผลอรันไปแล้ว กด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C9"><code>n = 1</code> แล้ว <code>while n &lt;= 3:</code> ข้างในมีแค่ <code>print(n)</code> จะเกิดอะไร?</div>
+    <button class="choice" data-correct>พิมพ์ 1 ไม่หยุด เพราะไม่มีอะไรเปลี่ยนค่า n</button>
+    <button class="choice">พิมพ์ 1 2 3 แล้วจบ</button>
+    <button class="choice">ไม่พิมพ์อะไรเลย</button>
+    <button class="choice">เกิด error ทันที</button>
+    <div class="explain">ทุก while ต้องมีบรรทัดที่ทำให้เงื่อนไขเป็นเท็จได้ในที่สุด เช่น <code>n += 1</code> · ถ้าค้างให้กด <kbd>Ctrl</kbd>+<kbd>C</kbd></div>
   </div>
 
   <h2>7.2 for หรือ while เลือกยังไง</h2>
@@ -522,6 +531,6 @@ print(f"ใช้เวลา {year} ปี ได้เงิน {money:.2f} �
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

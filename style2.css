@@ -1278,3 +1278,40 @@ pre .out.err { color: #c25a52; }
 .fi-ctl button:disabled { opacity: .4; cursor: not-allowed; }
 .fi-msg { font-size: .82rem; color: var(--ink-soft); }
 @media print { .fi-ctl { display: none !important; } .fillin { break-inside: avoid; } }
+
+/* ===== จุดเช็กความเข้าใจกลางบท ===== */
+.quiz.check {
+  border-left: 3px solid var(--accent-hot);
+  background: var(--bg);
+  padding: .9rem 1.1rem 1rem;
+  margin: 1.6rem 0;
+}
+.quiz.check::before {
+  content: "เช็กความเข้าใจ";
+  display: block; font-family: var(--font-ui); font-size: .64rem; font-weight: 700;
+  letter-spacing: .12em; color: var(--accent-hot); margin-bottom: .4rem;
+}
+.quiz.check .q { font-size: .95rem; }
+.quiz.check .choice { font-size: .88rem; padding: .35rem .7rem; }
+@media print { .quiz.check { break-inside: avoid; } }
+
+/* ===== หน้าเทียบให้ชัด ===== */
+.cmp { margin: 2rem 0 2.4rem; }
+.cmp h3 { font-family: var(--font-mono); font-size: 1.05rem; margin: 0 0 .3rem; color: var(--accent-hot);
+  font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+.cmp-why { max-width: none; margin: 0 0 .7rem; font-size: .92rem; }
+.cmp-ch { font-family: var(--font-ui); font-size: .68rem; letter-spacing: .06em; color: var(--ink-soft);
+  border: 1px solid var(--rule-2); border-radius: 2px; padding: .05rem .4rem; margin-left: .4rem; white-space: nowrap; }
+.cmp-grid { display: grid; gap: 1rem; }
+.cmp-grid.cmp-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cmp-grid.cmp-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cmp-side { min-width: 0; }
+.cmp-lbl { font-family: var(--font-ui); font-size: .7rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--ink); background: var(--bg); border-left: 3px solid var(--accent); padding: .2rem .5rem; }
+.cmp-side pre { margin: .4rem 0; white-space: pre-wrap; word-break: break-word; }
+.cmp-toc { font-family: var(--font-mono); font-size: .78rem; line-height: 2;
+  font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+@media (max-width: 800px) { .cmp-grid.cmp-2, .cmp-grid.cmp-3 { grid-template-columns: minmax(0, 1fr); } }
+@media print { .cmp { break-inside: avoid; } }
+.cmp-viz > div > .listviz { margin-top: .4rem; }
+@media (min-width: 801px) { .cmp-viz .lv-grid { grid-template-columns: minmax(0, 1fr); } }

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 12 · Function — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923e">
+<link rel="stylesheet" href="style2.css?v=20260923f">
 </head>
 <body>
 
@@ -66,6 +66,15 @@ print(y * 10)           <span class="out"># 50 ← เอาไปใช้ต�
     return "ไม่ผ่าน"        <span class="out"># ทำงานเฉพาะตอนไม่เข้า if</span>
 
 print(check_pass(80))       <span class="out"># ผ่าน</span></pre>
+
+  <div class="quiz check">
+    <div class="q" data-n="C14">ฟังก์ชันที่ข้างในใช้ <code>print(a + b)</code> แทน <code>return a + b</code> · เมื่อเขียน <code>x = add(2, 3)</code> แล้ว <code>x</code> เป็นอะไร?</div>
+    <button class="choice" data-correct>None</button>
+    <button class="choice">5</button>
+    <button class="choice">"5"</button>
+    <button class="choice">เกิด error</button>
+    <div class="explain">เห็นเลข 5 บนจอจริง แต่นั่นคือการพิมพ์ · ฟังก์ชันที่ไม่มี <code>return</code> คืนค่า <code>None</code> เสมอ เอาไปคำนวณต่อไม่ได้</div>
+  </div>
 
   <h2>12.3 พารามิเตอร์หลายตัวและค่า default</h2>
 
@@ -137,6 +146,15 @@ print(count)        <span class="out"># 2</span></pre>
     <h4>ดูทีละบรรทัด · ตัวแปรในฟังก์ชันเกิดแล้วหายไป</h4>
     <p>กรอบ<b>สีม่วง</b>คือตัวแปรของฟังก์ชัน · เกิดตอนเรียกฟังก์ชัน และหายไปทันทีที่ return</p>
     <script type="application/json">{"code": ["def increase(n):", "    n = n + 1", "    return n", "", "count = 0", "count = increase(count)", "count = increase(count)", "print(count)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "0", "", "int"]]}], "out": ""}, {"ex": 6, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "0", "", "int"]]}, {"n": "increase()", "v": [["n", "0", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "0", "", "int"]]}, {"n": "increase()", "v": [["n", "1", "", "int"]]}], "out": ""}, {"ex": 3, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "0", "", "int"]]}, {"n": "increase()", "v": [["n", "1", "", "int"]]}], "out": "", "ret": ["increase", "1"]}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "1", "", "int"]]}], "out": ""}, {"ex": 7, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "1", "", "int"]]}, {"n": "increase()", "v": [["n", "1", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "1", "", "int"]]}, {"n": "increase()", "v": [["n", "2", "", "int"]]}], "out": ""}, {"ex": 3, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "1", "", "int"]]}, {"n": "increase()", "v": [["n", "2", "", "int"]]}], "out": "", "ret": ["increase", "2"]}, {"ex": 7, "nx": 8, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "2", "", "int"]]}], "out": ""}, {"ex": 8, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["count", "2", "", "int"]]}], "out": "2\n", "end": 1}], "notes": {"1": "<code>def<\/code> แค่<b>สร้าง<\/b>ฟังก์ชันเก็บไว้ ยังไม่ได้ทำงาน · ลูกศรข้ามไปบรรทัด 5 เลย", "2": "n ข้างในเป็นคนละตัวกับ count ข้างนอก · แก้ n ไม่กระทบ count", "6": "count ได้ค่าใหม่จากที่ฟังก์ชัน return กลับมา กรอบสีม่วงหายไปแล้ว", "7": "เรียกอีกครั้ง ได้กรอบสีม่วงชุดใหม่ n เริ่มจากค่า count ล่าสุด"}}</script>
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C15">ตัวแปร <code>n</code> ที่สร้างขึ้นข้างในฟังก์ชัน เรียกใช้ข้างนอกฟังก์ชันได้ไหม?</div>
+    <button class="choice" data-correct>ไม่ได้ · เกิด <span class="mono">NameError</span></button>
+    <button class="choice">ได้ ค่ายังอยู่</button>
+    <button class="choice">ได้ แต่เป็น None</button>
+    <button class="choice">ได้เฉพาะตัวเลข</button>
+    <div class="explain">ตัวแปรในฟังก์ชันเกิดตอนเรียกและหายไปตอนจบ · ถ้าอยากใช้ข้างนอกต้อง <code>return</code> ออกมา</div>
   </div>
 
   <h2>12.6 ระวัง: ส่ง list เข้าฟังก์ชัน</h2>
@@ -714,6 +732,6 @@ for s in sorted(counts):
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923e"></script>
+<script src="sidebar.js?v=20260923f"></script>
 </body>
 </html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เทียบให้ชัด — Python Lab</title>
+<link rel="stylesheet" href="style2.css?v=20260923f">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Reference</div>
+  <h1>เทียบให้ชัด</h1>
+  <p class="lead">คู่ที่สับสนกันบ่อยที่สุด วางคู่กันให้เห็นความต่างในบรรทัดเดียว ·
+  โค้ดทุกช่องรันจริงด้วย Python 3.13 ผลลัพธ์และ error ที่เห็นคือของจริง ·
+  หัวข้อที่มีเครื่องหมาย <b>▸</b> มีภาพเคลื่อนไหวให้กดดูทีละขั้น</p>
+
+  <table>
+    <tr><th>หมวด</th><th>หัวข้อ</th></tr>
+    <tr><td>พื้นฐาน</td><td class="cmp-toc"><a href="#c1">= กับ ==</a> <b>▸</b> · <a href="#c2">print กับ return</a> <b>▸</b> · <a href="#c3">/ กับ // กับ %</a> · <a href="#c4">ข้อความ + ตัวเลข</a> · <a href="#c5">input() ได้อะไรมา</a> <b>▸</b> · <a href="#c6">ค่าที่ถือว่าเป็นเท็จ</a></td></tr>
+    <tr><td>list และ tuple</td><td class="cmp-toc"><a href="#c7">append กับ extend</a> <b>▸</b> · <a href="#c8">sort() กับ sorted()</a> <b>▸</b> · <a href="#c9">remove กับ pop กับ del</a> <b>▸</b> · <a href="#c10">b = a กับ b = a[:]</a> <b>▸</b> · <a href="#c11">list กับ tuple</a> <b>▸</b> · <a href="#c12">range(5) กับ range(1, 5) กับ range(1, 10, 2)</a> <b>▸</b></td></tr>
+    <tr><td>dict และ set</td><td class="cmp-toc"><a href="#c13">d[k] กับ d.get(k)</a> <b>▸</b> · <a href="#c14">in ของ dict กับ ของ list</a> <b>▸</b> · <a href="#c15">[] กับ () กับ {} กับ set()</a> · <a href="#c16">list กับ set</a> <b>▸</b></td></tr>
+    <tr><td>string</td><td class="cmp-toc"><a href="#c17">s.upper() กับ s = s.upper()</a> <b>▸</b> · <a href="#c18">split กับ join</a> <b>▸</b> · <a href="#c19">"5" กับ 5</a></td></tr>
+    <tr><td>loop และเงื่อนไข</td><td class="cmp-toc"><a href="#c20">for กับ while</a> <b>▸</b> · <a href="#c21">break กับ continue กับ pass</a> <b>▸</b> · <a href="#c22">and กับ or</a> · <a href="#c23">== กับ is</a> <b>▸</b></td></tr>
+  </table>
+
+  <h2>พื้นฐาน</h2>
+  <div class="cmp" id="c1">
+    <h3>= กับ ==</h3>
+    <p class="cmp-why">หนึ่งอันคือ<b>ใส่ค่า</b> อีกอันคือ<b>ถาม</b>ว่าเท่ากันไหม · ใน <code>if</code> ต้องใช้ <code>==</code> เสมอ <span class="cmp-ch">บทที่ 1, 2, 3</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">= ใส่ค่า</div>
+        <pre>x = 5
+print(x)</pre>
+        <pre class="out-box">5</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">== ถามว่าเท่ากันไหม</div>
+        <pre>x = 5
+print(x == 5)
+print(x == 9)</pre>
+        <pre class="out-box">True
+False</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["x = 5", "if x == 5:", "    print(\"เท่ากับ 5\")", "if x == 9:", "    print(\"เท่ากับ 9\")"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "5", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "5", "", "int"]]}], "out": "", "cond": {"line": 2, "expr": "x == 5", "sub": "5 == 5", "val": true, "short": ""}}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "5", "", "int"]]}], "out": "เท่ากับ 5\n"}, {"ex": 4, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "5", "", "int"]]}], "out": "เท่ากับ 5\n", "end": 1, "cond": {"line": 4, "expr": "x == 9", "sub": "5 == 9", "val": false, "short": ""}}], "notes": {"2": "<code>==<\/code> ได้คำตอบจริง/เท็จ ดูป้ายท้ายบรรทัด", "4": "เท็จ → ข้ามบล็อกข้างในไปเลย"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c2">
+    <h3>print กับ return</h3>
+    <p class="cmp-why"><code>print</code> แค่แสดงบนจอ · <code>return</code> <b>ส่งค่ากลับ</b>ให้เอาไปใช้ต่อได้ <span class="cmp-ch">บทที่ 12</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ใช้ print</div>
+        <pre>def add(a, b):
+    print(a + b)
+
+x = add(2, 3)
+print("x =", x)
+print(x + 1)</pre>
+        <pre class="err">5
+x = None
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">ใช้ return</div>
+        <pre>def add(a, b):
+    return a + b
+
+x = add(2, 3)
+print("x =", x)
+print(x + 1)</pre>
+        <pre class="out-box">x = 5
+6</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["def show(a, b):", "    print(a + b)", "", "def give(a, b):", "    return a + b", "", "x = show(2, 3)", "y = give(2, 3)", "print(x, y)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 4, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 7, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": []}, {"n": "show()", "v": [["a", "2", "", "int"], ["b", "3", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": []}, {"n": "show()", "v": [["a", "2", "", "int"], ["b", "3", "", "int"]]}], "out": "5\n", "ret": ["show", "None"]}, {"ex": 7, "nx": 8, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "None", "", "None"]]}], "out": "5\n"}, {"ex": 8, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "None", "", "None"]]}, {"n": "give()", "v": [["a", "2", "", "int"], ["b", "3", "", "int"]]}], "out": "5\n"}, {"ex": 5, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "None", "", "None"]]}, {"n": "give()", "v": [["a", "2", "", "int"], ["b", "3", "", "int"]]}], "out": "5\n", "ret": ["give", "5"]}, {"ex": 8, "nx": 9, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "None", "", "None"], ["y", "5", "", "int"]]}], "out": "5\n"}, {"ex": 9, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["x", "None", "", "None"], ["y", "5", "", "int"]]}], "out": "5\nNone 5\n", "end": 1}], "notes": {"2": "print แสดงบนจอ แต่ไม่ได้ส่งค่ากลับ", "5": "return ส่งค่ากลับให้คนเรียก", "7": "show() คืน <b>None<\/b> · x จึงเป็น None", "8": "give() คืน 5 · y เป็น 5 เอาไปคำนวณต่อได้"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c3">
+    <h3>/ กับ // กับ %</h3>
+    <p class="cmp-why"><code>/</code> ได้ทศนิยมเสมอ · <code>//</code> ตัดเศษทิ้ง · <code>%</code> เอาเศษที่เหลือ <span class="cmp-ch">บทที่ 2</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ทั้งสามแบบ</div>
+        <pre>print(7 / 2)
+print(7 // 2)
+print(7 % 2)
+print(type(6 / 3))</pre>
+        <pre class="out-box">3.5
+3
+1
+&lt;class 'float'&gt;</pre>
+      </div>
+    </div>
+  </div>
+  <div class="cmp" id="c4">
+    <h3>ข้อความ + ตัวเลข</h3>
+    <p class="cmp-why">บวกข้ามชนิดไม่ได้ · ต้องแปลงชนิด หรือใช้ f-string <span class="cmp-ch">บทที่ 1, 2</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">บวกตรง ๆ</div>
+        <pre>age = 20
+print("อายุ " + age)</pre>
+        <pre class="err">TypeError: can only concatenate str (not "int") to str</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">แปลงก่อน หรือใช้ f-string</div>
+        <pre>age = 20
+print("อายุ " + str(age))
+print(f"อายุ {age}")</pre>
+        <pre class="out-box">อายุ 20
+อายุ 20</pre>
+      </div>
+    </div>
+  </div>
+  <div class="cmp" id="c5">
+    <h3>input() ได้อะไรมา</h3>
+    <p class="cmp-why"><code>input()</code> คืน<b>ข้อความ</b>เสมอ แม้ผู้ใช้จะพิมพ์ตัวเลข <span class="cmp-ch">บทที่ 1, 2</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ไม่แปลง</div>
+        <pre>age = "20"          # ค่าที่ได้จาก input()
+print(type(age))
+print(age + 1)</pre>
+        <pre class="err">&lt;class 'str'&gt;
+TypeError: can only concatenate str (not "int") to str</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">แปลงเป็น int</div>
+        <pre>age = int("20")     # int(input(...))
+print(type(age))
+print(age + 1)</pre>
+        <pre class="out-box">&lt;class 'int'&gt;
+21</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["age = \"20\"", "print(age + \"1\")", "age = int(age)", "print(age + 1)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["age", "'20'", "", "str"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["age", "'20'", "", "str"]]}], "out": "201\n"}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["age", "20", "", "int"]]}], "out": "201\n"}, {"ex": 4, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["age", "20", "", "int"]]}], "out": "201\n21\n", "end": 1}], "notes": {"1": "ค่าจาก input() เป็น <b>str<\/b> ดูป้ายชนิดข้อมูลด้านขวา", "3": "<code>int()<\/code> เปลี่ยนชนิดเป็น int"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c6">
+    <h3>ค่าที่ถือว่าเป็นเท็จ</h3>
+    <p class="cmp-why"><code>0</code> <code>""</code> <code>[]</code> <code>None</code> ถือเป็นเท็จหมด ส่วน <code>"0"</code> กับ <code>[0]</code> เป็นจริง <span class="cmp-ch">บทที่ 2</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">เช็กทีละค่า</div>
+        <pre>for v in [0, "", [], None, "0", [0], " "]:
+    print(repr(v), "→", bool(v))</pre>
+        <pre class="out-box">0 → False
+'' → False
+[] → False
+None → False
+'0' → True
+[0] → True
+' ' → True</pre>
+      </div>
+    </div>
+  </div>
+  <h2>list และ tuple</h2>
+  <div class="cmp" id="c7">
+    <h3>append กับ extend</h3>
+    <p class="cmp-why"><code>append</code> ใส่ของ<b>ทั้งก้อน</b>เป็น 1 ช่อง · <code>extend</code> แกะสมาชิกใส่ทีละตัว <span class="cmp-ch">บทที่ 4</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">append</div>
+        <pre>a = [1, 2]
+a.append([7, 8])
+print(a)
+print(len(a))</pre>
+        <pre class="out-box">[1, 2, [7, 8]]
+3</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">extend</div>
+        <pre>a = [1, 2]
+a.extend([7, 8])
+print(a)
+print(len(a))</pre>
+        <pre class="out-box">[1, 2, 7, 8]
+4</pre>
+      </div>
+    </div>
+    <div class="cmp-grid cmp-2 cmp-viz">
+    <div>  <div class="listviz">
+    <h4>ดูเป็นภาพ · ฝั่ง append</h4>
+    <p>กด "ถัดไป" ดูว่าได้กี่กล่อง</p>
+    <script type="application/json">{"name": "a", "code": ["a = [1, 2]", "a.append([7, 8])"], "steps": [{"line": 1, "items": [[0, 1], [1, 2]], "vars": {}, "kind": "init", "msg": "เริ่มจาก 2 กล่องเท่ากันทั้งสองฝั่ง"}, {"line": 2, "kind": "append", "msg": "<code>append<\/code> ใส่ของ<b>ทั้งก้อน<\/b>เป็นกล่องเดียว · a ยาวขึ้น 1 ช่อง ข้างในกล่องเป็น list", "items": [[0, 1], [1, 2], [2, [7, 8]]], "vars": {}}]}</script>
+  </div>
+
+    </div>
+    <div>  <div class="listviz">
+    <h4>ดูเป็นภาพ · ฝั่ง extend</h4>
+    <p>กด "ถัดไป" ดูว่าได้กี่กล่อง</p>
+    <script type="application/json">{"name": "a", "code": ["a = [1, 2]", "a.extend([7, 8])"], "steps": [{"line": 1, "items": [[0, 1], [1, 2]], "vars": {}, "kind": "init", "msg": "เริ่มจาก 2 กล่องเท่ากันทั้งสองฝั่ง"}, {"line": 2, "kind": "extend", "msg": "<code>extend<\/code> <b>แกะสมาชิก<\/b>ใส่ทีละตัว · ได้เพิ่ม 2 กล่อง", "items": [[0, 1], [1, 2], [2, 7], [3, 8]], "vars": {}}]}</script>
+  </div>
+
+    </div>
+    </div>
+  </div>
+  <div class="cmp" id="c8">
+    <h3>sort() กับ sorted()</h3>
+    <p class="cmp-why"><code>sort()</code> เรียง<b>ของเดิม</b>และคืน None · <code>sorted()</code> สร้าง<b>list ใหม่</b> ของเดิมไม่เปลี่ยน <span class="cmp-ch">บทที่ 4</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">a.sort()</div>
+        <pre>a = [3, 1, 2]
+result = a.sort()
+print(a)
+print(result)</pre>
+        <pre class="out-box">[1, 2, 3]
+None</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">sorted(a)</div>
+        <pre>a = [3, 1, 2]
+result = sorted(a)
+print(a)
+print(result)</pre>
+        <pre class="out-box">[3, 1, 2]
+[1, 2, 3]</pre>
+      </div>
+    </div>
+  <div class="stepper ref">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["a = [3, 1, 2]", "r1 = a.sort()", "b = [3, 1, 2]", "r2 = sorted(b)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[3, 1, 2]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["r1", "None", "", "None"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["r1", "None", "", "None"], ["b", "[3, 1, 2]", "②", "list"]]}], "out": ""}, {"ex": 4, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["r1", "None", "", "None"], ["b", "[3, 1, 2]", "②", "list"], ["r2", "[1, 2, 3]", "③", "list"]]}], "out": "", "end": 1}], "notes": {"2": "<code>sort()<\/code> สลับกล่องใน<b>ก้อนเดิม<\/b> (ก้อน ①) · คืนค่า None ให้ r1", "4": "<code>sorted()<\/code> ไม่แตะก้อนเดิม · สร้าง<b>ก้อนใหม่<\/b>ที่เรียงแล้ว แล้วให้ r2 ชี้ไปก้อนนั้น"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c9">
+    <h3>remove กับ pop กับ del</h3>
+    <p class="cmp-why"><code>remove</code> ลบตาม<b>ค่า</b> · <code>pop</code> ลบตาม<b>ตำแหน่ง</b>แล้วคืนค่านั้นมา · <code>del</code> ลบตามตำแหน่งเฉย ๆ <span class="cmp-ch">บทที่ 4</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ทั้งสามแบบ</div>
+        <pre>a = [10, 20, 30, 40]
+a.remove(20)
+print(a)
+
+x = a.pop(0)
+print(x, a)
+
+del a[0]
+print(a)</pre>
+        <pre class="out-box">[10, 30, 40]
+10 [30, 40]
+[40]</pre>
+      </div>
+    </div>
+  <div class="listviz">
+    <h4>ดูเป็นภาพ · กล่องของ list ขยับยังไง</h4>
+    <p>กด "ถัดไป" ทีละคำสั่ง ดูว่าได้กี่กล่อง</p>
+    <script type="application/json">{"name": "a", "code": ["a = [10, 20, 30, 40]", "a.remove(20)", "x = a.pop(0)", "del a[0]"], "steps": [{"line": 1, "items": [[0, 10], [1, 20], [2, 30], [3, 40]], "vars": {}, "kind": "init", "msg": "เริ่มจาก 4 กล่อง · เลขใต้กล่องคือ index"}, {"line": 2, "kind": "remove", "msg": "<code>remove(20)<\/code> ลบตาม<b>ค่า<\/b> · ต้อง<b>ไล่หาจากซ้าย<\/b>ทีละช่องจนเจอ 20 แล้วค่อยลบ", "scan": [0, 1], "hit": 1, "items": [[0, 10], [2, 30], [3, 40]], "vars": {}}, {"line": 3, "kind": "pop", "msg": "<code>pop(0)<\/code> ลบตาม<b>ตำแหน่ง<\/b> · กระโดดไปช่อง 0 ได้เลย แล้ว<b>คืนค่า<\/b> 10 ให้ x", "hit": 0, "ret": 10, "target": "x", "items": [[2, 30], [3, 40]], "vars": {"x": "10"}}, {"line": 4, "kind": "pop", "msg": "<code>del a[0]<\/code> ลบตามตำแหน่งเหมือน pop แต่<b>ไม่คืนค่า<\/b> · ใช้เมื่อไม่ต้องการค่านั้นแล้ว", "hit": 0, "ret": 30, "items": [[3, 40]], "vars": {"x": "10"}}]}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c10">
+    <h3>b = a กับ b = a[:]</h3>
+    <p class="cmp-why">อันแรกคือ<b>ป้ายชื่อที่สอง</b>ของก้อนเดิม · อันหลังคือ<b>ก้อนใหม่</b> <span class="cmp-ch">บทที่ 4, 12</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">b = a</div>
+        <pre>a = [1, 2]
+b = a
+b.append(3)
+print("a =", a)
+print("b =", b)</pre>
+        <pre class="out-box">a = [1, 2, 3]
+b = [1, 2, 3]</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">b = a[:]</div>
+        <pre>a = [1, 2]
+b = a[:]
+b.append(3)
+print("a =", a)
+print("b =", b)</pre>
+        <pre class="out-box">a = [1, 2]
+b = [1, 2, 3]</pre>
+      </div>
+    </div>
+  <div class="stepper ref">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["a = [1, 2]", "b = a", "b.append(3)", "c = a[:]", "c.append(9)", "print(a, b, c)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "①", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"]]}], "out": ""}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"], ["c", "[1, 2, 3]", "②", "list"]]}], "out": ""}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"], ["c", "[1, 2, 3, 9]", "②", "list"]]}], "out": ""}, {"ex": 6, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"], ["c", "[1, 2, 3, 9]", "②", "list"]]}], "out": "[1, 2, 3] [1, 2, 3] [1, 2, 3, 9]\n", "end": 1}], "notes": {"2": "ลูกศรสองเส้นชี้ก้อนเดียวกัน", "3": "แก้ผ่าน b แล้ว a เปลี่ยนตาม", "4": "<code>a[:]<\/code> ได้ก้อนใหม่ ลูกศรชี้คนละก้อน", "5": "แก้ c แล้ว a ไม่เปลี่ยน"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c11">
+    <h3>list กับ tuple</h3>
+    <p class="cmp-why">list แก้ได้ · tuple แก้ไม่ได้ จึงปลอดภัยกว่าเมื่อไม่ควรเปลี่ยน <span class="cmp-ch">บทที่ 4, 5</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">list</div>
+        <pre>a = [1, 2]
+a[0] = 9
+print(a)</pre>
+        <pre class="out-box">[9, 2]</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">tuple</div>
+        <pre>t = (1, 2)
+t[0] = 9</pre>
+        <pre class="err">TypeError: 'tuple' object does not support item assignment</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["a = [1, 2]", "a[0] = 9", "print(a)", "t = (1, 2)", "t[0] = 9"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[9, 2]", "①", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[9, 2]", "①", "list"]]}], "out": "[9, 2]\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[9, 2]", "①", "list"], ["t", "(1, 2)", "", "tuple"]]}], "out": "[9, 2]\n"}, {"ex": 5, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[9, 2]", "①", "list"], ["t", "(1, 2)", "", "tuple"]]}], "out": "[9, 2]\n", "exc": "TypeError: 'tuple' object does not support item assignment", "end": 1}], "notes": {"2": "list แก้ช่องได้ ค่าเปลี่ยนในก้อนเดิม", "5": "tuple แก้ไม่ได้ → โปรแกรมพังทันที ดูบรรทัดสีแดง"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c12">
+    <h3>range(5) กับ range(1, 5) กับ range(1, 10, 2)</h3>
+    <p class="cmp-why">ไม่รวมเลขท้ายเสมอ · ตัวที่สามคือก้าวละเท่าไร <span class="cmp-ch">บทที่ 6</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">สามแบบ</div>
+        <pre>print(list(range(5)))
+print(list(range(1, 5)))
+print(list(range(1, 10, 2)))
+print(list(range(5, 0, -1)))</pre>
+        <pre class="out-box">[0, 1, 2, 3, 4]
+[1, 2, 3, 4]
+[1, 3, 5, 7, 9]
+[5, 4, 3, 2, 1]</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["for i in range(1, 5):", "    print(i)", "print(\"จบ\")"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "1", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "1", "", "int"]]}], "out": "1\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"]]}], "out": "1\n"}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"]]}], "out": "1\n2\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "3", "", "int"]]}], "out": "1\n2\n"}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "3", "", "int"]]}], "out": "1\n2\n3\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "4", "", "int"]]}], "out": "1\n2\n3\n"}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "4", "", "int"]]}], "out": "1\n2\n3\n4\n"}, {"ex": 1, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "4", "", "int"]]}], "out": "1\n2\n3\n4\n"}, {"ex": 3, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "4", "", "int"]]}], "out": "1\n2\n3\n4\nจบ\n", "end": 1}], "notes": {"1": "เริ่มที่ 1 · ทุกครั้งที่วนใหม่ i เปลี่ยนค่า", "2": "พิมพ์ค่าปัจจุบันของ i"}}</script>
+  </div>
+
+  </div>
+  <h2>dict และ set</h2>
+  <div class="cmp" id="c13">
+    <h3>d[k] กับ d.get(k)</h3>
+    <p class="cmp-why">วงเล็บเหลี่ยม<b>พัง</b>ถ้าไม่มี key · <code>get</code> คืน None หรือค่าสำรองที่เราตั้ง <span class="cmp-ch">บทที่ 9</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">d["email"]</div>
+        <pre>d = {"name": "ฟ้า"}
+print(d["email"])</pre>
+        <pre class="err">KeyError: 'email'</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">d.get("email")</div>
+        <pre>d = {"name": "ฟ้า"}
+print(d.get("email"))
+print(d.get("email", "ไม่ระบุ"))</pre>
+        <pre class="out-box">None
+ไม่ระบุ</pre>
+      </div>
+    </div>
+  <div class="dictviz">
+    <h4>ดูเป็นภาพ · ลิ้นชักของ dict</h4>
+    <p>แถวเขียวคือ key ที่หาเจอ · แถวเส้นประแดงคือ key ที่ไม่มี</p>
+    <script type="application/json">{"name": "student", "code": ["student = {'name': 'ฟ้าใส', 'age': 20}", "x = student[\"name\"]", "e = student.get(\"email\", \"ไม่ระบุ\")"], "steps": [{"line": 1, "kind": "init", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"]], "vars": {}, "msg": "ป้ายหน้าลิ้นชักคือ key"}, {"line": 2, "kind": "get", "key": "'name'", "msg": "มี key นี้ → ได้ค่ามาปกติ", "found": true, "target": "x", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"]], "vars": {"x": "'ฟ้าใส'"}}, {"line": 3, "kind": "getdef", "key": "'email'", "msg": "ไม่มี key นี้ · <code>get<\/code> คืนค่าสำรองแทนการพัง · ถ้าเขียน <code>student[\"email\"]<\/code> จะได้ KeyError", "found": false, "target": "e", "rows": [["'name'", "'ฟ้าใส'"], ["'age'", "20"]], "vars": {"x": "'ฟ้าใส'", "e": "'ไม่ระบุ'"}}]}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c14">
+    <h3>in ของ dict กับ ของ list</h3>
+    <p class="cmp-why"><code>in</code> ของ dict เช็กที่ <b>key</b> ไม่ใช่ value <span class="cmp-ch">บทที่ 4, 9</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">dict</div>
+        <pre>d = {"ฟ้า": 85}
+print("ฟ้า" in d)
+print(85 in d)
+print(85 in d.values())</pre>
+        <pre class="out-box">True
+False
+True</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">list</div>
+        <pre>a = ["ฟ้า", 85]
+print("ฟ้า" in a)
+print(85 in a)</pre>
+        <pre class="out-box">True
+True</pre>
+      </div>
+    </div>
+  <div class="dictviz">
+    <h4>ดูเป็นภาพ · ลิ้นชักของ dict</h4>
+    <p>แถวเขียวคือ key ที่หาเจอ · แถวเส้นประแดงคือ key ที่ไม่มี</p>
+    <script type="application/json">{"name": "scores", "code": ["scores = {'ฟ้า': 85, 'นล': 92}", "ok = \"ฟ้า\" in scores", "no = 85 in scores"], "steps": [{"line": 1, "kind": "init", "rows": [["'ฟ้า'", "85"], ["'นล'", "92"]], "vars": {}, "msg": "ป้ายหน้าลิ้นชักคือ key ส่วนของข้างในคือ value"}, {"line": 2, "kind": "in", "key": "'ฟ้า'", "msg": "<code>in<\/code> ของ dict เช็กที่ <b>key<\/b> → เจอ", "found": true, "target": "ok", "rows": [["'ฟ้า'", "85"], ["'นล'", "92"]], "vars": {"ok": "True"}}, {"line": 3, "kind": "in", "key": "85", "msg": "85 เป็น <b>value<\/b> ไม่ใช่ key → ได้ False · ถ้าอยากเช็กค่าต้องเขียน <code>85 in scores.values()<\/code>", "found": false, "target": "no", "rows": [["'ฟ้า'", "85"], ["'นล'", "92"]], "vars": {"ok": "True", "no": "False"}}]}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c15">
+    <h3>[] กับ () กับ {} กับ set()</h3>
+    <p class="cmp-why">วงเล็บบอกชนิดข้อมูล · <code>{}</code> เปล่า ๆ คือ dict ว่าง ไม่ใช่ set ว่าง <span class="cmp-ch">บทที่ 4, 5, 9, 10</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ดูชนิดของแต่ละวงเล็บ</div>
+        <pre>print(type([1, 2]))
+print(type((1, 2)))
+print(type({"a": 1}))
+print(type({1, 2}))
+print(type({}))
+print(type(set()))</pre>
+        <pre class="out-box">&lt;class 'list'&gt;
+&lt;class 'tuple'&gt;
+&lt;class 'dict'&gt;
+&lt;class 'set'&gt;
+&lt;class 'dict'&gt;
+&lt;class 'set'&gt;</pre>
+      </div>
+    </div>
+  </div>
+  <div class="cmp" id="c16">
+    <h3>list กับ set</h3>
+    <p class="cmp-why">list เก็บค่าซ้ำได้และเรียงตามลำดับ · set ตัดค่าซ้ำและไม่มีลำดับ <span class="cmp-ch">บทที่ 4, 10</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">list</div>
+        <pre>a = [3, 1, 3, 2]
+print(a)
+print(len(a))
+print(a[0])</pre>
+        <pre class="out-box">[3, 1, 3, 2]
+4
+3</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">set</div>
+        <pre>a = {3, 1, 3, 2}
+print(sorted(a))
+print(len(a))
+print(3 in a)</pre>
+        <pre class="out-box">[1, 2, 3]
+3
+True</pre>
+      </div>
+    </div>
+  <div class="setviz">
+    <h4>ดูเป็นภาพ · set ตัดค่าซ้ำ</h4>
+    <p>ส่งค่าจาก list เข้า set ทีละตัว ตัวที่ซ้ำจะถูกปฏิเสธ</p>
+    <script type="application/json">{"nums": [3, 1, 3, 2], "steps": [{"i": -1, "members": [], "msg": "list มี 4 ตัว มีค่าซ้ำปนอยู่ · กด \"ถัดไป\" ส่งเข้า set ทีละตัว"}, {"i": 0, "v": 3, "dup": false, "members": [3], "msg": "<b>3<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 1, "v": 1, "dup": false, "members": [3, 1], "msg": "<b>1<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 2, "v": 3, "dup": true, "members": [3, 1], "msg": "<b>3<\/b> มีอยู่ใน set แล้ว → <b>ไม่เพิ่ม<\/b> (set เก็บค่าละตัวเดียว)"}, {"i": 3, "v": 2, "dup": false, "members": [3, 1, 2], "msg": "<b>2<\/b> ยังไม่มี → เพิ่มเข้า set"}, {"i": 4, "members": [3, 1, 2], "end": 1, "msg": "ครบแล้ว · list 4 ตัว เหลือค่าไม่ซ้ำ <b>3<\/b> ตัว = <code>len(set(nums))<\/code>"}]}</script>
+  </div>
+
+  </div>
+  <h2>string</h2>
+  <div class="cmp" id="c17">
+    <h3>s.upper() กับ s = s.upper()</h3>
+    <p class="cmp-why">string แก้ไม่ได้ · เมธอดสร้างข้อความ<b>ใหม่</b> ต้องรับค่ากลับมาเก็บ <span class="cmp-ch">บทที่ 11</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">ไม่รับค่ากลับ</div>
+        <pre>s = "abc"
+s.upper()
+print(s)</pre>
+        <pre class="out-box">abc</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">รับค่ากลับ</div>
+        <pre>s = "abc"
+s = s.upper()
+print(s)</pre>
+        <pre class="out-box">ABC</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["s = \"abc\"", "s.upper()", "print(s)", "s = s.upper()", "print(s)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["s", "'abc'", "", "str"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["s", "'abc'", "", "str"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["s", "'abc'", "", "str"]]}], "out": "abc\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["s", "'ABC'", "", "str"]]}], "out": "abc\n"}, {"ex": 5, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["s", "'ABC'", "", "str"]]}], "out": "abc\nABC\n", "end": 1}], "notes": {"2": "สร้างข้อความใหม่แล้ว<b>ทิ้ง<\/b> · s ไม่เปลี่ยน", "4": "รับค่ากลับมาเก็บ s จึงเปลี่ยน"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c18">
+    <h3>split กับ join</h3>
+    <p class="cmp-why">คู่ตรงข้ามกัน: ตัดข้อความเป็น list และต่อ list กลับเป็นข้อความ <span class="cmp-ch">บทที่ 11</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">split → list</div>
+        <pre>words = "ฟ้า,นล,อาร์ม".split(",")
+print(words)
+print(type(words))</pre>
+        <pre class="out-box">['ฟ้า', 'นล', 'อาร์ม']
+&lt;class 'list'&gt;</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">join → string</div>
+        <pre>words = ["ฟ้า", "นล", "อาร์ม"]
+text = ", ".join(words)
+print(text)
+print(type(text))</pre>
+        <pre class="out-box">ฟ้า, นล, อาร์ม
+&lt;class 'str'&gt;</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["text = \"ฟ้า,นล\"", "words = text.split(\",\")", "print(words)", "back = \"-\".join(words)", "print(back)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["text", "'ฟ้า,นล'", "", "str"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["text", "'ฟ้า,นล'", "", "str"], ["words", "['ฟ้า', 'นล']", "①", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["text", "'ฟ้า,นล'", "", "str"], ["words", "['ฟ้า', 'นล']", "①", "list"]]}], "out": "['ฟ้า', 'นล']\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["text", "'ฟ้า,นล'", "", "str"], ["words", "['ฟ้า', 'นล']", "①", "list"], ["back", "'ฟ้า-นล'", "", "str"]]}], "out": "['ฟ้า', 'นล']\n"}, {"ex": 5, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["text", "'ฟ้า,นล'", "", "str"], ["words", "['ฟ้า', 'นล']", "①", "list"], ["back", "'ฟ้า-นล'", "", "str"]]}], "out": "['ฟ้า', 'นล']\nฟ้า-นล\n", "end": 1}], "notes": {"2": "ตัดข้อความเป็น <b>list<\/b> ดูป้ายชนิดข้อมูล", "4": "ต่อ list กลับเป็น <b>str<\/b>"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c19">
+    <h3>"5" กับ 5</h3>
+    <p class="cmp-why">หน้าตาเหมือนกันบนจอ แต่คนละชนิด ทำอะไรได้ไม่เหมือนกัน <span class="cmp-ch">บทที่ 2, 11</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">เทียบและคำนวณ</div>
+        <pre>print("5" == 5)
+print("5" * 3)
+print(5 * 3)
+print(int("5") == 5)</pre>
+        <pre class="out-box">False
+555
+15
+True</pre>
+      </div>
+    </div>
+  </div>
+  <h2>loop และเงื่อนไข</h2>
+  <div class="cmp" id="c20">
+    <h3>for กับ while</h3>
+    <p class="cmp-why">รู้จำนวนรอบล่วงหน้าใช้ <code>for</code> · ไม่รู้ว่าต้องวนกี่รอบใช้ <code>while</code> <span class="cmp-ch">บทที่ 6, 7</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">for: รู้จำนวนรอบ</div>
+        <pre>for i in range(3):
+    print("รอบ", i)</pre>
+        <pre class="out-box">รอบ 0
+รอบ 1
+รอบ 2</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">while: วนจนเงื่อนไขเป็นเท็จ</div>
+        <pre>n = 3
+while n &gt; 0:
+    print("เหลือ", n)
+    n -= 1</pre>
+        <pre class="out-box">เหลือ 3
+เหลือ 2
+เหลือ 1</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["for i in range(3):", "    print(\"for\", i)", "", "n = 3", "while n > 0:", "    print(\"while\", n)", "    n -= 1"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "0", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "0", "", "int"]]}], "out": "for 0\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "1", "", "int"]]}], "out": "for 0\n"}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "1", "", "int"]]}], "out": "for 0\nfor 1\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"]]}], "out": "for 0\nfor 1\n"}, {"ex": 2, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\n"}, {"ex": 1, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "3", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "3", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\n", "cond": {"line": 5, "expr": "n > 0", "sub": "3 > 0", "val": true, "short": ""}}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "3", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\n"}, {"ex": 7, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "2", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "2", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\n", "cond": {"line": 5, "expr": "n > 0", "sub": "2 > 0", "val": true, "short": ""}}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "2", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\n"}, {"ex": 7, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "1", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "1", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\n", "cond": {"line": 5, "expr": "n > 0", "sub": "1 > 0", "val": true, "short": ""}}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "1", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\nwhile 1\n"}, {"ex": 7, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "0", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\nwhile 1\n"}, {"ex": 5, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["i", "2", "", "int"], ["n", "0", "", "int"]]}], "out": "for 0\nfor 1\nfor 2\nwhile 3\nwhile 2\nwhile 1\n", "end": 1, "cond": {"line": 5, "expr": "n > 0", "sub": "0 > 0", "val": false, "short": ""}}], "notes": {"1": "<code>for<\/code> รู้อยู่แล้วว่าจะวน 3 รอบ", "5": "<code>while<\/code> ถามเงื่อนไขทุกรอบ ดูป้ายจริง/เท็จ", "7": "บรรทัดนี้แหละที่ทำให้เงื่อนไขเป็นเท็จได้ในที่สุด"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c21">
+    <h3>break กับ continue กับ pass</h3>
+    <p class="cmp-why"><code>break</code> ออกจาก loop · <code>continue</code> ข้ามรอบนี้ · <code>pass</code> ไม่ทำอะไรเลย <span class="cmp-ch">บทที่ 6, 7</span></p>
+    <div class="cmp-grid cmp-3">
+      <div class="cmp-side">
+        <div class="cmp-lbl">break</div>
+        <pre>for n in [1, 2, 3, 4]:
+    if n == 3:
+        break
+    print(n)</pre>
+        <pre class="out-box">1
+2</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">continue</div>
+        <pre>for n in [1, 2, 3, 4]:
+    if n == 3:
+        continue
+    print(n)</pre>
+        <pre class="out-box">1
+2
+4</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">pass</div>
+        <pre>for n in [1, 2, 3, 4]:
+    if n == 3:
+        pass
+    print(n)</pre>
+        <pre class="out-box">1
+2
+3
+4</pre>
+      </div>
+    </div>
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["for n in [1, 2, 3, 4]:", "    if n == 3:", "        break", "    print(n)", "", "for n in [1, 2, 3, 4]:", "    if n == 3:", "        continue", "    print(n)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": "", "cond": {"line": 2, "expr": "n == 3", "sub": "1 == 3", "val": false, "short": ""}}, {"ex": 4, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": "1\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n"}, {"ex": 2, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n", "cond": {"line": 2, "expr": "n == 3", "sub": "2 == 3", "val": false, "short": ""}}, {"ex": 4, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n2\n"}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n"}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n", "cond": {"line": 2, "expr": "n == 3", "sub": "3 == 3", "val": true, "short": ""}}, {"ex": 3, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": "1\n2\n"}, {"ex": 7, "nx": 9, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": "1\n2\n", "cond": {"line": 7, "expr": "n == 3", "sub": "1 == 3", "val": false, "short": ""}}, {"ex": 9, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "1", "", "int"]]}], "out": "1\n2\n1\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n2\n1\n"}, {"ex": 7, "nx": 9, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n2\n1\n", "cond": {"line": 7, "expr": "n == 3", "sub": "2 == 3", "val": false, "short": ""}}, {"ex": 9, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "2", "", "int"]]}], "out": "1\n2\n1\n2\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n1\n2\n"}, {"ex": 7, "nx": 8, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n1\n2\n", "cond": {"line": 7, "expr": "n == 3", "sub": "3 == 3", "val": true, "short": ""}}, {"ex": 8, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "3", "", "int"]]}], "out": "1\n2\n1\n2\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "4", "", "int"]]}], "out": "1\n2\n1\n2\n"}, {"ex": 7, "nx": 9, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "4", "", "int"]]}], "out": "1\n2\n1\n2\n", "cond": {"line": 7, "expr": "n == 3", "sub": "4 == 3", "val": false, "short": ""}}, {"ex": 9, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "4", "", "int"]]}], "out": "1\n2\n1\n2\n4\n"}, {"ex": 6, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["n", "4", "", "int"]]}], "out": "1\n2\n1\n2\n4\n", "end": 1}], "notes": {"3": "<b>break<\/b> ออกจาก loop ทันที ไม่วนต่อ", "8": "<b>continue<\/b> ข้ามเฉพาะรอบนี้ แล้ววนต่อ"}}</script>
+  </div>
+
+  </div>
+  <div class="cmp" id="c22">
+    <h3>and กับ or</h3>
+    <p class="cmp-why"><code>and</code> ต้องจริง<b>ทั้งคู่</b> · <code>or</code> จริง<b>ข้างเดียว</b>ก็พอ <span class="cmp-ch">บทที่ 2, 3</span></p>
+    <div class="cmp-grid cmp-1">
+      <div class="cmp-side">
+        <div class="cmp-lbl">เทียบทุกกรณี</div>
+        <pre>for a in [True, False]:
+    for b in [True, False]:
+        print(a, b, "→ and:", a and b, "| or:", a or b)</pre>
+        <pre class="out-box">True True → and: True | or: True
+True False → and: False | or: True
+False True → and: False | or: True
+False False → and: False | or: False</pre>
+      </div>
+    </div>
+  </div>
+  <div class="cmp" id="c23">
+    <h3>== กับ is</h3>
+    <p class="cmp-why"><code>==</code> ถามว่า<b>ค่า</b>เท่ากันไหม · <code>is</code> ถามว่าเป็น<b>ก้อนเดียวกัน</b>ไหม · เทียบค่าให้ใช้ <code>==</code> เสมอ <span class="cmp-ch">บทที่ 8</span></p>
+    <div class="cmp-grid cmp-2">
+      <div class="cmp-side">
+        <div class="cmp-lbl">list สองก้อนที่ค่าเท่ากัน</div>
+        <pre>a = [1, 2]
+b = [1, 2]
+print(a == b)
+print(a is b)
+c = a
+print(a is c)</pre>
+        <pre class="out-box">True
+False
+True</pre>
+      </div>
+      <div class="cmp-side">
+        <div class="cmp-lbl">ใช้ is กับ None</div>
+        <pre>x = None
+print(x is None)
+print(x == None)   # ได้ผลเหมือนกัน แต่ไม่นิยมเขียนแบบนี้</pre>
+        <pre class="out-box">True
+True</pre>
+      </div>
+    </div>
+  <div class="stepper ref">
+    <h4>ดูทีละบรรทัด · เทียบให้เห็นทีละบรรทัด</h4>
+    <p>กด "ถัดไป" ทีละขั้น ดูตัวแปรและผลลัพธ์ทางขวา</p>
+    <script type="application/json">{"code": ["a = [1, 2]", "b = [1, 2]", "c = a", "print(a == b)", "print(a is b)", "print(a is c)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "②", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "②", "list"], ["c", "[1, 2]", "①", "list"]]}], "out": ""}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "②", "list"], ["c", "[1, 2]", "①", "list"]]}], "out": "True\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "②", "list"], ["c", "[1, 2]", "①", "list"]]}], "out": "True\nFalse\n"}, {"ex": 6, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2]", "①", "list"], ["b", "[1, 2]", "②", "list"], ["c", "[1, 2]", "①", "list"]]}], "out": "True\nFalse\nTrue\n", "end": 1}], "notes": {"2": "b เป็นคนละก้อนกับ a ดูลูกศร", "3": "c ชี้ก้อนเดียวกับ a", "4": "ค่าเท่ากัน → <b>True<\/b>", "5": "คนละก้อน → <b>False<\/b>", "6": "ก้อนเดียวกัน → <b>True<\/b>"}}</script>
+  </div>
+
+  </div>
+</main>
+
+<script src="sidebar.js?v=20260923f"></script>
+</body>
+</html>
