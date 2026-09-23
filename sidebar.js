@@ -899,12 +899,20 @@ function initFillIn() {
   for (const box of document.querySelectorAll('.fillin')) {
     const { code, blanks, out } = JSON.parse(box.querySelector('script').textContent);
     let n = 0;
-    const html = code.map(line => vzEsc(line).replace(/@(\d+)@/g, (_, k) => {
-      n++;
-      const b = blanks[k];
-      return `<input class="fi-in" size="${Math.max(4, b.a[0].length + 1)}" spellcheck="false" autocomplete="off"
-        data-k="${k}" aria-label="ช่องเติมที่ ${k}"${b.hint ? ` title="${vzEsc(b.hint)}" placeholder="${vzEsc(b.hint)}"` : ''}>`;
-    })).join('\n');
+    // คำใบ้วางเป็นคอมเมนต์ท้ายบรรทัด ไม่ใส่ในช่อง เพราะช่องแคบจะตัดข้อความจนอ่านไม่จบ
+    const html = code.map(line => {
+      const hints = [];
+      const body = vzEsc(line).replace(/@(\d+)@/g, (_, k) => {
+        n++;
+        const b = blanks[k];
+        if (b.hint) hints.push(b.hint);
+        return `<input class="fi-in" size="${Math.max(6, b.a[0].length + 2)}" spellcheck="false"
+          autocomplete="off" data-k="${k}" aria-label="ช่องเติมที่ ${k}${b.hint ? ' · ' + vzEsc(b.hint) : ''}">`;
+      });
+      if (!hints.length) return body;
+      const label = hints.length > 1 ? hints.map((h, i) => `ช่อง ${i + 1}: ${h}`).join(' · ') : hints[0];
+      return `${body}   <span class="fi-hint"># ${vzEsc(label)}</span>`;
+    }).join('\n');
     box.insertAdjacentHTML('beforeend', `
       <pre class="fi-code">${html}</pre>
       ${out ? `<div class="fi-want"><b>ต้องได้ผลลัพธ์</b><pre class="out-box">${vzEsc(out)}</pre></div>` : ''}
