@@ -132,7 +132,7 @@ function buildPager() {
 
   const copy = document.createElement('div');
   copy.className = 'copyright';
-  copy.innerHTML = '&copy; K. Woranidtha 2026';
+  copy.innerHTML = '&copy; 2026 ดร.วรนิษฐา กรุงแสนเมือง · ภาควิชาวิศวกรรมระบบชีวภาพและเกษตร KMITL · สงวนลิขสิทธิ์';
   document.querySelector('main').appendChild(copy);
 }
 

@@ -1220,7 +1220,7 @@ main h2 { scroll-margin-top: 1rem; }
   /* ลายน้ำโลโก้ทุกหน้า · ใช้ภาพพื้นหลังปูซ้ำ สูงกระเบื้องละ 1 หน้ากระดาษ (297 - ขอบบน 14 - ขอบล่าง 18)
      ไม่ใช้ position: fixed เพราะเบราว์เซอร์บนมือถือพิมพ์ให้แค่หน้าแรกและสัดส่วนเพี้ยน */
   body {
-    background: url(bae_watermark.png) repeat-y center top !important;
+    background: url(bae_watermark.png?v=2) repeat-y center top !important;
     background-size: 100% 132.5mm !important;   /* กระเบื้อง = ครึ่งหน้า A4 · ทุกหน้ามีลายน้ำเสมอ ไม่ต้องพึ่งการแบ่งหน้าของเบราว์เซอร์ */
   }
 }
