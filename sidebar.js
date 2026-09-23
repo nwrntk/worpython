@@ -89,7 +89,14 @@ function buildLayout() {
   document.getElementById('toggleSidebar').onclick = toggleSidebar;
   document.getElementById('prevBtn').onclick = () => go(-1);
   document.getElementById('nextBtn').onclick = () => go(1);
-  document.getElementById('printBtn').onclick = () => window.print();
+  // ลายน้ำอยู่ในสไตล์ของการพิมพ์เท่านั้น เบราว์เซอร์จึงเพิ่งเริ่มโหลดตอนกดพิมพ์ ทำให้ครั้งแรกไม่ทัน
+  // โหลดเก็บไว้ตั้งแต่เปิดหน้า แล้วรอให้พร้อมก่อนสั่งพิมพ์ (ต้องเป็น url เดียวกับใน CSS จะได้ใช้แคชร่วมกัน)
+  const watermark = new Image();
+  watermark.src = 'bae_watermark.png?v=2';
+  document.getElementById('printBtn').onclick = async () => {
+    try { await watermark.decode(); } catch { /* โหลดไม่ได้ก็ยังพิมพ์ได้ แค่ไม่มีลายน้ำ */ }
+    window.print();
+  };
 
   // เลือกหัวข้อย่อยแล้วเลื่อนไป · จอเล็กปิดเมนูให้ด้วย · ไฮไลต์หัวข้อที่กำลังอ่าน
   const content = document.getElementById('content');
