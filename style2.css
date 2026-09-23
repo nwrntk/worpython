@@ -907,7 +907,13 @@ pre, code, kbd, .mono, .trace td, .trace input { font-variant-ligatures: none; f
 .st-frame.fn .st-fname { color: #6b4fa0; border-color: #d9cdea; }
 .st-var { display: flex; gap: .6rem; padding: .2rem .6rem; font-family: var(--font-mono); font-size: .78rem; }
 .st-n { min-width: 4.5rem; color: var(--accent-hot); font-weight: 600; }
-.st-v { word-break: break-word; }
+.st-v { word-break: break-word; min-width: 0; }
+/* ชนิดข้อมูลของตัวแปร (int, str, list, ...) */
+.st-type {
+  flex-shrink: 0; align-self: center; margin-left: auto; padding: 0 .3rem; border-radius: 2px;
+  background: var(--bg); color: var(--ink-soft); font-size: .66rem; letter-spacing: .02em;
+}
+.st-var.chg .st-type { background: #ffe9a8; }
 .st-tag { font-family: "Segoe UI Symbol", "Apple Symbols", system-ui, sans-serif; color: var(--accent-hot); font-size: 1.3rem; line-height: 1; vertical-align: -.12rem; margin-right: .35rem; }
 .st-empty { padding: .25rem .6rem; font-size: .75rem; color: var(--rule-2); }
 .st-var.chg { animation: st-flash 1s ease-out; }
@@ -1227,3 +1233,11 @@ main h2 { scroll-margin-top: 1rem; }
 
 /* ข้อความ error ในคอมเมนต์ผลลัพธ์ของโค้ดตัวอย่าง: แดงอ่อน */
 pre .out.err { color: #c25a52; }
+
+/* ===== สีของโค้ด (คล้าย editor) ===== */
+.c-kw { color: #8a3f9e; font-weight: 500; }          /* คำสงวน: if for def import */
+.c-bi { color: #1f6fb2; }                            /* ฟังก์ชันในตัว: print len int */
+.c-fn { color: #1f6fb2; font-weight: 600; }          /* ชื่อฟังก์ชันที่เราตั้ง */
+.c-st { color: #2f7a55; }                            /* ข้อความในเครื่องหมายคำพูด */
+.c-nu { color: #b26a00; }                            /* ตัวเลข */
+.c-cm { color: var(--ink-soft); }                    /* คอมเมนต์ */

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 3 · เงื่อนไข if — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923c">
+<link rel="stylesheet" href="style2.css?v=20260923d">
 </head>
 <body>
 
@@ -221,7 +221,7 @@ if score == 100:
   <div class="stepper">
     <h4>ดูทีละบรรทัด · if if if</h4>
     <p>score = 85 · สังเกตว่าลูกศรหยุดที่ <code>if</code> <strong>ครบทั้ง 3 ข้อ</strong> ไม่ว่าข้อก่อนหน้าจะจริงหรือเท็จ</p>
-    <script type="application/json">{"code": ["score = 85", "if score >= 50:", "    print(\"ผ่าน\")", "if score >= 80:", "    print(\"ดีมาก\")", "if score == 100:", "    print(\"เต็ม!\")"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "", "cond": {"line": 2, "expr": "score >= 50", "sub": "85 >= 50", "val": true, "short": ""}}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "ผ่าน\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "ผ่าน\n", "cond": {"line": 4, "expr": "score >= 80", "sub": "85 >= 80", "val": true, "short": ""}}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "ผ่าน\nดีมาก\n"}, {"ex": 6, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "ผ่าน\nดีมาก\n", "end": 1, "cond": {"line": 6, "expr": "score == 100", "sub": "85 == 100", "val": false, "short": ""}}], "notes": {"2": "ถามข้อแรก · ลูกศรชี้บรรทัด 3 = จริง", "3": "ทำเสร็จแล้วก็ยังไปถาม if ข้อต่อไป", "4": "ถามข้อสอง ทั้งที่ข้อแรกจริงไปแล้ว", "6": "85 == 100 เท็จ · ข้ามบรรทัด 7 จบโปรแกรม"}}</script>
+    <script type="application/json">{"code": ["score = 85", "if score >= 50:", "    print(\"ผ่าน\")", "if score >= 80:", "    print(\"ดีมาก\")", "if score == 100:", "    print(\"เต็ม!\")"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "", "cond": {"line": 2, "expr": "score >= 50", "sub": "85 >= 50", "val": true, "short": ""}}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "ผ่าน\n"}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "ผ่าน\n", "cond": {"line": 4, "expr": "score >= 80", "sub": "85 >= 80", "val": true, "short": ""}}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "ผ่าน\nดีมาก\n"}, {"ex": 6, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "ผ่าน\nดีมาก\n", "end": 1, "cond": {"line": 6, "expr": "score == 100", "sub": "85 == 100", "val": false, "short": ""}}], "notes": {"2": "ถามข้อแรก · ลูกศรชี้บรรทัด 3 = จริง", "3": "ทำเสร็จแล้วก็ยังไปถาม if ข้อต่อไป", "4": "ถามข้อสอง ทั้งที่ข้อแรกจริงไปแล้ว", "6": "85 == 100 เท็จ · ข้ามบรรทัด 7 จบโปรแกรม"}}</script>
   </div>
 
   <p>เหมาะกับเงื่อนไขที่<strong>เป็นอิสระต่อกัน</strong> จริงพร้อมกันหลายข้อได้
@@ -263,7 +263,7 @@ print(grade)</pre></div>
   <div class="stepper">
     <h4>ดูทีละบรรทัด · if-elif-else</h4>
     <p>score = 85 เหมือนกัน · สังเกตว่าพอเจอข้อที่จริงแล้ว <strong>ลูกศรกระโดดข้าม elif / else ที่เหลือทั้งหมด</strong></p>
-    <script type="application/json">{"code": ["score = 85", "if score >= 80:", "    grade = \"A\"", "elif score >= 70:", "    grade = \"B\"", "elif score >= 60:", "    grade = \"C\"", "else:", "    grade = \"F\"", "print(grade)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""]]}], "out": "", "cond": {"line": 2, "expr": "score >= 80", "sub": "85 >= 80", "val": true, "short": ""}}, {"ex": 3, "nx": 10, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""], ["grade", "'A'", ""]]}], "out": ""}, {"ex": 10, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", ""], ["grade", "'A'", ""]]}], "out": "A\n", "end": 1}], "notes": {"2": "85 >= 80 จริง → ลงไปบรรทัด 3", "3": "ได้ grade แล้ว · ลูกศรกระโดดไปบรรทัด 10 เลย ไม่ถาม elif ข้อที่เหลือ"}}</script>
+    <script type="application/json">{"code": ["score = 85", "if score >= 80:", "    grade = \"A\"", "elif score >= 70:", "    grade = \"B\"", "elif score >= 60:", "    grade = \"C\"", "else:", "    grade = \"F\"", "print(grade)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"]]}], "out": "", "cond": {"line": 2, "expr": "score >= 80", "sub": "85 >= 80", "val": true, "short": ""}}, {"ex": 3, "nx": 10, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"], ["grade", "'A'", "", "str"]]}], "out": ""}, {"ex": 10, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["score", "85", "", "int"], ["grade", "'A'", "", "str"]]}], "out": "A\n", "end": 1}], "notes": {"2": "85 >= 80 จริง → ลงไปบรรทัด 3", "3": "ได้ grade แล้ว · ลูกศรกระโดดไปบรรทัด 10 เลย ไม่ถาม elif ข้อที่เหลือ"}}</script>
   </div>
 
   <table>
@@ -554,6 +554,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923c"></script>
+<script src="sidebar.js?v=20260923d"></script>
 </body>
 </html>

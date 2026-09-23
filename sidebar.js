@@ -327,12 +327,13 @@ function initStepper() {
       });
       vars.innerHTML = st.fr.map((f, k) => `
         <div class="st-frame${k ? ' fn' : ''}"><div class="st-fname">${esc(f.n)}</div>
-        ${f.v.length ? f.v.map(([n, v, tag]) => `
+        ${f.v.length ? f.v.map(([n, v, tag, ty]) => `
           <div class="st-var${prev && valueOf(prev, f.n, n) !== v + tag ? ' chg' : ''}">
             <span class="st-n">${esc(n)}</span>
             <span class="st-v">${ref && tag
               ? `<i class="rf-dot${(valueOf(prev, f.n, n) || '').slice(-1) !== tag ? ' new' : ''}${k ? ' fn' : ''}" data-to="${tag}"></i>`
               : `${tag ? `<b class="st-tag">${tag}</b>` : ''}${esc(v)}`}</span>
+            ${ty ? `<span class="st-type" title="ชนิดข้อมูล">${esc(ty)}</span>` : ''}
           </div>`).join('') : '<div class="st-empty">ยังไม่มีตัวแปร</div>'}
         </div>`).join('');
       if (ref) {
@@ -884,6 +885,51 @@ function initConvViz() {
   }
 }
 
+/* ---------- ระบายสีโค้ด Python (เขียนเอง ไม่ต้องโหลดไลบรารีจากเน็ต) ---------- */
+
+const PY_KW = new Set(('False None True and as assert async await break class continue def del elif else except ' +
+  'finally for from global if import in is lambda nonlocal not or pass raise return try while with yield').split(' '));
+const PY_BI = new Set(('abs all any bool chr dict divmod enumerate filter float format id input int isinstance len ' +
+  'list map max min open ord pow print range repr reversed round set sorted str sum tuple type zip').split(' '));
+
+// คอมเมนต์ · ข้อความ (รวม f-string และสามอัญประกาศ) · ตัวเลข · ชื่อ
+const PY_RE = /(#[^\n]*)|('''[\s\S]*?'''|"""[\s\S]*?"""|[frbFRB]{0,2}'(?:\\.|[^'\\\n])*'|[frbFRB]{0,2}"(?:\\.|[^"\\\n])*")|(\b\d+\.?\d*\b)|([A-Za-z_]\w*)/g;
+
+function pyColor(code) {
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  let out = '', last = 0, m;
+  PY_RE.lastIndex = 0;
+  while ((m = PY_RE.exec(code))) {
+    out += esc(code.slice(last, m.index));
+    last = PY_RE.lastIndex;
+    const [all, comment, string, num, name] = m;
+    if (comment) out += `<span class="c-cm">${esc(all)}</span>`;
+    else if (string) out += `<span class="c-st">${esc(all)}</span>`;
+    else if (num) out += `<span class="c-nu">${all}</span>`;
+    else if (PY_KW.has(name)) out += `<span class="c-kw">${name}</span>`;
+    else if (PY_BI.has(name)) out += `<span class="c-bi">${name}</span>`;
+    else if (/^\s*(def|class)\s+$/.test(code.slice(0, m.index).split('\n').pop())) out += `<span class="c-fn">${name}</span>`;
+    else out += name;
+  }
+  return out + esc(code.slice(last));
+}
+
+function colorCode() {
+  // โค้ดในบทเรียน: ระบายเฉพาะข้อความเปล่า ส่วนที่ถูกครอบด้วย span อยู่แล้ว (คอมเมนต์ผลลัพธ์ / error) ปล่อยไว้
+  for (const pre of document.querySelectorAll('pre')) {
+    if (pre.matches('.out-box, .err, .st-out') || pre.closest('.out-box')) continue;
+    for (const node of [...pre.childNodes]) {
+      if (node.nodeType !== 3 || !node.nodeValue.trim()) continue;
+      const span = document.createElement('span');
+      span.innerHTML = pyColor(node.nodeValue);
+      node.replaceWith(span);
+    }
+  }
+  // โค้ดในวิดเจ็ต (ตัวไล่ทีละบรรทัด / กล่อง list / slice)
+  for (const code of document.querySelectorAll('.st-code li code'))
+    code.innerHTML = pyColor(code.textContent);
+}
+
 /* ---------- boot ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -897,6 +943,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initVenn();
   initSliceViz();
   initConvViz();
+  colorCode();
   buildLayout();
 });
 
