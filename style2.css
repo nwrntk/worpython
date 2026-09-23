@@ -1319,3 +1319,4 @@ pre .out.err { color: #c25a52; }
 @media (max-width: 600px) {   /* จอแคบ: คำใบ้ลงบรรทัดใหม่ โค้ดจะได้ไม่ยาวจนต้องเลื่อนข้างมาก */
   .fi-hint { display: block; margin: .1rem 0 .3rem; }
 }
+pre.err { white-space: pre-wrap; word-break: break-word; }   /* ข้อความ error ยาว: ตัดบรรทัดแทนเลื่อนข้าง */

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>คู่มืออ่าน error — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923g">
+<link rel="stylesheet" href="style2.css?v=20260923h">
 </head>
 <body>
 
@@ -576,7 +576,7 @@ print(img.shape)</pre>
     print(img.shape)
           ^^^^^^^^^
 AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;shape&#x27;</pre>
-    <p><b>สาเหตุ:</b> <code>cv2.imread</code> ไม่ error เมื่อหาไฟล์ไม่เจอ แต่คืน <code>None</code> เงียบ ๆ (บทที่ 14)<br><b>แก้:</b> เช็ก <code>if img is None:</code> ทันทีหลังอ่าน · ถ้าส่ง None เข้าฟังก์ชันของ cv2 จะได้ <code>cv2.error</code> ที่มีคำว่า <span class="mono">!_src.empty()</span> ซึ่งก็คือสาเหตุเดียวกัน</p>
+    <p><b>สาเหตุ:</b> <code>cv2.imread</code> ไม่ error เมื่อหาไฟล์ไม่เจอ แต่คืน <code>None</code> เงียบ ๆ (บทที่ 17)<br><b>แก้:</b> เช็ก <code>if img is None:</code> ทันทีหลังอ่าน · ถ้าส่ง None เข้าฟังก์ชันของ cv2 จะได้ <code>cv2.error</code> ที่มีคำว่า <span class="mono">!_src.empty()</span> ซึ่งก็คือสาเหตุเดียวกัน</p>
   </div>
 
   <h2 id="unbound">UnboundLocalError</h2>
@@ -630,7 +630,7 @@ FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</pr
   File &quot;main.py&quot;, line 1, in &lt;module&gt;
     import opencv
 ModuleNotFoundError: No module named &#x27;opencv&#x27;</pre>
-    <p><b>สาเหตุ:</b> ไม่มีไลบรารีชื่อนี้ในเครื่อง · ชื่อตอนติดตั้งกับชื่อตอน import อาจไม่เหมือนกัน<br><b>แก้:</b> ติดตั้ง <code>pip install opencv-python</code> แต่ตอนใช้เขียน <code>import cv2</code> (บทที่ 14)</p>
+    <p><b>สาเหตุ:</b> ไม่มีไลบรารีชื่อนี้ในเครื่อง · ชื่อตอนติดตั้งกับชื่อตอน import อาจไม่เหมือนกัน<br><b>แก้:</b> ติดตั้ง <code>pip install opencv-python</code> แต่ตอนใช้เขียน <code>import cv2</code> (บทที่ 17)</p>
   </div>
 
   <div class="case">
@@ -706,6 +706,6 @@ while i &lt;= 5:
   </ol>
 </main>
 
-<script src="sidebar.js?v=20260923g"></script>
+<script src="sidebar.js?v=20260923h"></script>
 </body>
 </html>

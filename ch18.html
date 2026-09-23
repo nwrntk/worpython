@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บทที่ 18 · ภาพดิจิทัลและการประมวลผล — Python Lab</title>
+<link rel="stylesheet" href="style2.css?v=20260923h">
+</head>
+<body>
+
+<main>
+  <div class="eyebrow">Chapter 18</div>
+  <h1>ภาพดิจิทัลและการประมวลผล</h1>
+  <p class="lead">บทที่ 17 สอนว่า “สั่ง OpenCV ยังไง” บทนี้สอนว่า “ข้างในมันทำอะไร” —
+  ตั้งแต่ภาพจริงกลายเป็นตัวเลขได้ยังไง ไปจนถึงนับวัตถุในภาพได้กี่ชิ้น</p>
+
+  <div class="note">
+    <b>ดูภาพประกอบแบบเลื่อนเล่นได้</b> — ทุกหัวข้อในบทนี้มีเดโมโต้ตอบสดที่
+    <a href="https://nwrntk.github.io/worimg/" target="_blank" rel="noopener">Image Processing Lab</a>
+    แนะนำให้เปิดคู่กันไป อ่านทฤษฎีที่นั่น แล้วกลับมาเขียนโค้ดที่นี่
+  </div>
+
+  <h2>18.1 ภาพดิจิทัลเกิดขึ้นได้ยังไง</h2>
+
+  <p>ภาพจริงเป็นสัญญาณ<b>ต่อเนื่อง</b> กล้องแปลงเป็นตัวเลขด้วยสองขั้นตอน</p>
+
+  <table>
+    <tr><th>ขั้นตอน</th><th>ทำอะไร</th><th>ถ้าน้อยเกินไป</th></tr>
+    <tr><td><b>Sampling</b></td><td>แบ่งพื้นที่เป็นตารางพิกเซล N×N</td><td>ภาพแตกเป็นบล็อกเหลี่ยม ๆ</td></tr>
+    <tr><td><b>Quantization</b></td><td>ปัดค่าความสว่างให้เหลือ L ระดับ</td><td>ไล่เฉดหายไป เกิดแถบสีเป็นชั้น ๆ</td></tr>
+  </table>
+
+  <figure class="fig">
+    <svg viewBox="0 0 268 148" role="img" aria-label="ภาพต่อเนื่องเทียบกับภาพที่ถูกแบ่งเป็นตารางพิกเซล">
+      <text class="lbl" x="4" y="12">ภาพจริง — ต่อเนื่อง</text>
+      <circle cx="64" cy="84" r="44" fill="var(--accent)"/>
+
+      <text class="lbl" x="148" y="12">หลัง sampling</text>
+      <g transform="translate(144 24)">
+        <g class="fig-a">
+          <g fill="var(--accent)"><rect x="30" y="15" width="15" height="15"/><rect x="45" y="15" width="15" height="15"/><rect x="60" y="15" width="15" height="15"/><rect x="75" y="15" width="15" height="15"/><rect x="15" y="30" width="15" height="15"/><rect x="30" y="30" width="15" height="15"/><rect x="45" y="30" width="15" height="15"/><rect x="60" y="30" width="15" height="15"/><rect x="75" y="30" width="15" height="15"/><rect x="90" y="30" width="15" height="15"/><rect x="15" y="45" width="15" height="15"/><rect x="30" y="45" width="15" height="15"/><rect x="45" y="45" width="15" height="15"/><rect x="60" y="45" width="15" height="15"/><rect x="75" y="45" width="15" height="15"/><rect x="90" y="45" width="15" height="15"/><rect x="15" y="60" width="15" height="15"/><rect x="30" y="60" width="15" height="15"/><rect x="45" y="60" width="15" height="15"/><rect x="60" y="60" width="15" height="15"/><rect x="75" y="60" width="15" height="15"/><rect x="90" y="60" width="15" height="15"/><rect x="15" y="75" width="15" height="15"/><rect x="30" y="75" width="15" height="15"/><rect x="45" y="75" width="15" height="15"/><rect x="60" y="75" width="15" height="15"/><rect x="75" y="75" width="15" height="15"/><rect x="90" y="75" width="15" height="15"/><rect x="30" y="90" width="15" height="15"/><rect x="45" y="90" width="15" height="15"/><rect x="60" y="90" width="15" height="15"/><rect x="75" y="90" width="15" height="15"/></g>
+          <path d="M0 0 H120 M0 15 H120 M0 30 H120 M0 45 H120 M0 60 H120 M0 75 H120 M0 90 H120 M0 105 H120 M0 120 H120 M0 0 V120 M15 0 V120 M30 0 V120 M45 0 V120 M60 0 V120 M75 0 V120 M90 0 V120 M105 0 V120 M120 0 V120 " fill="none" stroke="var(--paper)" stroke-width=".6" opacity=".7"/>
+          <text class="lbl" x="0" y="118">N = 8</text>
+        </g>
+        <g class="fig-b">
+          <g fill="var(--accent)"><rect x="42" y="18" width="6" height="6"/><rect x="48" y="18" width="6" height="6"/><rect x="54" y="18" width="6" height="6"/><rect x="60" y="18" width="6" height="6"/><rect x="66" y="18" width="6" height="6"/><rect x="72" y="18" width="6" height="6"/><rect x="30" y="24" width="6" height="6"/><rect x="36" y="24" width="6" height="6"/><rect x="42" y="24" width="6" height="6"/><rect x="48" y="24" width="6" height="6"/><rect x="54" y="24" width="6" height="6"/><rect x="60" y="24" width="6" height="6"/><rect x="66" y="24" width="6" height="6"/><rect x="72" y="24" width="6" height="6"/><rect x="78" y="24" width="6" height="6"/><rect x="84" y="24" width="6" height="6"/><rect x="24" y="30" width="6" height="6"/><rect x="30" y="30" width="6" height="6"/><rect x="36" y="30" width="6" height="6"/><rect x="42" y="30" width="6" height="6"/><rect x="48" y="30" width="6" height="6"/><rect x="54" y="30" width="6" height="6"/><rect x="60" y="30" width="6" height="6"/><rect x="66" y="30" width="6" height="6"/><rect x="72" y="30" width="6" height="6"/><rect x="78" y="30" width="6" height="6"/><rect x="84" y="30" width="6" height="6"/><rect x="90" y="30" width="6" height="6"/><rect x="24" y="36" width="6" height="6"/><rect x="30" y="36" width="6" height="6"/><rect x="36" y="36" width="6" height="6"/><rect x="42" y="36" width="6" height="6"/><rect x="48" y="36" width="6" height="6"/><rect x="54" y="36" width="6" height="6"/><rect x="60" y="36" width="6" height="6"/><rect x="66" y="36" width="6" height="6"/><rect x="72" y="36" width="6" height="6"/><rect x="78" y="36" width="6" height="6"/><rect x="84" y="36" width="6" height="6"/><rect x="90" y="36" width="6" height="6"/><rect x="18" y="42" width="6" height="6"/><rect x="24" y="42" width="6" height="6"/><rect x="30" y="42" width="6" height="6"/><rect x="36" y="42" width="6" height="6"/><rect x="42" y="42" width="6" height="6"/><rect x="48" y="42" width="6" height="6"/><rect x="54" y="42" width="6" height="6"/><rect x="60" y="42" width="6" height="6"/><rect x="66" y="42" width="6" height="6"/><rect x="72" y="42" width="6" height="6"/><rect x="78" y="42" width="6" height="6"/><rect x="84" y="42" width="6" height="6"/><rect x="90" y="42" width="6" height="6"/><rect x="96" y="42" width="6" height="6"/><rect x="18" y="48" width="6" height="6"/><rect x="24" y="48" width="6" height="6"/><rect x="30" y="48" width="6" height="6"/><rect x="36" y="48" width="6" height="6"/><rect x="42" y="48" width="6" height="6"/><rect x="48" y="48" width="6" height="6"/><rect x="54" y="48" width="6" height="6"/><rect x="60" y="48" width="6" height="6"/><rect x="66" y="48" width="6" height="6"/><rect x="72" y="48" width="6" height="6"/><rect x="78" y="48" width="6" height="6"/><rect x="84" y="48" width="6" height="6"/><rect x="90" y="48" width="6" height="6"/><rect x="96" y="48" width="6" height="6"/><rect x="18" y="54" width="6" height="6"/><rect x="24" y="54" width="6" height="6"/><rect x="30" y="54" width="6" height="6"/><rect x="36" y="54" width="6" height="6"/><rect x="42" y="54" width="6" height="6"/><rect x="48" y="54" width="6" height="6"/><rect x="54" y="54" width="6" height="6"/><rect x="60" y="54" width="6" height="6"/><rect x="66" y="54" width="6" height="6"/><rect x="72" y="54" width="6" height="6"/><rect x="78" y="54" width="6" height="6"/><rect x="84" y="54" width="6" height="6"/><rect x="90" y="54" width="6" height="6"/><rect x="96" y="54" width="6" height="6"/><rect x="18" y="60" width="6" height="6"/><rect x="24" y="60" width="6" height="6"/><rect x="30" y="60" width="6" height="6"/><rect x="36" y="60" width="6" height="6"/><rect x="42" y="60" width="6" height="6"/><rect x="48" y="60" width="6" height="6"/><rect x="54" y="60" width="6" height="6"/><rect x="60" y="60" width="6" height="6"/><rect x="66" y="60" width="6" height="6"/><rect x="72" y="60" width="6" height="6"/><rect x="78" y="60" width="6" height="6"/><rect x="84" y="60" width="6" height="6"/><rect x="90" y="60" width="6" height="6"/><rect x="96" y="60" width="6" height="6"/><rect x="18" y="66" width="6" height="6"/><rect x="24" y="66" width="6" height="6"/><rect x="30" y="66" width="6" height="6"/><rect x="36" y="66" width="6" height="6"/><rect x="42" y="66" width="6" height="6"/><rect x="48" y="66" width="6" height="6"/><rect x="54" y="66" width="6" height="6"/><rect x="60" y="66" width="6" height="6"/><rect x="66" y="66" width="6" height="6"/><rect x="72" y="66" width="6" height="6"/><rect x="78" y="66" width="6" height="6"/><rect x="84" y="66" width="6" height="6"/><rect x="90" y="66" width="6" height="6"/><rect x="96" y="66" width="6" height="6"/><rect x="18" y="72" width="6" height="6"/><rect x="24" y="72" width="6" height="6"/><rect x="30" y="72" width="6" height="6"/><rect x="36" y="72" width="6" height="6"/><rect x="42" y="72" width="6" height="6"/><rect x="48" y="72" width="6" height="6"/><rect x="54" y="72" width="6" height="6"/><rect x="60" y="72" width="6" height="6"/><rect x="66" y="72" width="6" height="6"/><rect x="72" y="72" width="6" height="6"/><rect x="78" y="72" width="6" height="6"/><rect x="84" y="72" width="6" height="6"/><rect x="90" y="72" width="6" height="6"/><rect x="96" y="72" width="6" height="6"/><rect x="24" y="78" width="6" height="6"/><rect x="30" y="78" width="6" height="6"/><rect x="36" y="78" width="6" height="6"/><rect x="42" y="78" width="6" height="6"/><rect x="48" y="78" width="6" height="6"/><rect x="54" y="78" width="6" height="6"/><rect x="60" y="78" width="6" height="6"/><rect x="66" y="78" width="6" height="6"/><rect x="72" y="78" width="6" height="6"/><rect x="78" y="78" width="6" height="6"/><rect x="84" y="78" width="6" height="6"/><rect x="90" y="78" width="6" height="6"/><rect x="24" y="84" width="6" height="6"/><rect x="30" y="84" width="6" height="6"/><rect x="36" y="84" width="6" height="6"/><rect x="42" y="84" width="6" height="6"/><rect x="48" y="84" width="6" height="6"/><rect x="54" y="84" width="6" height="6"/><rect x="60" y="84" width="6" height="6"/><rect x="66" y="84" width="6" height="6"/><rect x="72" y="84" width="6" height="6"/><rect x="78" y="84" width="6" height="6"/><rect x="84" y="84" width="6" height="6"/><rect x="90" y="84" width="6" height="6"/><rect x="30" y="90" width="6" height="6"/><rect x="36" y="90" width="6" height="6"/><rect x="42" y="90" width="6" height="6"/><rect x="48" y="90" width="6" height="6"/><rect x="54" y="90" width="6" height="6"/><rect x="60" y="90" width="6" height="6"/><rect x="66" y="90" width="6" height="6"/><rect x="72" y="90" width="6" height="6"/><rect x="78" y="90" width="6" height="6"/><rect x="84" y="90" width="6" height="6"/><rect x="42" y="96" width="6" height="6"/><rect x="48" y="96" width="6" height="6"/><rect x="54" y="96" width="6" height="6"/><rect x="60" y="96" width="6" height="6"/><rect x="66" y="96" width="6" height="6"/><rect x="72" y="96" width="6" height="6"/></g>
+          <path d="M0 0 H120 M0 12 H120 M0 24 H120 M0 36 H120 M0 48 H120 M0 60 H120 M0 72 H120 M0 84 H120 M0 96 H120 M0 108 H120 M0 120 H120 M0 0 V120 M12 0 V120 M24 0 V120 M36 0 V120 M48 0 V120 M60 0 V120 M72 0 V120 M84 0 V120 M96 0 V120 M108 0 V120 M120 0 V120 " fill="none" stroke="var(--paper)" stroke-width=".6" opacity=".7"/>
+          <text class="lbl" x="0" y="118">N = 20</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption><b>Sampling</b> — แบ่งพื้นที่เป็นตารางพิกเซล N×N
+      ตารางยิ่งหยาบ ภาพยิ่งแตกเป็นบล็อกเหลี่ยม ๆ ขอบโค้งของวงกลมหายไป</figcaption>
+  </figure>
+
+  <figure class="fig">
+    <svg viewBox="0 0 240 56" role="img" aria-label="แถบไล่เฉดเทียบกับแถบที่ถูกลดเหลือ 4 ระดับ">
+      <defs>
+        <linearGradient id="qgrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/>
+        </linearGradient>
+      </defs>
+      <g class="fig-a"><rect x="0" y="0" width="240" height="30" fill="url(#qgrad)"/></g>
+      <g class="fig-b"><rect x="0" y="0" width="60" height="30" fill="rgb(0,0,0)"/><rect x="60" y="0" width="60" height="30" fill="rgb(85,85,85)"/><rect x="120" y="0" width="60" height="30" fill="rgb(170,170,170)"/><rect x="180" y="0" width="60" height="30" fill="rgb(255,255,255)"/></g>
+      <rect x="0" y="0" width="240" height="30" fill="none" stroke="var(--rule-2)"/>
+      <text class="lbl" x="0" y="46">L = 256 ระดับ  ⇄  L = 4 ระดับ</text>
+    </svg>
+    <figcaption><b>Quantization</b> — ปัดค่าความสว่างให้เหลือ L ระดับ
+      ยิ่ง L น้อย ไล่เฉดยิ่งหายกลายเป็นแถบทึบเป็นชั้น ๆ</figcaption>
+  </figure>
+
+  <p>ผลลัพธ์คือ<b>เมทริกซ์ของจำนวนเต็ม</b> — ไม่มีอะไรมากกว่านั้น ลองทำให้ดูทั้งสองขั้น</p>
+
+<pre>import cv2
+import numpy as np
+
+img = cv2.imread("cat.jpg")
+h, w = img.shape[:2]
+
+<span class="out"># sampling หยาบ: ย่อลง 10 เท่า แล้วขยายกลับแบบไม่เกลี่ยสี</span>
+small  = cv2.resize(img, None, fx=0.1, fy=0.1, interpolation=cv2.INTER_AREA)
+blocky = cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
+
+<span class="out"># quantization: เหลือ 4 ระดับ จาก 256 ระดับ</span>
+L = 4
+step = 256 // L
+quant = (img // step) * step        <span class="out"># ปัดลงเป็นขั้น ๆ</span>
+
+cv2.imwrite("out_sampling.jpg", blocky)
+cv2.imwrite("out_quant.jpg", quant)</pre>
+
+  <div class="note">
+    <b>ทั้งสองบรรทัดคือคณิตศาสตร์ล้วน ๆ</b> — <code>img // step * step</code> คือการหารปัดลงแล้วคูณกลับ
+    ที่เรียนมาตั้งแต่บทที่ 2 แค่ทำพร้อมกันทุกพิกเซลเพราะ NumPy คิดให้ทั้ง array ทีเดียว
+  </div>
+
+  <h2>18.2 รูปแบบภาพ 4 แบบ</h2>
+
+  <table>
+    <tr><th>แบบ</th><th>เก็บอะไร</th><th>ใช้เมื่อ</th></tr>
+    <tr><td>Grayscale</td><td>1 ช่อง · 0-255</td><td>งานส่วนใหญ่ — เร็วและพอแล้ว</td></tr>
+    <tr><td>Binary</td><td>0 หรือ 255 เท่านั้น</td><td>นับวัตถุ วัดพื้นที่ หาคอนทัวร์</td></tr>
+    <tr><td>RGB / BGR</td><td>3 ช่อง · 16.7 ล้านสี</td><td>ภาพที่คนดู</td></tr>
+    <tr><td>HSV</td><td>สี · ความสด · ความสว่าง</td><td>คัดแยกวัตถุตามสี</td></tr>
+  </table>
+
+<pre><span class="out"># เทา — ถ่วงน้ำหนักตามความไวของตาคน เขียวหนักสุด</span>
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)   <span class="out"># 0.299R + 0.587G + 0.114B</span>
+
+<span class="out"># แยกดูทีละช่องสี — ท้องฟ้าจะสว่างในช่อง B ต้นหญ้าสว่างในช่อง G</span>
+b, g, r = cv2.split(img)
+
+<span class="out"># ไบนารี — เทียบกับเกณฑ์ T</span>
+T = 127
+_, binary = cv2.threshold(gray, T, 255, cv2.THRESH_BINARY)
+
+<span class="out"># HSV — สร้างมาสก์เฉพาะสีเขียว</span>
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+mask = cv2.inRange(hsv, (35, 80, 40), (85, 255, 255))
+only_green = cv2.bitwise_and(img, img, mask=mask)</pre>
+
+  <div class="warn">
+    <b>Hue ของ OpenCV คือ 0-179 ไม่ใช่ 0-360</b> — เพราะต้องยัดลงใน 1 ไบต์
+    ค่าที่อ่านเจอในตำราต้อง<b>หารสอง</b>ก่อนเสมอ (แดง 0 · เหลือง 30 · เขียว 60 · ฟ้า 90 · น้ำเงิน 120)
+  </div>
+
+  <div class="note">
+    <b>ทำไมต้อง HSV</b> — เงาหรือแสงที่เปลี่ยนไปกระทบ <b>V</b> เป็นหลัก แต่ <b>H</b> แทบไม่ขยับ
+    การคัดแยกวัตถุตามสีจึงทนแสงกว่าใช้ RGB มาก
+  </div>
+
+  <h2>18.3 Histogram และคอนทราสต์</h2>
+
+  <p>ฮิสโทแกรมคือ<b>อาร์เรย์ 256 ช่อง</b> ช่องที่ i เก็บจำนวนพิกเซลที่มีค่าเท่ากับ i
+  มันไม่สนใจว่าพิกเซลอยู่ตรงไหน จึงบอกได้แค่การกระจายความสว่าง</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 240 100" role="img" aria-label="ฮิสโทแกรมทั้งก้อนไถลซ้ายขวาเมื่อปรับความสว่าง">
+      <g class="fig-shift" fill="var(--accent)"><rect x="30" y="76" width="8" height="4"/><rect x="40" y="74" width="8" height="6"/><rect x="50" y="70" width="8" height="10"/><rect x="60" y="64" width="8" height="16"/><rect x="70" y="54" width="8" height="26"/><rect x="80" y="42" width="8" height="38"/><rect x="90" y="28" width="8" height="52"/><rect x="100" y="18" width="8" height="62"/><rect x="110" y="14" width="8" height="66"/><rect x="120" y="18" width="8" height="62"/><rect x="130" y="28" width="8" height="52"/><rect x="140" y="42" width="8" height="38"/><rect x="150" y="54" width="8" height="26"/><rect x="160" y="64" width="8" height="16"/><rect x="170" y="70" width="8" height="10"/><rect x="180" y="74" width="8" height="6"/><rect x="190" y="76" width="8" height="4"/><rect x="200" y="77" width="8" height="3"/></g>
+      <path d="M0 80 H240" stroke="var(--rule-2)"/>
+      <text class="lbl" x="0" y="94">0 (มืด)</text>
+      <text class="lbl" x="205" y="94">255 (สว่าง)</text>
+    </svg>
+    <figcaption>ปรับความสว่าง = ฮิสโทแกรม<b>ทั้งก้อนไถล</b>ไปทางเดียวกัน
+      ส่วนปรับคอนทราสต์คือทำให้ก้อนนี้กว้างขึ้นหรือแคบลง</figcaption>
+  </figure>
+
+<pre>hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
+print(hist.shape)                    <span class="out"># (256, 1)</span>
+
+<span class="out"># นับเองด้วย NumPy ก็ได้ ผลเท่ากัน</span>
+hist2 = np.bincount(gray.ravel(), minlength=256)
+
+print("มืดสุด", gray.min(), "สว่างสุด", gray.max())
+print("เฉลี่ย", round(gray.mean(), 1), "ส่วนเบี่ยงเบน", round(gray.std(), 1))</pre>
+
+  <div class="note">
+    <b>อยากเห็นฮิสโทแกรมเป็นกราฟจริง ๆ</b> — วาดด้วย matplotlib ได้ในสามบรรทัด
+    ดู <a href="ch16.html">บทที่ 16</a>
+  </div>
+
+  <p><b>คอนทราสต์คือความกว้างของช่วงค่าที่ภาพใช้จริง</b> — ภาพหม่นคือค่ากองอยู่กลางกราฟ
+  ยืดให้เต็ม 0-255 ได้ด้วย</p>
+
+<pre>stretched = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)</pre>
+
+  <div class="warn">
+    <b>ดันคอนทราสต์แรงเกินไปจะเกิด clipping</b> — พิกเซลไปกองที่ 0 กับ 255
+    แล้วรายละเอียดตรงนั้น<b>หายถาวร</b> ยืดกลับไม่ได้อีก
+  </div>
+
+  <h2>18.4 การดำเนินการระดับพิกเซล</h2>
+
+  <p>ผลลัพธ์ที่จุด (y, x) ขึ้นกับค่าที่จุด (y, x) ของภาพต้นทางเท่านั้น — บวก ลบ คูณ หาร ตรง ๆ</p>
+
+<pre>bright = cv2.add(img, 50)                    <span class="out"># สว่างขึ้น — เกิน 255 ตัดเหลือ 255</span>
+dark   = cv2.subtract(img, 50)               <span class="out"># มืดลง — ต่ำกว่า 0 ตัดเหลือ 0</span>
+diff   = cv2.absdiff(frame1, frame2)         <span class="out"># ต่างกันตรงไหน = จับการเคลื่อนไหว</span>
+masked = cv2.bitwise_and(img, img, mask=mask)<span class="out"># คูณด้วยมาสก์ = ตัดเฉพาะที่สนใจ</span>
+blend  = cv2.addWeighted(img1, 0.7, img2, 0.3, 0)   <span class="out"># ผสมสองภาพ</span></pre>
+
+  <div class="warn">
+    <b>อย่าใช้ <code>img + 50</code> เฉย ๆ</b> — ชนิดข้อมูลเป็น <code>uint8</code>
+    ค่า 250 + 50 จะ<b>วนกลับเป็น 44</b> จุดที่ควรสว่างสุดจะกลายเป็นดำ<br>
+    <code>cv2.add()</code> ตัดที่ 255 ให้อัตโนมัติ (เรียกว่า saturate) ใช้ตัวนี้เสมอ
+  </div>
+
+  <h2>18.5 Contrast enhancement — ตารางแปลงค่า</h2>
+
+  <p>วิธีที่เร็วที่สุดคือทำ<b>ตาราง 256 ช่อง</b> ไว้ล่วงหน้า แล้วยิงทุกพิกเซลผ่านตารางนั้น
+  (เรียกว่า transfer function หรือ LUT) — เส้นยิ่งชันช่วงไหน คอนทราสต์ช่วงนั้นยิ่งถูกขยาย</p>
+
+<pre><span class="out"># ยืดช่วง 100-180 ให้กลายเป็น 0-255 นอกช่วงถูกตัดทิ้ง</span>
+lo, hi = 100, 180
+table = np.clip((np.arange(256) - lo) * 255 / (hi - lo), 0, 255).astype(np.uint8)
+out = cv2.LUT(gray, table)
+
+<span class="out"># gamma — ดึงรายละเอียดในเงาโดยไม่เผาส่วนสว่าง</span>
+gamma = 0.5
+gtable = ((np.arange(256) / 255) ** gamma * 255).astype(np.uint8)
+out2 = cv2.LUT(gray, gtable)
+
+<span class="out"># ให้เครื่องเกลี่ยฮิสโทแกรมให้เอง</span>
+eq    = cv2.equalizeHist(gray)                                  <span class="out"># ทั้งภาพ</span>
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8)).apply(gray)  <span class="out"># แยกเป็นช่อง ๆ</span></pre>
+
+  <div class="note">
+    <b>LUT คือ dictionary ที่เรียนในบทที่ 9 ในรูปแบบเร็วที่สุด</b> —
+    คำนวณครั้งเดียว 256 ค่า แล้วเปิดตารางดูเอาสำหรับพิกเซลนับล้าน แทนที่จะคำนวณทีละจุด
+  </div>
+
+  <h2>18.6 Convolution — หัวใจของฟิลเตอร์ทุกตัว</h2>
+
+  <p>เลื่อน<b>เคอร์เนล</b> (ตารางน้ำหนักเล็ก ๆ) ไปทีละพิกเซล คูณค่าที่ทับกันแล้วบวกรวม
+  จากนั้นหารด้วยผลรวมน้ำหนักเพื่อคงความสว่างเดิม</p>
+
+  <div class="convviz">
+    <h4>ดูเป็นภาพ · เคอร์เนลเลื่อนทับภาพ</h4>
+    <p>กรอบสีเข้มคือ<b>เคอร์เนล</b> ตัวเลขเหลืองมุมช่องคือน้ำหนัก · ทุกตำแหน่ง: คูณค่าที่ทับกันทั้ง 9 คู่ บวกรวม หารด้วย 16 (ผลรวมน้ำหนัก) ได้ 1 ช่องในภาพออก · กด ⏵ เล่น เพื่อดูเลื่อนเอง · <b>เปลี่ยนตัวเลขในเคอร์เนล = เปลี่ยนจากเบลอเป็นคมหรือเป็นหาขอบ</b></p>
+    <script type="application/json">{"img": [[10, 20, 30, 20, 10], [20, 60, 120, 60, 20], [30, 120, 200, 120, 30], [20, 60, 120, 60, 20], [10, 20, 30, 20, 10]], "k": [[1, 2, 1], [2, 4, 2], [1, 2, 1]], "div": 16, "out": [[67, 91, 67], [91, 125, 91], [67, 91, 67]]}</script>
+  </div>
+
+
+<pre><span class="out"># เฉลี่ยเท่ากันหมด — เบลอแบบหยาบ ๆ</span>
+kernel = np.ones((3, 3), np.float32) / 9
+mean = cv2.filter2D(img, -1, kernel)
+
+<span class="out"># เกาส์เซียน — กลางหนัก ขอบเบา ลดจุดรบกวนโดยยังรักษารูปทรง</span>
+g = cv2.getGaussianKernel(5, 1.0)
+print((g @ g.T * 273).round())      <span class="out"># ดูน้ำหนัก: ตรงกลางมากสุด แล้วลดตามระยะ</span>
+
+blur = cv2.GaussianBlur(img, (5, 5), 0)   <span class="out"># ใช้จริงเรียกตัวนี้ เร็วกว่า</span>
+
+<span class="out"># เปลี่ยนเคอร์เนล = เปลี่ยนฟิลเตอร์ เช่น ทำให้คมขึ้น</span>
+sharpen = np.array([[0, -1, 0],
+                    [-1, 5, -1],
+                    [0, -1, 0]], np.float32)
+out = cv2.filter2D(img, -1, sharpen)</pre>
+
+  <div class="note">
+    <b>เบลอ · คม · หาขอบ · ตรวจลาย — ทั้งหมดคือ convolution ตัวเดียวกัน</b>
+    ต่างกันแค่ตัวเลขในเคอร์เนล นี่คือเหตุผลที่ CNN ในงาน AI ถึงชื่อ “Convolutional”
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C18">เบลอ ทำให้คม และหาขอบ ต่างกันตรงไหนในเชิงการคำนวณ?</div>
+    <button class="choice" data-correct>ใช้ convolution เหมือนกัน ต่างแค่ตัวเลขในเคอร์เนล</button>
+    <button class="choice">ใช้คนละสูตรกันคนละแบบ</button>
+    <button class="choice">ต่างกันที่ขนาดภาพ</button>
+    <button class="choice">ต่างกันที่รูปแบบไฟล์</button>
+    <div class="explain">ทั้งสามอย่างคือการเลื่อนเคอร์เนลไปคูณแล้วบวกเหมือนกันหมด · เปลี่ยนน้ำหนักในเคอร์เนล = เปลี่ยนฟิลเตอร์</div>
+  </div>
+
+  <h2>18.7 Binarization — หาเกณฑ์ T ให้อัตโนมัติ</h2>
+
+  <figure class="fig">
+    <svg viewBox="0 0 240 116" role="img" aria-label="เกณฑ์ T เลื่อนไปมาแล้วผลไบนารีเปลี่ยนตาม">
+      <defs>
+        <linearGradient id="tgrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/>
+        </linearGradient>
+      </defs>
+      <text class="lbl" x="0" y="10">ภาพเทา</text>
+      <rect x="0" y="16" width="240" height="30" fill="url(#tgrad)" stroke="var(--rule-2)"/>
+      <g transform="translate(120 0)">
+        <g class="fig-tline">
+          <path d="M0 12 V50" stroke="var(--wrong)" stroke-width="2"/>
+          <text class="lbl" x="4" y="12" fill="var(--wrong)">T</text>
+        </g>
+      </g>
+
+      <text class="lbl" x="0" y="72">ผลไบนารี</text>
+      <rect x="0" y="78" width="240" height="30" fill="#fff"/>
+      <rect class="fig-tfill" x="0" y="78" width="240" height="30" fill="#000"/>
+      <rect x="0" y="78" width="240" height="30" fill="none" stroke="var(--rule-2)"/>
+    </svg>
+    <figcaption><b>Binarization</b> — จุดที่เข้มกว่า T กลายเป็นดำ ที่เหลือเป็นขาว
+      เลือก T ผิดนิดเดียวผลต่างกันคนละเรื่อง จึงมี Otsu ไว้หา T ให้อัตโนมัติ</figcaption>
+  </figure>
+
+<pre><span class="out"># Otsu: ไล่ลอง T ทุกค่า 0-255 เลือกค่าที่แยกสองกลุ่มได้ขาดที่สุด</span>
+T, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+print("Otsu เลือก T =", T)          <span class="out"># เลข 0 ข้างหน้าถูกมองข้าม Otsu หาเอง</span>
+
+<span class="out"># Adaptive: คิด T ใหม่ในทุกหน้าต่างย่อย — ทนแสงตกไม่เท่ากัน</span>
+adap = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                             cv2.THRESH_BINARY, 31, 5)   <span class="out"># 31 = ขนาดหน้าต่าง (คี่)</span></pre>
+
+  <div class="note">
+    <b>เอกสารถ่ายรูปแล้วมีเงามือ ใช้ Otsu ไม่รอด</b> — เพราะมันหา T ค่าเดียวสำหรับทั้งภาพ
+    งานแบบนั้นต้อง adaptive เสมอ
+  </div>
+
+  <h2>18.8 Morphology — จัดการรูปทรงบนภาพไบนารี</h2>
+
+  <table>
+    <tr><th>คำสั่ง</th><th>กติกา</th><th>ใช้ทำอะไร</th></tr>
+    <tr><td>Erosion</td><td>เป็น 1 เมื่อใต้ SE เป็น 1 <b>ทุกช่อง</b></td><td>กัดขอบ วัตถุเล็กลง</td></tr>
+    <tr><td>Dilation</td><td>เป็น 1 เมื่อมี 1 <b>อย่างน้อยหนึ่ง</b>ช่อง</td><td>พองวัตถุ เชื่อมรอยขาด</td></tr>
+    <tr><td>Opening</td><td>กัดแล้วพอง</td><td>ลบจุดรบกวนเล็ก ๆ นอกวัตถุ</td></tr>
+    <tr><td>Closing</td><td>พองแล้วกัด</td><td>อุดรูในตัววัตถุ</td></tr>
+  </table>
+
+  <figure class="fig" data-step="0">
+    <svg viewBox="-1 -1 236 184" role="img" aria-label="Erosion กัดขอบวัตถุ">
+      <g class="fig-step s0"><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g></g><g class="fig-step s1"><g fill="var(--wrong)" opacity=".22"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="13" height="13"/><rect x="130" y="52" width="13" height="13"/><rect x="39" y="65" width="13" height="13"/><rect x="65" y="65" width="39" height="13"/><rect x="130" y="65" width="13" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="13" height="13"/><rect x="65" y="78" width="13" height="13"/><rect x="91" y="78" width="13" height="13"/><rect x="130" y="78" width="13" height="13"/><rect x="39" y="91" width="13" height="13"/><rect x="65" y="91" width="39" height="13"/><rect x="130" y="91" width="13" height="13"/><rect x="39" y="104" width="13" height="13"/><rect x="130" y="104" width="13" height="13"/><rect x="39" y="117" width="13" height="13"/><rect x="130" y="117" width="13" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g><g fill="var(--accent)"><rect x="52" y="52" width="78" height="13"/><rect x="52" y="65" width="13" height="13"/><rect x="104" y="65" width="26" height="13"/><rect x="52" y="78" width="13" height="13"/><rect x="104" y="78" width="26" height="13"/><rect x="52" y="91" width="13" height="13"/><rect x="104" y="91" width="26" height="13"/><rect x="52" y="104" width="78" height="13"/><rect x="52" y="117" width="78" height="13"/></g></g><g class="fig-step s2"><g fill="var(--wrong)" opacity=".22"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g><g fill="var(--accent)"></g></g>
+      <path d="M0 0 H234 M0 13 H234 M0 26 H234 M0 39 H234 M0 52 H234 M0 65 H234 M0 78 H234 M0 91 H234 M0 104 H234 M0 117 H234 M0 130 H234 M0 143 H234 M0 156 H234 M0 169 H234 M0 182 H234 M0 0 V182 M13 0 V182 M26 0 V182 M39 0 V182 M52 0 V182 M65 0 V182 M78 0 V182 M91 0 V182 M104 0 V182 M117 0 V182 M130 0 V182 M143 0 V182 M156 0 V182 M169 0 V182 M182 0 V182 M195 0 V182 M208 0 V182 M221 0 V182 M234 0 V182 " fill="none" stroke="var(--rule)" stroke-width=".5"/>
+    </svg>
+    <label class="fig-ctl">
+      <input type="range" min="0" max="2" step="1" value="0" aria-label="เลื่อนดูทีละขั้น">
+      <span class="fig-ctl-label"><span class="fig-step s0">ต้นฉบับ</span><span class="fig-step s1">กัด 1 รอบ</span><span class="fig-step s2">กัด 2 รอบ</span></span>
+    </label>
+    <figcaption><b>Erosion</b> — พิกเซลจะเหลือ 1 ก็ต่อเมื่อเพื่อนบ้าน 3×3 <b>เป็น 1 ทุกช่อง</b> วัตถุจึงถูกกัดให้เล็กลงรอบด้าน จุดเดี่ยว ๆ กับหางบาง ๆ หายไปก่อนใคร ส่วนรูข้างในกลับกว้างขึ้น (ช่องสีแดงจาง = ที่หายไปจากต้นฉบับ)</figcaption>
+  </figure>
+
+  <figure class="fig" data-step="0">
+    <svg viewBox="-1 -1 236 184" role="img" aria-label="Dilation พองวัตถุ">
+      <g class="fig-step s0"><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g></g><g class="fig-step s1"><g fill="var(--accent)"><rect x="26" y="26" width="130" height="13"/><rect x="26" y="39" width="130" height="13"/><rect x="26" y="52" width="130" height="13"/><rect x="182" y="52" width="39" height="13"/><rect x="26" y="65" width="130" height="13"/><rect x="182" y="65" width="39" height="13"/><rect x="26" y="78" width="130" height="13"/><rect x="182" y="78" width="39" height="13"/><rect x="26" y="91" width="130" height="13"/><rect x="26" y="104" width="130" height="13"/><rect x="182" y="104" width="39" height="13"/><rect x="26" y="117" width="130" height="13"/><rect x="182" y="117" width="39" height="13"/><rect x="26" y="130" width="130" height="13"/><rect x="182" y="130" width="39" height="13"/><rect x="26" y="143" width="130" height="13"/><rect x="65" y="156" width="52" height="13"/><rect x="65" y="169" width="52" height="13"/></g><g fill="var(--good)" opacity=".45"><rect x="26" y="26" width="130" height="13"/><rect x="26" y="39" width="13" height="13"/><rect x="143" y="39" width="13" height="13"/><rect x="26" y="52" width="13" height="13"/><rect x="143" y="52" width="13" height="13"/><rect x="182" y="52" width="39" height="13"/><rect x="26" y="65" width="13" height="13"/><rect x="143" y="65" width="13" height="13"/><rect x="182" y="65" width="13" height="13"/><rect x="208" y="65" width="13" height="13"/><rect x="26" y="78" width="13" height="13"/><rect x="78" y="78" width="13" height="13"/><rect x="143" y="78" width="13" height="13"/><rect x="182" y="78" width="39" height="13"/><rect x="26" y="91" width="13" height="13"/><rect x="143" y="91" width="13" height="13"/><rect x="26" y="104" width="13" height="13"/><rect x="143" y="104" width="13" height="13"/><rect x="182" y="104" width="39" height="13"/><rect x="26" y="117" width="13" height="13"/><rect x="143" y="117" width="13" height="13"/><rect x="182" y="117" width="13" height="13"/><rect x="208" y="117" width="13" height="13"/><rect x="26" y="130" width="13" height="13"/><rect x="143" y="130" width="13" height="13"/><rect x="182" y="130" width="39" height="13"/><rect x="26" y="143" width="52" height="13"/><rect x="104" y="143" width="52" height="13"/><rect x="65" y="156" width="13" height="13"/><rect x="104" y="156" width="13" height="13"/><rect x="65" y="169" width="52" height="13"/></g></g><g class="fig-step s2"><g fill="var(--accent)"><rect x="13" y="13" width="156" height="13"/><rect x="13" y="26" width="156" height="13"/><rect x="13" y="39" width="221" height="13"/><rect x="13" y="52" width="221" height="13"/><rect x="13" y="65" width="221" height="13"/><rect x="13" y="78" width="221" height="13"/><rect x="13" y="91" width="221" height="13"/><rect x="13" y="104" width="221" height="13"/><rect x="13" y="117" width="221" height="13"/><rect x="13" y="130" width="221" height="13"/><rect x="13" y="143" width="221" height="13"/><rect x="13" y="156" width="156" height="13"/><rect x="52" y="169" width="78" height="13"/></g><g fill="var(--good)" opacity=".45"><rect x="13" y="13" width="156" height="13"/><rect x="13" y="26" width="156" height="13"/><rect x="13" y="39" width="26" height="13"/><rect x="143" y="39" width="91" height="13"/><rect x="13" y="52" width="26" height="13"/><rect x="143" y="52" width="91" height="13"/><rect x="13" y="65" width="26" height="13"/><rect x="143" y="65" width="52" height="13"/><rect x="208" y="65" width="26" height="13"/><rect x="13" y="78" width="26" height="13"/><rect x="78" y="78" width="13" height="13"/><rect x="143" y="78" width="91" height="13"/><rect x="13" y="91" width="26" height="13"/><rect x="143" y="91" width="91" height="13"/><rect x="13" y="104" width="26" height="13"/><rect x="143" y="104" width="91" height="13"/><rect x="13" y="117" width="26" height="13"/><rect x="143" y="117" width="52" height="13"/><rect x="208" y="117" width="26" height="13"/><rect x="13" y="130" width="26" height="13"/><rect x="143" y="130" width="91" height="13"/><rect x="13" y="143" width="65" height="13"/><rect x="104" y="143" width="130" height="13"/><rect x="13" y="156" width="65" height="13"/><rect x="104" y="156" width="65" height="13"/><rect x="52" y="169" width="78" height="13"/></g></g>
+      <path d="M0 0 H234 M0 13 H234 M0 26 H234 M0 39 H234 M0 52 H234 M0 65 H234 M0 78 H234 M0 91 H234 M0 104 H234 M0 117 H234 M0 130 H234 M0 143 H234 M0 156 H234 M0 169 H234 M0 182 H234 M0 0 V182 M13 0 V182 M26 0 V182 M39 0 V182 M52 0 V182 M65 0 V182 M78 0 V182 M91 0 V182 M104 0 V182 M117 0 V182 M130 0 V182 M143 0 V182 M156 0 V182 M169 0 V182 M182 0 V182 M195 0 V182 M208 0 V182 M221 0 V182 M234 0 V182 " fill="none" stroke="var(--rule)" stroke-width=".5"/>
+    </svg>
+    <label class="fig-ctl">
+      <input type="range" min="0" max="2" step="1" value="0" aria-label="เลื่อนดูทีละขั้น">
+      <span class="fig-ctl-label"><span class="fig-step s0">ต้นฉบับ</span><span class="fig-step s1">พอง 1 รอบ</span><span class="fig-step s2">พอง 2 รอบ</span></span>
+    </label>
+    <figcaption><b>Dilation</b> — พิกเซลเป็น 1 เมื่อเพื่อนบ้าน 3×3 <b>มี 1 อย่างน้อยหนึ่งช่อง</b> วัตถุพองออกรอบด้าน รูข้างในถูกอุด และของที่อยู่ใกล้กันจะเชื่อมติดกัน (ช่องสีเขียวจาง = ที่งอกเพิ่มมา)</figcaption>
+  </figure>
+
+  <figure class="fig" data-step="0">
+    <svg viewBox="-1 -1 236 184" role="img" aria-label="Opening กัดแล้วพอง">
+      <g class="fig-step s0"><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g></g><g class="fig-step s1"><g fill="var(--wrong)" opacity=".22"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="13" height="13"/><rect x="130" y="52" width="13" height="13"/><rect x="39" y="65" width="13" height="13"/><rect x="65" y="65" width="39" height="13"/><rect x="130" y="65" width="13" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="13" height="13"/><rect x="65" y="78" width="13" height="13"/><rect x="91" y="78" width="13" height="13"/><rect x="130" y="78" width="13" height="13"/><rect x="39" y="91" width="13" height="13"/><rect x="65" y="91" width="39" height="13"/><rect x="130" y="91" width="13" height="13"/><rect x="39" y="104" width="13" height="13"/><rect x="130" y="104" width="13" height="13"/><rect x="39" y="117" width="13" height="13"/><rect x="130" y="117" width="13" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g><g fill="var(--accent)"><rect x="52" y="52" width="78" height="13"/><rect x="52" y="65" width="13" height="13"/><rect x="104" y="65" width="26" height="13"/><rect x="52" y="78" width="13" height="13"/><rect x="104" y="78" width="26" height="13"/><rect x="52" y="91" width="13" height="13"/><rect x="104" y="91" width="26" height="13"/><rect x="52" y="104" width="78" height="13"/><rect x="52" y="117" width="78" height="13"/></g></g><g class="fig-step s2"><g fill="var(--wrong)" opacity=".22"><rect x="195" y="65" width="13" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="39" y="130" width="104" height="13"/></g></g>
+      <path d="M0 0 H234 M0 13 H234 M0 26 H234 M0 39 H234 M0 52 H234 M0 65 H234 M0 78 H234 M0 91 H234 M0 104 H234 M0 117 H234 M0 130 H234 M0 143 H234 M0 156 H234 M0 169 H234 M0 182 H234 M0 0 V182 M13 0 V182 M26 0 V182 M39 0 V182 M52 0 V182 M65 0 V182 M78 0 V182 M91 0 V182 M104 0 V182 M117 0 V182 M130 0 V182 M143 0 V182 M156 0 V182 M169 0 V182 M182 0 V182 M195 0 V182 M208 0 V182 M221 0 V182 M234 0 V182 " fill="none" stroke="var(--rule)" stroke-width=".5"/>
+    </svg>
+    <label class="fig-ctl">
+      <input type="range" min="0" max="2" step="1" value="0" aria-label="เลื่อนดูทีละขั้น">
+      <span class="fig-ctl-label"><span class="fig-step s0">ต้นฉบับ</span><span class="fig-step s1">1) กัด</span><span class="fig-step s2">2) พองกลับ = Opening</span></span>
+    </label>
+    <figcaption><b>Opening = กัดแล้วพอง</b> — จุดรบกวนกับหางบาง ๆ ถูกกัดหายไปตั้งแต่ขั้นแรก พอพองกลับก็ไม่มีอะไรให้ฟื้น วัตถุหลักจึงกลับมาขนาดเดิมแต่<b>เศษหายหมด</b> สังเกตว่ารูข้างในยังอยู่</figcaption>
+  </figure>
+
+  <figure class="fig" data-step="0">
+    <svg viewBox="-1 -1 236 184" role="img" aria-label="Closing พองแล้วกัด">
+      <g class="fig-step s0"><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="39" height="13"/><rect x="91" y="78" width="52" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g></g><g class="fig-step s1"><g fill="var(--accent)"><rect x="26" y="26" width="130" height="13"/><rect x="26" y="39" width="130" height="13"/><rect x="26" y="52" width="130" height="13"/><rect x="182" y="52" width="39" height="13"/><rect x="26" y="65" width="130" height="13"/><rect x="182" y="65" width="39" height="13"/><rect x="26" y="78" width="130" height="13"/><rect x="182" y="78" width="39" height="13"/><rect x="26" y="91" width="130" height="13"/><rect x="26" y="104" width="130" height="13"/><rect x="182" y="104" width="39" height="13"/><rect x="26" y="117" width="130" height="13"/><rect x="182" y="117" width="39" height="13"/><rect x="26" y="130" width="130" height="13"/><rect x="182" y="130" width="39" height="13"/><rect x="26" y="143" width="130" height="13"/><rect x="65" y="156" width="52" height="13"/><rect x="65" y="169" width="52" height="13"/></g><g fill="var(--good)" opacity=".45"><rect x="26" y="26" width="130" height="13"/><rect x="26" y="39" width="13" height="13"/><rect x="143" y="39" width="13" height="13"/><rect x="26" y="52" width="13" height="13"/><rect x="143" y="52" width="13" height="13"/><rect x="182" y="52" width="39" height="13"/><rect x="26" y="65" width="13" height="13"/><rect x="143" y="65" width="13" height="13"/><rect x="182" y="65" width="13" height="13"/><rect x="208" y="65" width="13" height="13"/><rect x="26" y="78" width="13" height="13"/><rect x="78" y="78" width="13" height="13"/><rect x="143" y="78" width="13" height="13"/><rect x="182" y="78" width="39" height="13"/><rect x="26" y="91" width="13" height="13"/><rect x="143" y="91" width="13" height="13"/><rect x="26" y="104" width="13" height="13"/><rect x="143" y="104" width="13" height="13"/><rect x="182" y="104" width="39" height="13"/><rect x="26" y="117" width="13" height="13"/><rect x="143" y="117" width="13" height="13"/><rect x="182" y="117" width="13" height="13"/><rect x="208" y="117" width="13" height="13"/><rect x="26" y="130" width="13" height="13"/><rect x="143" y="130" width="13" height="13"/><rect x="182" y="130" width="39" height="13"/><rect x="26" y="143" width="52" height="13"/><rect x="104" y="143" width="52" height="13"/><rect x="65" y="156" width="13" height="13"/><rect x="104" y="156" width="13" height="13"/><rect x="65" y="169" width="52" height="13"/></g></g><g class="fig-step s2"><g fill="var(--accent)"><rect x="39" y="39" width="104" height="13"/><rect x="39" y="52" width="104" height="13"/><rect x="39" y="65" width="104" height="13"/><rect x="195" y="65" width="13" height="13"/><rect x="39" y="78" width="104" height="13"/><rect x="39" y="91" width="104" height="13"/><rect x="39" y="104" width="104" height="13"/><rect x="39" y="117" width="104" height="13"/><rect x="195" y="117" width="13" height="13"/><rect x="39" y="130" width="104" height="13"/><rect x="78" y="143" width="26" height="13"/><rect x="78" y="156" width="26" height="13"/></g><g fill="var(--good)" opacity=".45"><rect x="78" y="78" width="13" height="13"/></g></g>
+      <path d="M0 0 H234 M0 13 H234 M0 26 H234 M0 39 H234 M0 52 H234 M0 65 H234 M0 78 H234 M0 91 H234 M0 104 H234 M0 117 H234 M0 130 H234 M0 143 H234 M0 156 H234 M0 169 H234 M0 182 H234 M0 0 V182 M13 0 V182 M26 0 V182 M39 0 V182 M52 0 V182 M65 0 V182 M78 0 V182 M91 0 V182 M104 0 V182 M117 0 V182 M130 0 V182 M143 0 V182 M156 0 V182 M169 0 V182 M182 0 V182 M195 0 V182 M208 0 V182 M221 0 V182 M234 0 V182 " fill="none" stroke="var(--rule)" stroke-width=".5"/>
+    </svg>
+    <label class="fig-ctl">
+      <input type="range" min="0" max="2" step="1" value="0" aria-label="เลื่อนดูทีละขั้น">
+      <span class="fig-ctl-label"><span class="fig-step s0">ต้นฉบับ</span><span class="fig-step s1">1) พอง</span><span class="fig-step s2">2) กัดกลับ = Closing</span></span>
+    </label>
+    <figcaption><b>Closing = พองแล้วกัด</b> — รูข้างในถูกอุดตอนพอง พอกัดกลับรูก็ไม่กลับมา วัตถุหลักขนาดเท่าเดิมแต่<b>รูหายไป</b> ส่วนจุดรบกวนข้างนอกยังอยู่ครบ — ตรงข้ามกับ Opening</figcaption>
+  </figure>
+
+<pre>se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))   <span class="out"># รูปทรงหัวแปรง</span>
+
+ero    = cv2.erode(binary, se)
+dil    = cv2.dilate(binary, se)
+opened = cv2.morphologyEx(binary, cv2.MORPH_OPEN,  se)
+closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, se)</pre>
+
+  <div class="note">
+    <b>Opening แล้ว Closing คือคู่หูมาตรฐาน</b> — ทำต่อจาก threshold เกือบทุกครั้ง
+    เพื่อเก็บกวาดเศษก่อนเอาไปนับวัตถุ
+  </div>
+
+  <h2>18.9 Edge detection — ขอบคืออนุพันธ์</h2>
+
+  <p>ขอบภาพคือบริเวณที่ความสว่าง<b>เปลี่ยนเร็ว</b> Sobel ใช้เคอร์เนลสองตัวจับการเปลี่ยนแปลง
+  แนวนอนและแนวตั้ง แล้วรวมเป็นขนาดเกรเดียนต์ <code>G = |Gx| + |Gy|</code></p>
+
+<pre>gx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)   <span class="out"># เปลี่ยนตามแนวนอน</span>
+gy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)   <span class="out"># เปลี่ยนตามแนวตั้ง</span>
+
+mag   = cv2.convertScaleAbs(np.abs(gx) + np.abs(gy))    <span class="out"># ความแรงของขอบ</span>
+angle = np.arctan2(gy, gx) * 180 / np.pi                <span class="out"># ทิศทางของขอบ (องศา)</span>
+
+lap = cv2.Laplacian(gray, cv2.CV_64F)             <span class="out"># อนุพันธ์อันดับสอง</span></pre>
+
+  <div class="warn">
+    <b>ต้องใส่ <code>cv2.CV_64F</code> ไม่ใช่ปล่อยเป็น uint8</b> — เกรเดียนต์มีค่าติดลบ
+    (ขอบขาลง) ถ้าเก็บเป็น uint8 ค่าลบจะถูกตัดเป็น 0 <b>ขอบหายไปครึ่งหนึ่ง</b>
+    ค่อยแปลงกลับด้วย <code>convertScaleAbs</code> ตอนท้าย
+  </div>
+
+  <h2>18.10 Contour — ขอบวัตถุที่เรียงต่อกัน</h2>
+
+  <p>คอนทัวร์คือลำดับพิกเซลขอบที่เรียงรอบวัตถุ (อัลกอริทึม Moore เดินสำรวจเพื่อนบ้าน 8 ทิศ
+  จนกลับมาที่จุดเริ่ม) เก็บเป็นลำดับทิศทางได้ จึงวัดรูปทรงได้โดย<b>ไม่ต้องเก็บภาพทั้งใบ</b></p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 240 130" role="img" aria-label="จุดเดินไล่ตามขอบวัตถุรอบหนึ่งรอบ">
+      <path d="M 60 22 L 142 16 L 188 58 L 166 104 L 92 110 L 40 74 Z"
+            fill="var(--accent)" opacity=".18"/>
+      <path d="M 60 22 L 142 16 L 188 58 L 166 104 L 92 110 L 40 74 Z"
+            fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+      <circle class="fig-dot" r="6" fill="var(--accent-hot)"/>
+      <text class="lbl" x="0" y="126">เดินตามเพื่อนบ้าน 8 ทิศจนกลับมาที่จุดเริ่ม</text>
+    </svg>
+    <figcaption><b>Contour tracing</b> — ไล่เก็บพิกเซลขอบเรียงต่อกันรอบวัตถุ
+      ได้ลำดับทิศทาง (chain code) ที่เอาไปวัดเส้นรอบรูปและเทียบรูปทรงได้ โดยไม่ต้องเก็บภาพทั้งใบ</figcaption>
+  </figure>
+
+<pre>contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+print("เจอวัตถุ", len(contours), "ชิ้น")
+
+for c in contours:
+    area = cv2.contourArea(c)          <span class="out"># พื้นที่</span>
+    if area &lt; 100:                     <span class="out"># กรองเศษเล็ก ๆ ทิ้ง</span>
+        continue
+    peri = cv2.arcLength(c, True)      <span class="out"># เส้นรอบรูป</span>
+    x, y, w, h = cv2.boundingRect(c)   <span class="out"># กรอบสี่เหลี่ยมที่ครอบพอดี</span>
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    print(f"พื้นที่ {area:.0f} เส้นรอบรูป {peri:.0f} สัดส่วน {w/h:.2f}")
+
+cv2.drawContours(img, contours, -1, (0, 0, 255), 1)   <span class="out"># -1 = วาดทุกเส้น</span></pre>
+
+  <table>
+    <tr><th>ค่าที่ใส่</th><th>ความหมาย</th></tr>
+    <tr><td><code>RETR_EXTERNAL</code></td><td>เอาแค่ขอบนอกสุด ไม่เอารูข้างใน</td></tr>
+    <tr><td><code>RETR_TREE</code></td><td>เอาทั้งหมดพร้อมลำดับชั้นว่าอันไหนอยู่ในอันไหน</td></tr>
+    <tr><td><code>CHAIN_APPROX_NONE</code></td><td>เก็บทุกจุดขอบ</td></tr>
+    <tr><td><code>CHAIN_APPROX_SIMPLE</code></td><td>เก็บแค่หัวมุม — เส้นตรงยาว ๆ เหลือ 2 จุด</td></tr>
+  </table>
+
+  <div class="warn">
+    <b><code>findContours</code> ต้องการภาพไบนารี</b> — ใส่ภาพสีหรือภาพเทาเข้าไปตรง ๆ ไม่ได้
+    ลำดับที่ถูกคือ เทา → เบลอ → threshold → morphology → findContours
+  </div>
+
+  <h2>18.11 ส่วนเสริมที่ใช้บ่อย</h2>
+
+  <p><b>Median filter</b> — noise แบบ salt &amp; pepper คือพิกเซลที่กระโดดไป 0 หรือ 255 แบบสุ่ม
+  เกาส์เซียนจะเฉลี่ยค่าผิดเข้าไปด้วยจนเหลือรอยด่าง ส่วนมีเดียนเรียงค่าใน 9 ช่องแล้วหยิบ<b>ตัวกลาง</b>
+  ค่าสุดโต่งจึงถูกตัดทิ้งหมดและขอบยังคม</p>
+
+<pre>med = cv2.medianBlur(img, 5)          <span class="out"># ขนาดต้องเป็นเลขคี่</span></pre>
+
+  <p><b>Connected component labeling</b> — นับว่ามีวัตถุกี่ชิ้นและแต่ละชิ้นใหญ่แค่ไหน</p>
+
+<pre>n, labels, stats, centroids = cv2.connectedComponentsWithStats(binary, connectivity=8)
+
+for i in range(1, n):                 <span class="out"># เริ่มที่ 1 เพราะ 0 คือพื้นหลัง</span>
+    x, y, w, h, area = stats[i]
+    if area &lt; 50:                     <span class="out"># กรองก้อนเล็กออก</span>
+        continue
+    cx, cy = centroids[i]
+    print(f"วัตถุ {i}: พื้นที่ {area} จุดกึ่งกลาง ({cx:.0f}, {cy:.0f})")</pre>
+
+  <p><b>Bit-plane slicing</b> — ค่าพิกเซลหนึ่งไบต์แยกได้เป็น 8 ระนาบบิต
+  บิตสูง (7, 6, 5) เก็บโครงร่างหลักของภาพ ส่วนบิตต่ำ (2, 1, 0) แทบเป็นสัญญาณรบกวน</p>
+
+<pre>for k in range(8):
+    plane = ((gray &gt;&gt; k) &amp; 1) * 255   <span class="out"># ดึงบิตที่ k ออกมาเป็นภาพขาวดำ</span>
+    cv2.imwrite(f"bit{k}.png", plane)</pre>
+
+  <div class="note">
+    <b>ความจริงข้อนี้คือหัวใจของการบีบอัดภาพ</b> — ตัดบิตต่ำทิ้งแล้วภาพแทบไม่ต่าง
+    และเป็นที่ซ่อนข้อมูลของ steganography ด้วย เพราะแก้บิตล่างสุดแล้วตาคนมองไม่ออก
+  </div>
+
+  <h2>18.12 ท่ามาตรฐาน — นับวัตถุในภาพ</h2>
+
+  <p>รวมทุกหัวข้อในบทนี้เป็นลำดับเดียวที่ใช้จริงเกือบทุกงาน</p>
+
+<pre>import cv2
+import numpy as np
+
+img = cv2.imread("coins.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)          <span class="out"># 1) ลดเหลือช่องเดียว</span>
+blur = cv2.GaussianBlur(gray, (5, 5), 0)              <span class="out"># 2) ลด noise</span>
+
+T, binary = cv2.threshold(blur, 0, 255,               <span class="out"># 3) แยกวัตถุจากพื้นหลัง</span>
+                          cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN,  se)   <span class="out"># 4) เก็บกวาดเศษ</span>
+binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, se)   <span class="out">#    และอุดรู</span>
+
+contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL,  <span class="out"># 5) หาขอบวัตถุ</span>
+                               cv2.CHAIN_APPROX_SIMPLE)
+
+count = 0
+for c in contours:
+    area = cv2.contourArea(c)
+    if area &lt; 300:                                    <span class="out"># 6) กรองก้อนเล็กทิ้ง</span>
+        continue
+    count += 1
+    x, y, w, h = cv2.boundingRect(c)
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.putText(img, str(count), (x, y - 5),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+
+print(f"Otsu เลือก T = {T:.0f} · นับได้ {count} ชิ้น")
+cv2.imshow("count", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</pre>
+
+  <div class="note">
+    <b>ตัวเลข 300 กับ (5,5) ต้องปรับตามภาพจริง</b> — ไม่มีค่าที่ใช้ได้กับทุกรูป
+    เขียนโค้ดให้แก้ตัวเลขพวกนี้ง่าย ๆ ไว้ตั้งแต่แรก แล้วนั่งลองปรับดูผล นี่คือ 80% ของงานจริง
+  </div>
+
+  <h2>18.13 Flowchart ของงานประมวลผลภาพ</h2>
+
+  <p>งานประมวลผลภาพส่วนใหญ่เป็น<strong>ท่อ (pipeline)</strong> — ภาพไหลผ่านขั้นตอนเรียงกันลงมา
+  flowchart จึงเป็นเส้นตรงยาว แล้วมี loop ตอนท้ายเมื่อต้องจัดการวัตถุทีละชิ้น
+  ในกล่องเขียนเป็นคำอธิบายสั้น ๆ ได้ ไม่ต้องใส่พารามิเตอร์ครบ</p>
+
+  <figure class="fig">
+    <svg class="flow" viewBox="-134 -21 374 722" style="max-width:542px" role="img" aria-label="flowchart นับวัตถุในภาพ"><defs><marker id="ah-ch15ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch15ex" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 327.0 L0.0 349.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 379.0 L0.0 398.5" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 457.5 L0.0 486.5" marker-end="url(#ah-ch15ex)"/><text class="el" x="6.0" y="468.5" style="text-anchor:start">จริง</text><path class="e" d="M70.6 516.0 L126.6 516.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="78.6" y="511.0" style="text-anchor:start">จริง</text><path class="e" d="M0.0 545.5 L0.0 576.0 L-130.0 576.0 L-130.0 428.0 L-52.7 428.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="6.0" y="556.5" style="text-anchor:start">เท็จ</text><path class="e" d="M169.1 537.5 L169.1 576.0 L-130.0 576.0 L-130.0 428.0 L-52.7 428.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M0.0 643.0 L0.0 665.0" marker-end="url(#ah-ch15ex)"/><path class="e" d="M52.7 428.0 L235.6 428.0 L235.6 598.0 L0.0 598.0 L0.0 613.0" marker-end="url(#ah-ch15ex)"/><text class="el" x="60.7" y="423.0" style="text-anchor:start">เท็จ</text><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-31.2 37.0H47.2L31.2 67.0H-47.2Z"/><text x="0" y="52.0">อ่านภาพ</text><rect class="n" x="-50.1" y="89.0" width="100.3" height="30"/><text x="0" y="104.0">แปลงเป็น gray</text><rect class="n" x="-75.5" y="141.0" width="150.9" height="30"/><text x="0" y="156.0">GaussianBlur ลด noise</text><rect class="n" x="-66.9" y="193.0" width="133.7" height="30"/><text x="0" y="208.0">threshold แบบ Otsu</text><rect class="n" x="-80.9" y="245.0" width="161.7" height="30"/><text x="0" y="260.0">morphology open / close</text><rect class="n" x="-48.4" y="297.0" width="96.8" height="30"/><text x="0" y="312.0">findContours</text><rect class="n" x="-39.5" y="349.0" width="79.1" height="30"/><text x="0" y="364.0">count = 0</text><path class="n dec" d="M0 398.5L52.7 428L0 457.5L-52.7 428Z"/><text x="0" y="421.5">ยังมี c ใน</text><text x="0" y="434.5">contours ?</text><path class="n dec" d="M0 486.5L70.6 516L0 545.5L-70.6 516Z"/><text x="0" y="509.5">contourArea(c)</text><text x="0" y="522.5">&gt;= 300 ?</text><rect class="n" x="126.6" y="494.5" width="85.0" height="43"/><text x="169.07575757575756" y="509.5">count += 1</text><text x="169.07575757575756" y="522.5">วาดกรอบ</text><path class="n io" d="M-64.7 613.0H80.7L64.7 643.0H-80.7Z"/><text x="0" y="628.0">แสดง count และภาพ</text><rect class="n term" x="-19.4" y="665.0" width="38.8" height="30" rx="15.0"/><text x="0" y="680.0">จบ</text></svg>
+    <figcaption>ท่ามาตรฐาน 15.12 · 7 กล่องบนคือ pipeline · เพชรล่างคือการกรองก้อนเล็กทิ้ง</figcaption>
+  </figure>
+
+  <div class="note">
+    <b>วาด pipeline ก่อนเขียนโค้ด</b> ช่วยให้เห็นว่าขั้นไหนรับภาพชนิดไหน
+    เช่น threshold ต้องได้ภาพ gray · findContours ต้องได้ภาพไบนารี ถ้าสลับลำดับผิดจะ error หรือได้ผลเพี้ยน
+  </div>
+
+  <hr>
+
+  <h2>แบบทดสอบ · เลือกตอบ</h2>
+  <p class="lead">เลือกได้ข้อละครั้งเดียว คิดก่อนกด</p>
+
+  <div class="quiz">
+    <div class="q" data-n="Q1">ภาพดิจิทัลจริง ๆ แล้วคืออะไร?</div>
+    <button class="choice">ภาพวาดที่คอมพิวเตอร์จำไว้ทั้งใบ</button>
+    <button class="choice" data-correct>ตารางของตัวเลข 0-255</button>
+    <button class="choice">ไฟล์ที่เปิดได้เฉพาะโปรแกรมแต่งรูป</button>
+    <button class="choice">ชุดคำสั่งวาดรูป</button>
+    <div class="explain">ทุกอย่างในบทนี้ทำได้เพราะภาพเป็นแค่ตัวเลข — บวก ลบ เทียบค่า วนลูปได้เหมือนข้อมูลอื่น</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q2">ลด L (จำนวนระดับความสว่าง) ให้เหลือน้อย ๆ ภาพจะเป็นยังไง?</div>
+    <button class="choice">ภาพเล็กลง</button>
+    <button class="choice" data-correct>ไล่เฉดหายไป เหลือเป็นแถบสีทึบเป็นชั้น ๆ</button>
+    <button class="choice">ภาพหมุนกลับด้าน</button>
+    <button class="choice">สีกลายเป็นตรงข้าม</button>
+    <div class="explain">ลองเลื่อนดูรูปในหัวข้อ 18.1 — ส่วนภาพที่แตกเป็นบล็อกนั่นคือลด N (sampling)</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q3">ภาพไบนารี (binary) มีค่าได้กี่แบบ?</div>
+    <button class="choice">256 แบบ</button>
+    <button class="choice">3 แบบ</button>
+    <button class="choice" data-correct>2 แบบ — ดำกับขาว</button>
+    <button class="choice">16.7 ล้านแบบ</button>
+    <div class="explain">ได้จากการเทียบค่าเทากับเกณฑ์ T เข้มกว่า T เป็นดำ ที่เหลือเป็นขาว</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q4">ฮิสโทแกรมบอกอะไรเรา?</div>
+    <button class="choice">ตำแหน่งของวัตถุในภาพ</button>
+    <button class="choice" data-correct>มีพิกเซลค่าไหนอยู่กี่จุด</button>
+    <button class="choice">ขนาดไฟล์ของภาพ</button>
+    <button class="choice">จำนวนสีที่ตาคนแยกออก</button>
+    <div class="explain">มันนับอย่างเดียว ไม่สนใจว่าพิกเซลอยู่ตรงไหน จึงบอกได้แค่การกระจายความสว่าง</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q5">อยากคัดแยกวัตถุสีเขียวจากภาพที่มีเงาพาดผ่าน ควรใช้อะไร?</div>
+    <button class="choice">แปลงเป็นภาพเทาก่อน</button>
+    <button class="choice" data-correct>แปลงเป็น HSV แล้วกรองช่วง Hue</button>
+    <button class="choice">ใช้ Sobel หาขอบ</button>
+    <button class="choice">ย่อภาพให้เล็กลง</button>
+    <div class="explain">เงาทำให้ V (ความสว่าง) เปลี่ยน แต่ H (สีอะไร) แทบไม่ขยับ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q6">ข้อดีของ Otsu คืออะไร?</div>
+    <button class="choice">ทำให้ภาพคมขึ้น</button>
+    <button class="choice" data-correct>หาค่าเกณฑ์ T ให้อัตโนมัติ ไม่ต้องเดาเอง</button>
+    <button class="choice">ลบ noise ออกจากภาพ</button>
+    <button class="choice">แปลงภาพสีเป็นภาพเทา</button>
+    <div class="explain">มันไล่ลอง T ทุกค่า แล้วเลือกค่าที่แยกวัตถุกับพื้นหลังได้ขาดที่สุด</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q7">ภาพไบนารีมีจุดขาวเล็ก ๆ กระจายเป็น noise เต็มไปหมด ใช้อะไรลบ?</div>
+    <button class="choice">Dilation</button>
+    <button class="choice" data-correct>Opening — กัดแล้วพอง</button>
+    <button class="choice">Closing — พองแล้วกัด</button>
+    <button class="choice">Threshold</button>
+    <div class="explain">Opening กัดจุดเล็กหายไปก่อน แล้วค่อยพองวัตถุจริงกลับมาขนาดเดิม
+      ส่วน Closing ใช้อุดรู<b>ใน</b>วัตถุ</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q8">ทำไมต้องเบลอภาพก่อนหาขอบ?</div>
+    <button class="choice">เพื่อให้ภาพสวยขึ้น</button>
+    <button class="choice" data-correct>เพราะจุดรบกวนเม็ดเล็ก ๆ จะกลายเป็นขอบปลอมเต็มไปหมด</button>
+    <button class="choice">เพราะ Canny รับได้แต่ภาพที่เบลอแล้ว</button>
+    <button class="choice">เพื่อให้ไฟล์เล็กลง</button>
+    <div class="explain">ขอบคือ “จุดที่ความสว่างเปลี่ยนเร็ว” — noise หนึ่งเม็ดก็เข้าเกณฑ์นั้นเหมือนกัน</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q9">ก่อนใช้ <code>findContours</code> ต้องเตรียมภาพเป็นแบบไหน?</div>
+    <button class="choice">ภาพสี BGR</button>
+    <button class="choice">ภาพ HSV</button>
+    <button class="choice" data-correct>ภาพไบนารี (ผ่าน threshold มาแล้ว)</button>
+    <button class="choice">ภาพขนาดเท่าไรก็ได้ แต่ต้องเป็นภาพสี</button>
+    <div class="explain">ลำดับมาตรฐานคือ เทา → เบลอ → threshold → morphology → findContours</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q" data-n="Q10">ข้อใดเรียงลำดับกล่องใน pipeline นับวัตถุ (18.13) ถูกต้อง?</div>
+    <button class="choice">threshold → gray → findContours</button>
+    <button class="choice" data-correct>gray → blur → threshold → findContours</button>
+    <button class="choice">findContours → threshold → gray</button>
+    <button class="choice">blur → findContours → gray → threshold</button>
+    <div class="explain">threshold ต้องได้ภาพ gray · findContours ต้องได้ภาพไบนารี · ลำดับผิด = error หรือผลเพี้ยน</div>
+  </div>
+
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · ภาพคือตารางตัวเลข</h4>
+    <p>ใช้ numpy ดูขนาดภาพและทำภาพขาวดำสองระดับ</p>
+    <script type="application/json">{"code": ["import numpy as np", "", "img = np.array([[10, 200], [50, 90]])", "print(img.@1@)", "print(img.@2@())", "binary = (img @3@ 100).astype(np.uint8) * 255", "print(binary)"], "blanks": {"1": {"a": ["shape"], "hint": "คุณสมบัติ"}, "2": {"a": ["max"], "hint": "เมธอด"}, "3": {"a": [">"], "hint": "เปรียบเทียบ"}}, "out": "(2, 2)\n200\n[[  0 255]\n [  0   0]]"}</script>
+  </div>
+
+  <h2>แบบทดสอบ · เขียนโค้ด</h2>
+
+  <div class="lab">
+    <h4>โจทย์ 1 — ดูค่าความสว่างของรูป</h4>
+    <p>อ่านรูป แปลงเป็นเทา แล้วพิมพ์ค่าต่ำสุด สูงสุด และค่าเฉลี่ย
+    จากนั้นนับว่ามีพิกเซลที่เข้มกว่า 128 อยู่กี่จุด</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+import numpy as np
+
+img = cv2.imread("cat.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+print("ต่ำสุด :", gray.min())
+print("สูงสุด :", gray.max())
+print("เฉลี่ย :", round(gray.mean(), 1))
+
+dark = int(np.sum(gray &lt; 128))       <span class="out"># นับจุดที่เข้มกว่า 128</span>
+print(f"จุดเข้ม {dark} จุด จากทั้งหมด {gray.size} จุด")</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 2 — เทียบฟิลเตอร์ 2 แบบ</h4>
+    <p>อ่านรูป แล้วบันทึกออกมา 3 ไฟล์: ภาพเทาต้นฉบับ, ผ่าน <code>GaussianBlur</code>
+    และผ่าน <code>medianBlur</code> แล้วเปิดดูเทียบกันว่าต่างกันตรงไหน</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+gray = cv2.imread("cat.jpg", cv2.IMREAD_GRAYSCALE)   <span class="out"># อ่านเป็นภาพเทาเลย</span>
+if gray is None:
+    print("ไม่พบรูป")
+    exit()
+
+outputs = [
+    ("out_gray.png",   gray),
+    ("out_gauss.png",  cv2.GaussianBlur(gray, (5, 5), 0)),
+    ("out_median.png", cv2.medianBlur(gray, 5)),
+]
+
+for name, image in outputs:
+    cv2.imwrite(name, image)
+    print("บันทึกแล้ว:", name)</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 3 — นับวัตถุในภาพ</h4>
+    <p>ทำตามลำดับมาตรฐาน: เทา → เบลอ → Otsu → <code>findContours</code>
+    แล้วนับว่ามีวัตถุกี่ชิ้น โดยข้ามก้อนที่เล็กกว่า 200 พิกเซล
+    และวาดกรอบสี่เหลี่ยมล้อมทุกชิ้นที่นับได้</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+img = cv2.imread("coins.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+_, binary = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+count = 0
+for c in contours:
+    if cv2.contourArea(c) &lt; 200:      <span class="out"># ก้อนเล็กเกินไป ข้ามไป</span>
+        continue
+    count += 1
+    x, y, w, h = cv2.boundingRect(c)
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+print("นับได้", count, "ชิ้น")
+cv2.imwrite("out_count.jpg", img)</pre>
+    </details>
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 4 — เมนูแปลงภาพ</h4>
+    <p>ทำเมนูง่าย ๆ ด้วย <code>while</code> + <code>if/elif</code> ให้เลือกได้ว่าจะทำ
+    1) เทา 2) Otsu 3) หาขอบ แล้วบันทึกไฟล์ผลลัพธ์
+    โดยทุกครั้งทำจาก<b>ภาพต้นฉบับ</b> ไม่ใช่ภาพที่แปลงไปแล้ว</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+<pre>import cv2
+
+img = cv2.imread("cat.jpg")
+if img is None:
+    print("ไม่พบรูป")
+    exit()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+while True:
+    print("1) เทา  2) Otsu  3) หาขอบ  q) ออก")
+    c = input("เลือก: ").strip()
+
+    if c == "q":
+        break
+    elif c == "1":
+        out, name = gray, "out_gray.png"
+    elif c == "2":
+        _, out = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        name = "out_otsu.png"
+    elif c == "3":
+        out = cv2.Canny(cv2.GaussianBlur(gray, (5, 5), 0), 100, 200)
+        name = "out_edge.png"
+    else:
+        print("ไม่มีตัวเลือกนั้น")
+        continue
+
+    cv2.imwrite(name, out)
+    print(f"บันทึก {name} · ความสว่างเฉลี่ย {out.mean():.1f}")</pre>
+    </details>
+  </div>
+
+  <div class="note">
+    <b>ทุกอย่างในบทนี้คือเลขคณิตกับลูป</b> — OpenCV แค่ทำให้เร็วพอใช้งานจริง
+    ถ้าเข้าใจว่าแต่ละคำสั่งทำอะไรกับตัวเลขในเมทริกซ์ ก็อ่านโค้ดงาน Computer Vision
+    ที่ไหนก็รู้เรื่อง แม้จะเจอคำสั่งที่ไม่เคยเห็นมาก่อน
+  </div>
+
+  <div class="lab">
+    <h4>โจทย์ 5 — วาด Flowchart</h4>
+    <p>วาด flowchart ของโปรแกรมหาขอบวัตถุ: อ่านภาพ → ขาวดำ → ลด noise → Canny → แสดงผล แล้วเขียนโค้ดตาม</p>
+    <details>
+      <summary>▸ ดูเฉลย</summary>
+  <div class="pair">
+  <figure class="fig">
+    <svg class="flow" viewBox="-89 -21 179 354" style="max-width:259px" role="img" aria-label="flowchart หาขอบด้วย Canny"><defs><marker id="ah-ch15lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8Z"/></marker><marker id="ah2-ch15lab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ah hl" d="M0 0L8 4L0 8Z"/></marker></defs><path class="e" d="M0.0 15.0 L0.0 37.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 67.0 L0.0 89.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 119.0 L0.0 141.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 171.0 L0.0 193.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 223.0 L0.0 245.0" marker-end="url(#ah-ch15lab)"/><path class="e" d="M0.0 275.0 L0.0 297.0" marker-end="url(#ah-ch15lab)"/><rect class="n term" x="-22.6" y="-15.0" width="45.2" height="30" rx="15.0"/><text x="0" y="0.0">เริ่ม</text><path class="n io" d="M-31.2 37.0H47.2L31.2 67.0H-47.2Z"/><text x="0" y="52.0">อ่านภาพ</text><rect class="n" x="-50.1" y="89.0" width="100.3" height="30"/><text x="0" y="104.0">แปลงเป็น gray</text><rect class="n" x="-75.5" y="141.0" width="150.9" height="30"/><text x="0" y="156.0">GaussianBlur ลด noise</text><rect class="n" x="-46.7" y="193.0" width="93.4" height="30"/><text x="0" y="208.0">Canny หาขอบ</text><path class="n io" d="M-44.0 245.0H60.0L44.0 275.0H-60.0Z"/><text x="0" y="260.0">แสดงภาพขอบ</text><rect class="n term" x="-19.4" y="297.0" width="38.8" height="30" rx="15.0"/><text x="0" y="312.0">จบ</text></svg>
+    <figcaption>pipeline ล้วน ไม่มีการตัดสินใจ</figcaption>
+  </figure>
+  <div class="pair-code"><pre>img = cv2.imread("coins.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blur, 50, 150)
+cv2.imshow("edges", edges)
+cv2.waitKey(0)</pre></div>
+  </div>
+    </details>
+  </div>
+</main>
+
+<script>
+/* สไลเดอร์ใต้รูป: ตั้ง data-step ให้ figure แล้ว CSS เลือกโชว์ขั้นที่ตรงกัน */
+for (const range of document.querySelectorAll('.fig input[type=range]')) {
+  const fig = range.closest('.fig');
+  const sync = () => fig.dataset.step = range.value;
+  range.addEventListener('input', sync);
+  sync();
+}
+</script>
+
+<script src="sidebar.js?v=20260923h"></script>
+</body>
+</html>
