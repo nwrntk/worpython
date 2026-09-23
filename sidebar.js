@@ -317,6 +317,7 @@ function initStepper() {
 
     function show() {
       const st = steps[at], prev = steps[at - 1];
+      box.querySelector('.st-code').classList.toggle('done', !!st.end);   // จบโปรแกรม: ขึ้นแถบใต้โค้ด
       lis.forEach((li, i) => {
         li.classList.toggle('ex', i + 1 === st.ex);
         li.classList.toggle('nx', i + 1 === st.nx);
@@ -885,6 +886,62 @@ function initConvViz() {
   }
 }
 
+/* ---------- เติมโค้ดในช่องว่าง ---------- */
+
+function initFillIn() {
+  // ยอมรับช่องว่างต่างกัน และ ' กับ " สลับกันได้ แต่ตัวพิมพ์เล็กใหญ่ต้องตรง (Python แยกตัวพิมพ์)
+  const norm = s => s.trim().replace(/\s+/g, ' ').replace(/'/g, '"');
+  for (const box of document.querySelectorAll('.fillin')) {
+    const { code, blanks, out } = JSON.parse(box.querySelector('script').textContent);
+    let n = 0;
+    const html = code.map(line => vzEsc(line).replace(/@(\d+)@/g, (_, k) => {
+      n++;
+      const b = blanks[k];
+      return `<input class="fi-in" size="${Math.max(4, b.a[0].length + 1)}" spellcheck="false" autocomplete="off"
+        data-k="${k}" aria-label="ช่องเติมที่ ${k}"${b.hint ? ` title="${vzEsc(b.hint)}" placeholder="${vzEsc(b.hint)}"` : ''}>`;
+    })).join('\n');
+    box.insertAdjacentHTML('beforeend', `
+      <pre class="fi-code">${html}</pre>
+      ${out ? `<div class="fi-want"><b>ต้องได้ผลลัพธ์</b><pre class="out-box">${vzEsc(out)}</pre></div>` : ''}
+      <div class="fi-ctl">
+        <button class="fi-check">ตรวจคำตอบ</button>
+        <button class="fi-show">ดูเฉลย</button>
+        <span class="fi-msg"></span>
+      </div>`);
+    const inputs = [...box.querySelectorAll('.fi-in')];
+    const msg = box.querySelector('.fi-msg'), check = box.querySelector('.fi-check'), show = box.querySelector('.fi-show');
+    const mark = i => {
+      const ok = blanks[i.dataset.k].a.some(a => norm(a) === norm(i.value));
+      i.classList.toggle('right', ok);
+      i.classList.toggle('wrong', !ok);
+      return ok;
+    };
+    check.addEventListener('click', () => {
+      const ok = inputs.filter(mark).length;
+      msg.textContent = ok === inputs.length
+        ? `ถูกทุกช่อง ${ok}/${inputs.length} · ลองพิมพ์ลงไฟล์ .py แล้วรันดูด้วย`
+        : `ถูก ${ok}/${inputs.length} ช่อง · ช่องสีแดงลองใหม่`;
+    });
+    let saved = null;                                  // ดูเฉลย ↔ ปิดเฉลย: ปิดแล้วได้ของที่พิมพ์ไว้คืน
+    show.addEventListener('click', () => {
+      if (!saved) {
+        saved = inputs.map(i => i.value);
+        for (const i of inputs) { i.value = blanks[i.dataset.k].a[0]; i.readOnly = true; mark(i); }
+        show.textContent = 'ปิดเฉลย';
+        check.disabled = true;
+        msg.textContent = 'นี่คือคำตอบหนึ่งที่ถูก · เขียนต่างจากนี้แต่ได้ผลเดียวกันก็ถือว่าใช้ได้';
+      } else {
+        inputs.forEach((i, k) => { i.value = saved[k]; i.readOnly = false; i.classList.remove('right', 'wrong'); });
+        saved = null;
+        show.textContent = 'ดูเฉลย';
+        check.disabled = false;
+        msg.textContent = '';
+      }
+    });
+    inputs.forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') check.click(); }));
+  }
+}
+
 /* ---------- ระบายสีโค้ด Python (เขียนเอง ไม่ต้องโหลดไลบรารีจากเน็ต) ---------- */
 
 const PY_KW = new Set(('False None True and as assert async await break class continue def del elif else except ' +
@@ -943,7 +1000,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initVenn();
   initSliceViz();
   initConvViz();
-  colorCode();
+  initFillIn();
+  colorCode();          // ต้องหลัง initFillIn เพื่อระบายสีโค้ดรอบช่องเติมด้วย
   buildLayout();
 });
 

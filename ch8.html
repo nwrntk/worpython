@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 8 · Loop Patterns — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -489,6 +489,14 @@ print(largest)</pre></div>
     <div class="explain">ไม่มีค่าไหนมากกว่า 0 ทาง "จริง" จึงไม่เคยถูกใช้ · นี่คือเหตุผลที่ต้องเริ่มจาก <code>None</code></div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · หาค่ามากสุดและนับจำนวน</h4>
+    <p>ลูปเดียว ทำสองอย่างพร้อมกัน</p>
+    <script type="application/json">{"code": ["scores = [55, 90, 42, 78]", "best = scores[0]", "count = 0", "for s in scores:", "    if s > best:", "        best = @1@", "    if s >= 50:", "        count @2@ 1", "print(best, count)"], "blanks": {"1": {"a": ["s"], "hint": "ตัวแปรในลูป"}, "2": {"a": ["+="], "hint": "นับเพิ่ม"}}, "out": "90 3"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -668,6 +676,6 @@ print(count, avg)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

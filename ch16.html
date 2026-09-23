@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 16 · Matplotlib — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -325,6 +325,14 @@ plt.show()</pre></div>
     <div class="explain">ปิดหน้าต่าง show แล้ว figure ถูกปิดตามไป <code>plt.savefig</code> ทีหลังจึงมักได้ภาพเปล่า · savefig ก่อนปลอดภัยเสมอ</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · พล็อตกราฟไทยแล้วบันทึกเป็นไฟล์</h4>
+    <p>ลืมตั้งฟอนต์ ภาษาไทยจะกลายเป็นสี่เหลี่ยมเปล่า (หัวข้อ 16.6) · บันทึกก่อน show() เสมอ</p>
+    <script type="application/json">{"code": ["import matplotlib.pyplot as plt", "", "plt.rcParams[\"font.family\"] = @1@", "", "x = [1, 2, 3]", "y = [2, 4, 6]", "plt.@2@(x, y)", "plt.xlabel(\"x\")", "plt.@3@(\"กราฟเส้น\")", "plt.@4@(\"graph.png\")"], "blanks": {"1": {"a": ["\"Tahoma\""], "hint": "ชื่อฟอนต์ไทย"}, "2": {"a": ["plot"], "hint": "ฟังก์ชันวาดเส้น"}, "3": {"a": ["title"], "hint": "ชื่อกราฟ"}, "4": {"a": ["savefig"], "hint": "บันทึกไฟล์"}}, "out": ""}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -452,6 +460,6 @@ plt.show()</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

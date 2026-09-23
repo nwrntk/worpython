@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 5 · Tuple — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -134,6 +134,33 @@ first, *rest = (1, 2, 3, 4, 5)
 print(first)     <span class="out"># 1</span>
 print(rest)      <span class="out"># [2, 3, 4, 5]</span></pre>
 
+  <h3>list ของ tuple — ข้อมูลหลายชุด ชุดละหลายค่า</h3>
+
+  <p>รูปแบบที่เจอบ่อยมาก: เก็บหลายรายการใน list โดยแต่ละรายการเป็น tuple ที่จับคู่ค่าไว้ด้วยกัน
+  แล้วแกะค่าออกมาใน <code>for</code> ได้เลย</p>
+
+<pre>scores = [("ฟ้า", 80), ("นล", 92), ("อาร์ม", 75)]
+
+for name, score in scores:
+    print(name, score)
+
+print(scores[1][0])
+
+best = scores[0]
+for item in scores:
+    if item[1] &gt; best[1]:
+        best = item
+print(best)
+<span class="out"># ฟ้า 80
+# นล 92
+# อาร์ม 75
+# นล
+# ('นล', 92)</span></pre>
+
+  <p><code>for name, score in scores:</code> คือการแกะ tuple แต่ละตัวออกเป็นสองตัวแปรทุกรอบ ·
+  ถ้าไม่แกะ ต้องเขียน <code>item[0]</code> <code>item[1]</code> ซึ่งอ่านยากกว่า ·
+  <code>scores[1][0]</code> คือ "รายการที่ 1 แล้วเอาค่าแรกของรายการนั้น"</p>
+
   <h2>5.6 กับดัก: tuple ที่มี list อยู่ข้างใน</h2>
 
   <p>tuple "แก้ไม่ได้" หมายถึงแก้ว่ามันชี้ไปที่อะไรไม่ได้ —
@@ -242,6 +269,14 @@ a, b = b, a</pre></div>
     <div class="explain">เป็นคำสั่งเดียวที่ทำพร้อมกัน จึงเป็นกล่องเดียว · แบบใช้ temp ถึงจะเป็น 3 กล่อง</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · tuple และการแกะค่า</h4>
+    <p>แกะค่าออกจาก tuple ใส่หลายตัวแปรพร้อมกัน</p>
+    <script type="application/json">{"code": ["t = (1, 2, 3)", "print(t[@1@])", "a, b, c = @2@", "print(a + b + c)", "point = (3, 4)", "x, y = point", "print(f\"x={x} y={y}\")"], "blanks": {"1": {"a": ["0"], "hint": "index ตัวแรก"}, "2": {"a": ["t"], "hint": "ชื่อตัวแปร"}}, "out": "1\n6\nx=3 y=4"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -341,6 +376,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

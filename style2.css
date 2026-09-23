@@ -843,7 +843,7 @@ th code { text-transform: none; letter-spacing: 0; }
 }
 
 /* ฟอนต์โค้ดรวม >= != -> เป็นสัญลักษณ์ตัวเดียว (ligature) นักเรียนจะพิมพ์ตามผิด · ปิดทุกที่ที่เป็นโค้ด */
-pre, code, kbd, .mono, .trace td, .trace input { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+pre, code, kbd, .mono, .trace td, .trace input, .fi-in { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
 
 /* ตารางไล่รอบบนจอแคบ: ให้ช่องเติมหดได้ ไม่ดันจอให้เลื่อนข้าง */
 .trace { overflow-x: auto; }
@@ -894,6 +894,13 @@ pre, code, kbd, .mono, .trace td, .trace input { font-variant-ligatures: none; f
 .st-code li.ex code { font-weight: 700; }
 .st-code li.ex::before { color: var(--good); font-weight: 700; }
 .st-code li.nx { outline: 1px dashed var(--rule-2); outline-offset: -1px; }
+/* จบโปรแกรมแล้ว: แถบชัด ๆ ใต้บรรทัดสุดท้าย */
+.st-code.done::after {
+  content: "■ จบโปรแกรม — ไม่มีบรรทัดถัดไปแล้ว";
+  display: block; margin-top: .35rem; padding: .25rem 1rem .25rem 3.2rem;
+  border-top: 2px solid var(--ink); background: var(--ink);
+  font-family: var(--font-ui); font-size: .7rem; font-weight: 700; color: #fff; letter-spacing: .04em;
+}
 .st-code li.nx::after {
   content: "ต่อไป"; position: absolute; right: .6rem; font-family: var(--font-ui);
   font-size: .62rem; font-weight: 400; color: var(--ink-soft);
@@ -1241,3 +1248,33 @@ pre .out.err { color: #c25a52; }
 .c-st { color: #2f7a55; }                            /* ข้อความในเครื่องหมายคำพูด */
 .c-nu { color: #b26a00; }                            /* ตัวเลข */
 .c-cm { color: var(--ink-soft); }                    /* คอมเมนต์ */
+
+/* ===== เติมโค้ดในช่องว่าง ===== */
+.fillin {
+  background: var(--paper); border: 1px solid var(--rule-2); border-top: 3px solid var(--good);
+  border-radius: 2px; padding: 1rem 1.2rem 1.1rem; margin: 1.8rem 0;
+}
+.fillin h4 { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .04em; color: var(--good); margin: 0 0 .3rem; }
+.fillin > p { margin: 0 0 .8rem; font-size: .92rem; }
+.fi-code { background: var(--bg); border-left-color: var(--good); }
+.fi-in {
+  font-family: var(--font-mono); font-size: .82rem; color: var(--ink);
+  padding: .05rem .3rem; border: 0; border-bottom: 2px solid var(--accent); background: #fff;
+  border-radius: 2px 2px 0 0; min-width: 3rem;
+}
+.fi-in:focus { outline: 2px solid var(--accent-hot); outline-offset: 1px; }
+.fi-in.right { background: #e3f1e8; border-bottom-color: var(--good); }
+.fi-in.wrong { background: #fdecea; border-bottom-color: var(--wrong); }
+.fi-want { margin: .2rem 0 .6rem; font-size: .85rem; }
+.fi-want b { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .06em; color: var(--ink-soft); }
+.fi-want .out-box { margin-top: .25rem; }
+.fi-want .out-box::before { display: none; }
+.fi-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.fi-ctl button {
+  font-family: var(--font-ui); font-size: .75rem; font-weight: 600; padding: .3rem .8rem;
+  border: 1px solid var(--good); border-radius: 2px; background: var(--good); color: #fff; cursor: pointer;
+}
+.fi-ctl .fi-show { background: #fff; color: var(--good); }
+.fi-ctl button:disabled { opacity: .4; cursor: not-allowed; }
+.fi-msg { font-size: .82rem; color: var(--ink-soft); }
+@media print { .fi-ctl { display: none !important; } .fillin { break-inside: avoid; } }

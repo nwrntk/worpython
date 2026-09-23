@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 11 · String — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -267,6 +267,14 @@ print(count)</pre></div>
     <div class="explain">ยาว 8 ตัว ผ่านเพชรแรก (จริง) · ไม่มีตัวเลข เพชรที่สองตอบเท็จ → ออกขวาไปแจ้ง "ต้องมีตัวเลข"</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · จัดการข้อความ</h4>
+    <p>ตัดช่องว่างหัวท้าย เปลี่ยนตัวพิมพ์ และแยก/ต่อข้อความ</p>
+    <script type="application/json">{"code": ["s = \"  Python Lab  \"", "print(s.@1@())", "print(s.strip().@2@())", "words = \"a,b,c\".@3@(\",\")", "print(words)", "print(\"-\".@4@(words))"], "blanks": {"1": {"a": ["strip"], "hint": "เมธอด"}, "2": {"a": ["upper"], "hint": "เมธอด"}, "3": {"a": ["split"], "hint": "เมธอด"}, "4": {"a": ["join"], "hint": "เมธอด"}}, "out": "Python Lab\nPYTHON LAB\n['a', 'b', 'c']\na-b-c"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -396,6 +404,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

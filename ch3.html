@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 3 · เงื่อนไข if — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -405,6 +405,14 @@ else:
     <div class="explain">if if if ถามทุกข้อ: 85 >= 50 จริง · 85 >= 80 จริง · 85 == 100 เท็จ → แสดง 2 บรรทัด</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · เติมเงื่อนไขให้ครบ 3 ทาง</h4>
+    <p>คะแนน 72 ต้องได้ผลว่า "ผ่าน"</p>
+    <script type="application/json">{"code": ["score = 72", "if score @1@ 80:", "    grade = \"ดีมาก\"", "@2@ score >= 50:", "    grade = \"ผ่าน\"", "@3@:", "    grade = \"ไม่ผ่าน\"", "print(grade)"], "blanks": {"1": {"a": [">="], "hint": "เปรียบเทียบ"}, "2": {"a": ["elif"], "hint": "คำสงวน"}, "3": {"a": ["else"], "hint": "คำสงวน"}}, "out": "ผ่าน"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -554,6 +562,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

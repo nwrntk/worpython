@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 14 · OpenCV — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -345,6 +345,14 @@ cv2.destroyAllWindows()</pre></div>
     <div class="explain">เปิดกล้องครั้งเดียวก่อน loop · ที่ต้องทำซ้ำทุกรอบคืออ่านเฟรมใหม่ ถ้าวนกลับไปถึง VideoCapture จะเปิดกล้องซ้ำทุกเฟรม</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · เปิดภาพ แปลงเป็นขาวดำ แล้วบันทึก</h4>
+    <p>ลำดับมาตรฐานของงานประมวลผลภาพด้วย OpenCV</p>
+    <script type="application/json">{"code": ["import cv2", "", "img = cv2.@1@(\"cat.jpg\")", "if img is @2@:", "    print(\"เปิดไฟล์ไม่ได้\")", "gray = cv2.cvtColor(img, cv2.@3@)", "cv2.@4@(\"gray.jpg\", gray)"], "blanks": {"1": {"a": ["imread"], "hint": "ฟังก์ชันอ่านภาพ"}, "2": {"a": ["None"], "hint": "ค่าที่ได้เมื่อเปิดไม่ได้"}, "3": {"a": ["COLOR_BGR2GRAY"], "hint": "ค่าคงที่"}, "4": {"a": ["imwrite"], "hint": "ฟังก์ชันบันทึก"}}, "out": ""}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -525,6 +533,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

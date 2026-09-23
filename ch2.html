@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 2 · ชนิดข้อมูล — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -298,6 +298,14 @@ ValueError: invalid literal for int() with base 10: 'สิบ'</pre>
       โค้ดไม่ได้ผิด แต่ต้องดักค่าที่ผู้ใช้พิมพ์ผิด (บทที่ 7 และ 13)</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · แปลงชนิดข้อมูลและตัวดำเนินการ</h4>
+    <p>ข้อความ "25" บวกเลขตรง ๆ ไม่ได้ ต้องแปลงก่อน</p>
+    <script type="application/json">{"code": ["s = \"25\"", "n = @1@(s)", "print(n + 5)", "print(@2@(3.7))", "print(10 @3@ 3)", "print(10 @4@ 3)"], "blanks": {"1": {"a": ["int"], "hint": "ชื่อฟังก์ชัน"}, "2": {"a": ["int"], "hint": "ตัดทศนิยมทิ้ง"}, "3": {"a": ["//"], "hint": "หารปัดเศษทิ้ง"}, "4": {"a": ["%"], "hint": "เศษเหลือ"}}, "out": "30\n3\n3\n1"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -431,6 +439,6 @@ print(f"ปีหน้าอายุ {age + 1}")</pre>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

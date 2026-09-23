@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 9 · Dictionary — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -180,6 +180,33 @@ for sid, info in students.items():
     ข้างในต้องใช้ <code>'</code> สลับกัน ไม่งั้น Python จะงงว่า string จบตรงไหน
   </div>
 
+  <h3>list ของ dict — ตารางข้อมูลแบบที่ใช้งานจริง</h3>
+
+  <p>ข้อมูลหลายรายการที่แต่ละรายการมีหลายฟิลด์ (เหมือนหนึ่งแถวในไฟล์ CSV บทที่ 13)
+  นิยมเก็บเป็น <strong>list ของ dict</strong></p>
+
+<pre>students = [
+    {"name": "ฟ้า", "gpa": 3.45},
+    {"name": "นล", "gpa": 2.80},
+]
+
+print(students[0]["name"])
+students.append({"name": "อาร์ม", "gpa": 3.10})
+
+for s in students:
+    print(s["name"], s["gpa"])
+
+best = max(students, key=lambda s: s["gpa"])
+print("เก่งสุด:", best["name"])
+<span class="out"># ฟ้า
+# ฟ้า 3.45
+# นล 2.8
+# อาร์ม 3.1
+# เก่งสุด: ฟ้า</span></pre>
+
+  <p>อ่านจากนอกเข้าใน: <code>students[0]["name"]</code> คือ "รายการที่ 0 ก่อน" ได้ dict หนึ่งก้อน
+  แล้วค่อยเอา key <code>"name"</code> ของก้อนนั้น · เพิ่มคนใหม่ด้วย <code>append</code> ทั้ง dict</p>
+
   <h2>9.8 เรียงลำดับ dict</h2>
 
 <pre>scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
@@ -297,6 +324,14 @@ print(counts)</pre></div>
     <button class="choice" data-correct>KeyError ตั้งแต่คำแรก</button>
     <button class="choice">ได้ dict ว่าง</button>
     <div class="explain">คำแรกยังไม่มี key ใน dict การ <code>+= 1</code> ต้องอ่านค่าเดิมก่อน จึงพัง · ทาง "เท็จ" มีไว้สร้าง key นี่เอง</div>
+  </div>
+
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · dict: อ่าน เพิ่ม และวนดูทั้งหมด</h4>
+    <p>key ที่ไม่มีอยู่ ต้องใช้วิธีที่ไม่ทำให้โปรแกรมพัง</p>
+    <script type="application/json">{"code": ["student = {\"name\": \"ฟ้าใส\", \"age\": 20}", "print(student[@1@])", "student[@2@] = 3.45", "print(student.@3@(\"email\", \"ไม่ระบุ\"))", "for k, v in student.@4@():", "    print(k, v)"], "blanks": {"1": {"a": ["\"name\""], "hint": "key"}, "2": {"a": ["\"gpa\""], "hint": "key ใหม่"}, "3": {"a": ["get"], "hint": "เมธอด"}, "4": {"a": ["items"], "hint": "เมธอด"}}, "out": "ฟ้าใส\nไม่ระบุ\nname ฟ้าใส\nage 20\ngpa 3.45"}</script>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -430,6 +465,6 @@ else:
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

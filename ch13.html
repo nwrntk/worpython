@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 13 · File &amp; Exception — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -350,6 +350,14 @@ else:
     <div class="explain">เกิด error → ไปทำบล็อก except · ไม่เกิด (เท็จ) → ทำต่อตามปกติ ซึ่งก็คือส่วน else</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · try-except และการเขียนไฟล์</h4>
+    <p>ภาษาไทยต้องระบุ encoding เสมอ</p>
+    <script type="application/json">{"code": ["try:", "    n = int(\"abc\")", "@1@ ValueError:", "    print(\"ไม่ใช่ตัวเลข\")", "@2@:", "    print(\"จบการแปลง\")", "", "with open(\"note.txt\", \"w\", encoding=@3@) as f:", "    f.write(\"สวัสดี\")", "", "with open(\"note.txt\", encoding=\"utf-8\") as f:", "    print(f.@4@())"], "blanks": {"1": {"a": ["except"], "hint": "คำสงวน"}, "2": {"a": ["finally"], "hint": "ทำเสมอ"}, "3": {"a": ["\"utf-8\""], "hint": "ข้อความ"}, "4": {"a": ["read"], "hint": "เมธอด"}}, "out": "ไม่ใช่ตัวเลข\nจบการแปลง\nสวัสดี"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -551,6 +559,6 @@ print(n)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

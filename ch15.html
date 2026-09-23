@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 15 · ภาพดิจิทัลและการประมวลผล — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -605,6 +605,14 @@ cv2.destroyAllWindows()</pre>
     <div class="explain">threshold ต้องได้ภาพ gray · findContours ต้องได้ภาพไบนารี · ลำดับผิด = error หรือผลเพี้ยน</div>
   </div>
 
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · ภาพคือตารางตัวเลข</h4>
+    <p>ใช้ numpy ดูขนาดภาพและทำภาพขาวดำสองระดับ</p>
+    <script type="application/json">{"code": ["import numpy as np", "", "img = np.array([[10, 200], [50, 90]])", "print(img.@1@)", "print(img.@2@())", "binary = (img @3@ 100).astype(np.uint8) * 255", "print(binary)"], "blanks": {"1": {"a": ["shape"], "hint": "คุณสมบัติ"}, "2": {"a": ["max"], "hint": "เมธอด"}, "3": {"a": [">"], "hint": "เปรียบเทียบ"}}, "out": "(2, 2)\n200\n[[  0 255]\n [  0   0]]"}</script>
+  </div>
+
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
 
   <div class="lab">
@@ -766,6 +774,6 @@ for (const range of document.querySelectorAll('.fig input[type=range]')) {
 }
 </script>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>

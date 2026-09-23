@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 4 · List — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923d">
+<link rel="stylesheet" href="style2.css?v=20260923e">
 </head>
 <body>
 
@@ -161,7 +161,75 @@ print(a)         <span class="out"># [1, 2, 3, 4]  ← a ไม่เปลี�
     <script type="application/json">{"code": ["a = [1, 2, 3]", "b = a", "b.append(4)", "print(a)", "c = a[:]", "c.append(99)", "print(a)", "print(c)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3]", "①", "list"], ["b", "[1, 2, 3]", "①", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"]]}], "out": ""}, {"ex": 4, "nx": 5, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 5, "nx": 6, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 6, "nx": 7, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n"}, {"ex": 7, "nx": 8, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n[1, 2, 3, 4]\n"}, {"ex": 8, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["a", "[1, 2, 3, 4]", "①", "list"], ["b", "[1, 2, 3, 4]", "①", "list"], ["c", "[1, 2, 3, 4, 99]", "②", "list"]]}], "out": "[1, 2, 3, 4]\n[1, 2, 3, 4]\n[1, 2, 3, 4, 99]\n", "end": 1}], "notes": {"2": "b ได้ป้าย <b>①<\/b> เหมือน a = ชื่อสองชื่อชี้ list ก้อนเดียวกัน ยังไม่มี list ก้อนที่สอง", "3": "append ผ่าน b แต่ a เปลี่ยนด้วย เพราะเป็นก้อนเดียวกัน", "5": "<code>a[:]<\/code> สร้าง list ก้อนใหม่ c จึงได้ป้าย <b>②<\/b>", "6": "แก้ c (ก้อน ②) แล้ว a (ก้อน ①) ไม่เปลี่ยน"}}</script>
   </div>
 
-  <h2>4.7 Flowchart กับ List</h2>
+  <h2>4.7 List ซ้อน List — ตาราง 2 มิติ</h2>
+
+  <p>สมาชิกของ list เป็น list ได้ ใช้เก็บข้อมูลที่เป็น<strong>ตาราง</strong> เช่น คะแนนหลายคนหลายวิชา
+  กระดานเกม หรือภาพ (บทที่ 15 ภาพคือตารางตัวเลขล้วน ๆ)</p>
+
+<pre>grid = [[1, 2, 3],
+        [4, 5, 6]]
+
+print(grid[0])         <span class="out"># [1, 2, 3]    ← ทั้งแถวที่ 0</span>
+print(grid[1][2])      <span class="out"># 6            ← แถวที่ 1 ช่องที่ 2</span>
+print(len(grid))       <span class="out"># 2            ← มีกี่แถว</span>
+print(len(grid[0]))    <span class="out"># 3            ← แถวแรกมีกี่ช่อง</span>
+
+grid[0][1] = 99        <span class="out"># แก้เฉพาะช่องเดียว</span>
+print(grid)            <span class="out"># [[1, 99, 3], [4, 5, 6]]</span></pre>
+
+  <div class="note">
+    <b>อ่านจากนอกเข้าใน:</b> <code>grid[1][2]</code> คือ "เอา<strong>แถว</strong>ที่ 1 ก่อน" ได้
+    <code>[4, 5, 6]</code> แล้วค่อย "เอา<strong>ช่อง</strong>ที่ 2 ของแถวนั้น" ได้ <code>6</code> ·
+    วงเล็บซ้ายสุดคือแถว วงเล็บขวาสุดคือหลัก<br>
+    <code>len(grid)</code> = จำนวนแถว · <code>len(grid[0])</code> = จำนวนหลักของแถวแรก
+  </div>
+
+  <h3>วนทุกช่องด้วย loop ซ้อน loop</h3>
+
+<pre>grid = [[1, 2, 3], [4, 5, 6]]
+
+for row in grid:
+    for cell in row:
+        print(cell, end=" ")
+    print()
+
+for r, row in enumerate(grid):
+    for c, cell in enumerate(row):
+        print(f"grid[{r}][{c}] = {cell}")
+<span class="out"># 1 2 3 
+# 4 5 6 
+# grid[0][0] = 1
+# grid[0][1] = 2
+# grid[0][2] = 3
+# grid[1][0] = 4
+# grid[1][1] = 5
+# grid[1][2] = 6</span></pre>
+
+  <p>loop นอกได้ทีละ<strong>แถว</strong> loop ในได้ทีละ<strong>ช่อง</strong>ของแถวนั้น ·
+  ถ้าอยากได้เลขแถวและเลขหลักด้วย ใช้ <code>enumerate</code> ซ้อนกันสองชั้น (บทที่ 6)</p>
+
+  <div class="warn">
+    <b>กับดักที่เจอบ่อยที่สุดของตาราง:</b> สร้างตารางด้วย <code>[[0] * 3] * 2</code> จะได้
+    <strong>แถวเดียวกันซ้ำสองครั้ง</strong> (ป้ายสองป้ายชี้ list ก้อนเดียวกัน เหตุผลเดียวกับหัวข้อ 4.6)
+    แก้ช่องเดียวจึงเปลี่ยนทุกแถว
+<pre>bad = [[0] * 3] * 2
+bad[0][0] = 9
+print(bad)      <span class="out"># [[9, 0, 0], [9, 0, 0]]  ← แถวล่างเปลี่ยนตามด้วย!</span>
+
+good = [[0] * 3 for _ in range(2)]
+good[0][0] = 9
+print(good)     <span class="out"># [[9, 0, 0], [0, 0, 0]]  ← เปลี่ยนแค่แถวเดียว ถูกต้อง</span></pre>
+    ใช้แบบล่างที่สร้าง list ใหม่ทุกแถวแทน
+  </div>
+
+  <div class="stepper">
+    <h4>ดูทีละบรรทัด · วนทุกช่องของตาราง 2 มิติ</h4>
+    <p>ดูว่า <code>row</code> เปลี่ยนทีละแถว ส่วน <code>cell</code> เปลี่ยนทุกช่อง · loop ในวนจบก่อน loop นอกจึงขยับ</p>
+    <script type="application/json">{"code": ["grid = [[1, 2], [3, 4]]", "for row in grid:", "    for cell in row:", "        print(cell)"], "steps": [{"ex": 0, "nx": 1, "fr": [{"n": "ทั้งโปรแกรม", "v": []}], "out": ""}, {"ex": 1, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"]]}], "out": ""}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"]]}], "out": ""}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"], ["cell", "1", "", "int"]]}], "out": ""}, {"ex": 4, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"], ["cell", "1", "", "int"]]}], "out": "1\n"}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"], ["cell", "2", "", "int"]]}], "out": "1\n"}, {"ex": 4, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"], ["cell", "2", "", "int"]]}], "out": "1\n2\n"}, {"ex": 3, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[1, 2]", "②", "list"], ["cell", "2", "", "int"]]}], "out": "1\n2\n"}, {"ex": 2, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "2", "", "int"]]}], "out": "1\n2\n"}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "3", "", "int"]]}], "out": "1\n2\n"}, {"ex": 4, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "3", "", "int"]]}], "out": "1\n2\n3\n"}, {"ex": 3, "nx": 4, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "4", "", "int"]]}], "out": "1\n2\n3\n"}, {"ex": 4, "nx": 3, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "4", "", "int"]]}], "out": "1\n2\n3\n4\n"}, {"ex": 3, "nx": 2, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "4", "", "int"]]}], "out": "1\n2\n3\n4\n"}, {"ex": 2, "nx": 0, "fr": [{"n": "ทั้งโปรแกรม", "v": [["grid", "[[1, 2], [3, 4]]", "①", "list"], ["row", "[3, 4]", "③", "list"], ["cell", "4", "", "int"]]}], "out": "1\n2\n3\n4\n", "end": 1}], "notes": {"2": "loop นอก: หยิบมาทีละ <b>แถว<\/b> (row เป็น list)", "3": "loop ใน: หยิบมาทีละ <b>ช่อง<\/b>ในแถวนั้น"}}</script>
+  </div>
+
+
+  <h2>4.8 Flowchart กับ List</h2>
 
   <p>คำสั่งที่เปลี่ยน list (<code>append</code>, <code>remove</code>, <code>sort</code>)
   เป็นกล่อง process ธรรมดา ส่วนการเช็กว่ามีของใน list ไหม (<code>in</code>) เป็นคำถาม จริง/เท็จ
@@ -258,6 +326,14 @@ else:
     <button class="choice"><code>members.sort()</code></button>
     <button class="choice"><code>n = len(members)</code></button>
     <div class="explain"><code>in</code> ได้คำตอบ True/False จึงเป็นคำถาม · ที่เหลือเป็นการกระทำ = กล่อง process</div>
+  </div>
+
+  <h2>แบบทดสอบ · เติมช่องว่าง</h2>
+
+  <div class="fillin">
+    <h4>เติมช่องว่าง · จัดการ list ให้ได้ตามผลลัพธ์</h4>
+    <p>เพิ่มสมาชิก เรียงลำดับ แล้วอ่านตัวสุดท้าย</p>
+    <script type="application/json">{"code": ["nums = [4, 7, 1]", "nums.@1@(9)", "nums.@2@()", "print(nums)", "print(nums[@3@])", "print(@4@(nums))"], "blanks": {"1": {"a": ["append"], "hint": "เมธอด"}, "2": {"a": ["sort"], "hint": "เมธอด"}, "3": {"a": ["-1"], "hint": "index"}, "4": {"a": ["len"], "hint": "ฟังก์ชัน"}}, "out": "[1, 4, 7, 9]\n9\n4"}</script>
   </div>
 
   <h2>แบบทดสอบ · เขียนโค้ด</h2>
@@ -367,6 +443,6 @@ print(max(scores), min(scores), avg)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923d"></script>
+<script src="sidebar.js?v=20260923e"></script>
 </body>
 </html>
