@@ -813,8 +813,13 @@ th code { text-transform: none; letter-spacing: 0; }
     border-bottom: 1px solid var(--rule); padding-bottom: .4rem; margin-bottom: 1rem;
   }
 
-  html, body { height: auto !important; overflow: visible !important; background: #fff !important; }
-  .pres-layout, .pres-stage, .pres-content, main { background: #fff !important; }
+  html { background: #fff !important; }
+  html, body { height: auto !important; overflow: visible !important; }
+  /* โปร่งใสทั้งหมด เพื่อให้เห็นลายน้ำที่อยู่บนพื้นหลังของ body (ดูท้ายไฟล์) */
+  .pres-layout, .pres-stage, .pres-content, main { background: transparent !important; }
+  /* กล่องพื้นขาวบนกระดาษขาว = ไม่ต่างกัน แต่ถ้าทึบจะบังลายน้ำ จึงทำให้โปร่งใส */
+  pre:not(.st-out):not(.out-box), .note, .warn, .lab, .quiz, .case, .trace, .stepper, .listviz, .dictviz, .setviz,
+  .vennviz, .sliceviz, .convviz, .fig { background-color: transparent !important; }
   body { font-size: 11pt; line-height: 1.7; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -1212,10 +1217,11 @@ main h2 { scroll-margin-top: 1rem; }
 
 @media print {
   .pres-credit { display: none !important; }
-  /* ลายน้ำโลโก้กลางทุกหน้า (position: fixed ถูกพิมพ์ซ้ำทุกหน้า) */
-  body::after {
-    content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; pointer-events: none;
-    background: url(bae_logo.png) center / 62% auto no-repeat; opacity: .07;
+  /* ลายน้ำโลโก้ทุกหน้า · ใช้ภาพพื้นหลังปูซ้ำ สูงกระเบื้องละ 1 หน้ากระดาษ (297 - ขอบบน 14 - ขอบล่าง 18)
+     ไม่ใช้ position: fixed เพราะเบราว์เซอร์บนมือถือพิมพ์ให้แค่หน้าแรกและสัดส่วนเพี้ยน */
+  body {
+    background: url(bae_watermark.png) repeat-y center top !important;
+    background-size: 100% 132.5mm !important;   /* กระเบื้อง = ครึ่งหน้า A4 · ทุกหน้ามีลายน้ำเสมอ ไม่ต้องพึ่งการแบ่งหน้าของเบราว์เซอร์ */
   }
 }
 
