@@ -24,7 +24,9 @@
 
 * { box-sizing: border-box; }
 
-html, body { height: 100%; overflow: hidden; }
+/* บนมือถือ/แท็บเล็ต 100vh สูงเกินจอจริง (นับพื้นที่ใต้แถบ URL ด้วย) หน้าจึงเลื่อนจนแถบบนหลุดออกนอกจอ
+   dvh วัดจากพื้นที่ที่เห็นจริง · เบราว์เซอร์เก่าที่ไม่รู้จัก dvh จะใช้ % ตามบรรทัดแรก */
+html, body { height: 100%; height: 100dvh; overflow: hidden; overscroll-behavior: none; }
 
 body {
   margin: 0;
@@ -39,7 +41,7 @@ body {
 
 /* ===== Layout ===== */
 
-.pres-layout { display: flex; height: 100vh; background: var(--bg); }
+.pres-layout { display: flex; height: 100vh; height: 100dvh; background: var(--bg); }
 
 /* ===== Sidebar ===== */
 
@@ -127,11 +129,14 @@ body {
 }
 
 .pres-topbar {
+  position: sticky; top: 0; z-index: 20;   /* ตรึงไว้บนสุดเสมอ */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: .5rem 1rem;
+  padding-top: calc(.5rem + env(safe-area-inset-top, 0px));   /* เผื่อรอยบากบน iPhone */
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
   min-height: var(--topbar-h);
@@ -195,7 +200,7 @@ body {
   text-align: center;
 }
 
-.pres-content { flex: 1; overflow-y: auto; outline: none; }
+.pres-content { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; outline: none; }
 
 .pres-hint {
   position: fixed;
