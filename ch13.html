@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>บทที่ 13 · File &amp; Exception — Python Lab</title>
-<link rel="stylesheet" href="style2.css?v=20260923i">
+<link rel="icon" type="image/png" href="favicon.png?v=1">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1">
+<link rel="stylesheet" href="style2.css?v=20261020">
 </head>
 <body>
 
@@ -27,7 +29,7 @@
 
   <table>
     <tr><th>ไฟล์</th><th>ข้างในมีอะไร</th><th>ใช้กับ</th></tr>
-    <tr><td><code>data.txt</code></td><td>ตัวเลข 12, 7, 30, 5, 46 บรรทัดละตัว (รวมกันได้ 100)</td><td>13.1, 13.5, 13.7</td></tr>
+    <tr><td><code>data.txt</code></td><td>ตัวเลข 12, 7, 30, 5, 46 บรรทัดละตัว (รวมกันได้ 100)</td><td>13.3, 13.9, 13.11</td></tr>
     <tr><td><code>scores.csv</code></td><td><code>ชื่อ,คะแนน</code> 6 คน</td><td>13.3, 13.6, โจทย์ 3</td></tr>
     <tr><td><code>scores_bad.csv</code></td><td>เหมือนข้างบน แต่มีบรรทัดว่าง คะแนนเป็นตัวหนังสือ ขาดคะแนน และมีช่องเกิน</td><td>ลองโค้ด 13.6 กับโจทย์ 3 ว่ารับมือได้ไหม</td></tr>
     <tr><td><code>notes.txt</code></td><td>บันทึก 3 รายการ บรรทัดละรายการ</td><td>โจทย์ 4</td></tr>
@@ -39,46 +41,202 @@
     ถ้ากดลิงก์แล้วเบราว์เซอร์เปิดไฟล์ขึ้นมาแทนการดาวน์โหลด ให้คลิกขวาที่ปุ่ม → Save link as
   </div>
 
-  <h2>13.1 อ่านไฟล์</h2>
+  <h2>13.1 เปิดไฟล์ แล้วต้องปิดด้วย</h2>
 
-  <p>ใช้ <code>with open(...)</code> เสมอ — Python จะปิดไฟล์ให้อัตโนมัติเมื่อจบบล็อก
-  แม้โปรแกรมจะ error กลางทาง</p>
+  <p>การใช้ไฟล์มี 3 ขั้นเสมอ: <strong>เปิด → ใช้งาน → ปิด</strong> ·
+  <code>open()</code> คืน<strong>ตัวแทนไฟล์</strong> (file object) ออกมาให้เราสั่งงานต่อ</p>
 
-<pre>with open("data.txt", "r", encoding="utf-8") as f:
-    content = f.read()          <span class="out"># อ่านทั้งไฟล์เป็น string เดียว</span>
+<pre>f = open("data.txt", encoding="utf-8")   # 1) เปิด
+text = f.read()                          # 2) ใช้งาน
+f.close()                                # 3) ปิด
 
-print(content)</pre>
+print(type(f))                                          <span class="out"># &lt;class '_io.TextIOWrapper'&gt;</span>
+print(f.name)                                           <span class="out"># data.txt</span>
+print(f.closed)                                         <span class="out"># True</span>
+print(len(text))                                        <span class="out"># 13</span></pre>
+
 
   <div class="warn">
-    <b>ภาษาไทยต้องใส่ <code>encoding="utf-8"</code> เสมอ</b><br>
-    ถ้าไม่ใส่ Windows จะเดา encoding เอง แล้วภาษาไทยจะกลายเป็นตัวประหลาด
-    หรือเกิด <span class="mono">UnicodeDecodeError</span>
+    <b>ถ้าลืม <code>close()</code></b> ไฟล์จะยังถูกจองไว้ · ที่เจอบ่อยคือสั่งเขียนแล้วไปเปิดอ่านทันที
+    แต่ข้อมูลยัง<b>ค้างอยู่ในหน่วยความจำ ยังไม่ลงไฟล์จริง</b> เลยอ่านได้ไม่ครบ
+<pre>f = open("note.txt", "w", encoding="utf-8")
+f.write("สวัสดี")
+# ยังไม่ได้ close
+
+print(repr(open("note.txt", encoding="utf-8").read()))   # ยังไม่ปิด    <span class="out"># ''  ← ยังไม่มีอะไรในไฟล์</span>
+f.close()
+print(repr(open("note.txt", encoding="utf-8").read()))   # ปิดแล้ว      <span class="out"># 'สวัสดี'  ← ข้อมูลลงไฟล์แล้ว</span></pre>
+
   </div>
 
-  <p>3 วิธีอ่าน เลือกตามงาน</p>
+  <h3>with — ให้ Python ปิดไฟล์ให้เอง</h3>
 
-<pre><span class="out"># 1) ทั้งไฟล์เป็น string เดียว</span>
-with open("data.txt", encoding="utf-8") as f:
+  <p>เขียนแบบ <code>with</code> แล้ว<strong>ไม่ต้องเรียก <code>close()</code> เลย</strong> ·
+  พอจบบล็อก (ย่อหน้ากลับออกมา) Python ปิดให้ทันที <strong>แม้โค้ดจะ error กลางทาง</strong>
+  ซึ่งเป็นจุดที่โค้ดแบบ <code>open/close</code> พลาดบ่อย เพราะพังก่อนถึงบรรทัด <code>close()</code></p>
+
+<pre>with open("data.txt", encoding="utf-8") as f:
     text = f.read()
+    print(f.closed)        # ข้างในบล็อก: ยังเปิดอยู่            <span class="out"># False</span>
 
-<span class="out"># 2) เป็น list ทีละบรรทัด (ติด \n ท้ายมาด้วย)</span>
-with open("data.txt", encoding="utf-8") as f:
-    lines = f.readlines()
+print(f.closed)            # ออกจากบล็อก: ปิดให้แล้วอัตโนมัติ    <span class="out"># True</span></pre>
 
-<span class="out"># 3) วนทีละบรรทัด — ประหยัดหน่วยความจำที่สุด ใช้บ่อยที่สุด</span>
-with open("data.txt", encoding="utf-8") as f:
-    for line in f:
-        print(line.strip())     <span class="out"># strip() ตัด \n ท้ายบรรทัดทิ้ง</span></pre>
 
-  <h2>13.2 เขียนไฟล์</h2>
+  <p>เปิดหลายไฟล์พร้อมกันก็ได้ คั่นด้วยจุลภาค</p>
+
+<pre>with open("in.txt", encoding="utf-8") as src, open("out.txt", "w", encoding="utf-8") as dst:
+    dst.write(src.read().upper())</pre>
+
+  <div class="note">
+    <b>สรุปกฎของบทนี้:</b> ใช้ <code>with open(...)</code> เสมอ · เขียน <code>open/close</code> เองเฉพาะตอนที่
+    ต้องเปิดไฟล์ค้างไว้ข้ามฟังก์ชันจริง ๆ ซึ่งเจอไม่บ่อย
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C24">เปิดไฟล์ด้วย <code>with open(...) as f:</code> แล้วโค้ดข้างในเกิด error · ไฟล์ถูกปิดไหม?</div>
+    <button class="choice" data-correct>ปิด · <code>with</code> ปิดให้เสมอแม้จะ error</button>
+    <button class="choice">ไม่ปิด เพราะโปรแกรมหยุดก่อน</button>
+    <button class="choice">ปิดเฉพาะตอนที่เขียนไฟล์</button>
+    <button class="choice">ต้องเรียก <code>f.close()</code> เองอยู่ดี</button>
+    <div class="explain">นี่คือเหตุผลหลักที่ใช้ <code>with</code> · ถ้าเขียน <code>open/close</code> เอง แล้วพังกลางทาง บรรทัด <code>close()</code> จะไม่ถูกทำเลย</div>
+  </div>
+
+  <h2>13.2 โหมดเปิดไฟล์</h2>
+
+  <p>พารามิเตอร์ตัวที่สองของ <code>open()</code> คือ<strong>โหมด</strong> บอกว่าจะทำอะไรกับไฟล์ ·
+  ไม่ใส่ = <code>"r"</code> คืออ่านอย่างเดียว</p>
 
   <table>
-    <tr><th>โหมด</th><th>ความหมาย</th></tr>
-    <tr><td><code>"r"</code></td><td>อ่าน (ค่าเริ่มต้น) — ถ้าไม่มีไฟล์จะ error</td></tr>
-    <tr><td><code>"w"</code></td><td>เขียนใหม่ — <strong>ลบข้อมูลเดิมทั้งหมด</strong></td></tr>
-    <tr><td><code>"a"</code></td><td>เขียนต่อท้าย — ของเดิมยังอยู่</td></tr>
-    <tr><td><code>"x"</code></td><td>สร้างใหม่ — ถ้ามีไฟล์อยู่แล้วจะ error</td></tr>
+    <tr><th>โหมด</th><th>ไฟล์ไม่มีอยู่</th><th>ไฟล์มีอยู่แล้ว</th><th>ใช้ตอนไหน</th></tr>
+    <tr><td><code>"r"</code></td><td><span class="mono">FileNotFoundError</span></td><td>อ่านได้ เขียนไม่ได้</td><td>อ่านข้อมูล (ค่าเริ่มต้น)</td></tr>
+    <tr><td><code>"w"</code></td><td>สร้างใหม่ให้</td><td><strong>ล้างข้อมูลเดิมทิ้งทั้งหมด</strong></td><td>เขียนผลลัพธ์ชุดใหม่</td></tr>
+    <tr><td><code>"a"</code></td><td>สร้างใหม่ให้</td><td>เขียนต่อท้าย ของเดิมอยู่ครบ</td><td>บันทึกเพิ่มทีละรายการ</td></tr>
+    <tr><td><code>"x"</code></td><td>สร้างใหม่ให้</td><td><span class="mono">FileExistsError</span></td><td>กันเขียนทับโดยไม่ตั้งใจ</td></tr>
   </table>
+
+<pre># "w" ล้างไฟล์ทิ้งตั้งแต่ตอนเปิด ยังไม่ทันเขียนอะไรเลย
+with open("notes.txt", encoding="utf-8") as f:
+    print(len(f.read()))      # ของเดิมมีข้อมูลอยู่                      <span class="out"># 70</span>
+
+f = open("notes.txt", "w", encoding="utf-8")
+f.close()                     # เปิดโหมด w แล้วปิดเลย ไม่ได้เขียนอะไร
+
+with open("notes.txt", encoding="utf-8") as f:
+    print(len(f.read()))      # ของเดิมหายหมดแล้ว                        <span class="out"># 0</span></pre>
+
+
+  <div class="warn">
+    <b>พิมพ์ <code>"w"</code> แทน <code>"r"</code> = ข้อมูลหาย</b> และกู้คืนไม่ได้ ·
+    ถ้าแค่อ่าน ไม่ต้องใส่โหมดเลยปลอดภัยที่สุด · ถ้าไม่อยากเขียนทับไฟล์ที่มีอยู่ ให้ใช้ <code>"x"</code>
+  </div>
+
+  <p>เติม <code>"b"</code> ท้ายโหมด แปลว่าอ่าน-เขียนเป็น<strong>ไบต์ดิบ</strong> ไม่ใช่ข้อความ
+  ใช้กับไฟล์ที่ไม่ใช่ตัวหนังสือ เช่น รูปภาพ (บทที่ 17–18) · โหมดไบต์<strong>ห้ามใส่ <code>encoding</code></strong></p>
+
+<pre>with open("cat.jpg", "rb") as f:     <span class="out"># rb = read binary</span>
+    head = f.read(4)
+    print(head)                      <span class="out"># b'\xff\xd8\xff\xe0'  ← ไบต์ดิบ</span></pre>
+
+  <h2>13.3 อ่านไฟล์ 4 วิธี</h2>
+
+  <p>ไฟล์ <code>data.txt</code> มีตัวเลขบรรทัดละตัว: 12, 7, 30, 5, 46</p>
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    text = f.read()               # ทั้งไฟล์เป็นข้อความก้อนเดียว
+
+print(repr(text))                                                   <span class="out"># '12\n7\n30\n5\n46\n'</span>
+print(len(text))                                                    <span class="out"># 13</span></pre>
+
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    first = f.readline()          # ทีละ 1 บรรทัด
+    second = f.readline()
+
+print(repr(first))                                   <span class="out"># '12\n'</span>
+print(repr(second))                                  <span class="out"># '7\n'</span></pre>
+
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    lines = f.readlines()         # ทุกบรรทัดเป็น list
+
+print(lines)                                              <span class="out"># ['12\n', '7\n', '30\n', '5\n', '46\n']</span>
+print(len(lines))                                         <span class="out"># 5</span>
+print(lines[0].strip())                                   <span class="out"># 12</span></pre>
+
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    for line in f:                # วนทีละบรรทัด ใช้บ่อยที่สุด
+        print(line.strip())</pre>
+<pre class="out-box">12
+7
+30
+5
+46</pre>
+
+
+  <table>
+    <tr><th>วิธี</th><th>ได้อะไร</th><th>เหมาะกับ</th></tr>
+    <tr><td><code>f.read()</code></td><td>str ก้อนเดียวทั้งไฟล์</td><td>ไฟล์เล็ก อยากได้ข้อความทั้งหมด</td></tr>
+    <tr><td><code>f.readline()</code></td><td>str ทีละบรรทัด</td><td>อ่านหัวตารางบรรทัดแรกแยกจากข้อมูล</td></tr>
+    <tr><td><code>f.readlines()</code></td><td>list ของทุกบรรทัด</td><td>อยากนับบรรทัด หรือเข้าถึงด้วย index</td></tr>
+    <tr><td><code>for line in f</code></td><td>ทีละบรรทัดแบบไม่โหลดทั้งไฟล์</td><td><strong>ค่าเริ่มต้นที่ควรใช้</strong> ไฟล์ใหญ่แค่ไหนก็ไหว</td></tr>
+  </table>
+
+  <div class="note">
+    <b>ทุกบรรทัดที่อ่านมามี <code>\n</code> ติดท้าย</b> (ยกเว้นบรรทัดสุดท้ายของบางไฟล์)
+    จึงต้อง <code>.strip()</code> ก่อนใช้เกือบทุกครั้ง · และข้อมูลที่ได้เป็น <b>str เสมอ</b>
+    ถ้าจะคำนวณต้อง <code>int()</code> หรือ <code>float()</code> ก่อน
+  </div>
+
+<pre>total = 0
+with open("data.txt", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if line:                  # ข้ามบรรทัดว่าง
+            total += int(line)    # แปลงเป็นตัวเลขก่อนบวก
+
+print(total)                                                 <span class="out"># 100</span></pre>
+
+
+  <h2>13.4 ตัวชี้ตำแหน่งในไฟล์</h2>
+
+  <p>ไฟล์ที่เปิดอยู่มี<strong>ตัวชี้</strong>บอกว่าอ่านถึงไหนแล้ว · อ่านไปข้างหน้าเรื่อย ๆ
+  พออ่านจนจบไฟล์ ตัวชี้อยู่ท้ายสุด <strong>อ่านซ้ำอีกครั้งจึงได้ข้อความว่าง</strong>
+  ซึ่งเป็นกับดักที่ทำคนงงมาก</p>
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    first = f.read()
+    second = f.read()          # อ่านซ้ำทันที
+
+print(len(first))                                                    <span class="out"># 13</span>
+print(repr(second))            # ว่าง เพราะตัวชี้อยู่ท้ายไฟล์แล้ว    <span class="out"># ''</span></pre>
+
+
+  <p><code>f.tell()</code> ถามว่าตัวชี้อยู่ตำแหน่งไหน · <code>f.seek(0)</code> สั่งให้กลับไปต้นไฟล์</p>
+
+<pre>with open("data.txt", encoding="utf-8") as f:
+    print(f.tell())            # เพิ่งเปิด อยู่ต้นไฟล์    <span class="out"># 0</span>
+    print(f.readline().strip())                           <span class="out"># 12</span>
+    print(f.tell())            # ขยับไปแล้ว               <span class="out"># 3</span>
+    f.seek(0)                  # ย้อนกลับไปต้นไฟล์
+    print(f.readline().strip())                           <span class="out"># 12</span></pre>
+
+
+  <div class="note">
+    <b>วิธีที่ง่ายกว่าการ seek</b> — ถ้าต้องใช้ข้อมูลหลายรอบ ให้<b>อ่านเก็บใส่ตัวแปรครั้งเดียว</b>
+    เช่น <code>lines = f.readlines()</code> แล้ววน <code>lines</code> กี่รอบก็ได้ ไม่ต้องยุ่งกับตัวชี้
+  </div>
+
+  <div class="quiz check">
+    <div class="q" data-n="C25">อ่านไฟล์ด้วย <code>f.read()</code> ไปแล้วหนึ่งครั้ง · สั่ง <code>f.read()</code> ซ้ำทันทีได้อะไร?</div>
+    <button class="choice" data-correct>ข้อความว่าง เพราะตัวชี้อยู่ท้ายไฟล์แล้ว</button>
+    <button class="choice">ข้อความเดิมทั้งหมดอีกรอบ</button>
+    <button class="choice">เกิด error</button>
+    <button class="choice">ได้เฉพาะบรรทัดแรก</button>
+    <div class="explain">ตัวชี้เดินไปข้างหน้าอย่างเดียว · ถ้าต้องอ่านซ้ำให้ <code>f.seek(0)</code> ก่อน หรือเก็บไว้ในตัวแปรตั้งแต่รอบแรก</div>
+  </div>
+
+  <h2>13.5 เขียนไฟล์</h2>
 
 <pre><span class="out"># เขียนทับ</span>
 with open("output.txt", "w", encoding="utf-8") as f:
@@ -95,12 +253,96 @@ with open("names.txt", "w", encoding="utf-8") as f:
     for n in names:
         f.write(n + "\n")</pre>
 
+  <h3>write ไม่ขึ้นบรรทัดใหม่ให้</h3>
+
+  <p>ต่างจาก <code>print</code> ที่ขึ้นบรรทัดใหม่ให้เสมอ · <code>f.write()</code> เขียนตามที่สั่งเป๊ะ ๆ
+  ต้องใส่ <code>\n</code> เอง และคืนจำนวนตัวอักษรที่เขียนลงไป</p>
+
+<pre>with open("out.txt", "w", encoding="utf-8") as f:
+    n = f.write("ฟ้า")
+    f.write("นล")              # ไม่ได้ใส่ \n จึงต่อกันเป็นบรรทัดเดียว
+
+print(n)                                                                  <span class="out"># 3</span>
+print(repr(open("out.txt", encoding="utf-8").read()))                     <span class="out"># 'ฟ้านล'</span></pre>
+
+
+<pre>names = ["ฟ้า", "นล", "อาร์ม"]
+
+with open("out.txt", "w", encoding="utf-8") as f:
+    f.writelines(n + "\n" for n in names)   # writelines ก็ไม่เติม \n ให้เช่นกัน
+
+print(open("out.txt", encoding="utf-8").read())</pre>
+<pre class="out-box">ฟ้า
+นล
+อาร์ม</pre>
+
+
+  <p>อีกวิธีที่สะดวกคือใช้ <code>print</code> แล้วบอกว่าให้พิมพ์ลงไฟล์แทนจอ ด้วย <code>file=</code>
+  วิธีนี้ขึ้นบรรทัดใหม่ให้อัตโนมัติ</p>
+
+<pre>with open("out.txt", "w", encoding="utf-8") as f:
+    print("ฟ้า", 85, file=f)        # ขึ้นบรรทัดใหม่ให้เอง
+    print("นล", 92, file=f)
+
+print(open("out.txt", encoding="utf-8").read())</pre>
+<pre class="out-box">ฟ้า 85
+นล 92</pre>
+
+
+  <h2>13.6 ไฟล์ที่ว่านั้นอยู่ที่ไหน</h2>
+
+  <p>เขียน <code>open("data.txt")</code> เฉย ๆ แปลว่า "หาไฟล์ชื่อนี้ใน<strong>โฟลเดอร์ที่กำลังทำงานอยู่</strong>"
+  ซึ่งมักเป็นโฟลเดอร์เดียวกับไฟล์ <code>.py</code> ที่รัน · ถ้าไฟล์อยู่คนละที่จะได้
+  <a href="errors.html#file"><span class="mono">FileNotFoundError</span></a> ทันที</p>
+
+<pre>import os
+
+print(os.getcwd())                       # โฟลเดอร์ที่กำลังทำงานอยู่
+print(os.listdir())                      # มีไฟล์อะไรอยู่บ้าง
+print(os.path.exists("data.txt"))        # มีไฟล์นี้ไหม
+print(os.path.exists("missing.txt"))</pre>
+<pre class="out-box">D:\งาน\python-lab
+['data.txt', 'main.py', 'notes.txt']
+True
+False</pre>
+
+
+  <p>ระบุที่อยู่ไฟล์ได้ 2 แบบ</p>
+
+<pre><span class="out"># เส้นทางแบบสัมพัทธ์ — นับจากโฟลเดอร์ที่ทำงานอยู่</span>
+open("data.txt")              <span class="out"># ไฟล์อยู่ข้าง ๆ โค้ด</span>
+open("files/data.txt")        <span class="out"># อยู่ในโฟลเดอร์ย่อยชื่อ files</span>
+open("../data.txt")           <span class="out"># ถอยออกไปโฟลเดอร์แม่</span>
+
+<span class="out"># เส้นทางแบบเต็ม — บอกที่อยู่ตั้งแต่ไดรฟ์</span>
+open(r"D:\งาน\data.txt")      <span class="out"># ใส่ r นำหน้า กัน \ ถูกตีความเป็นรหัสพิเศษ</span></pre>
+
   <div class="warn">
-    <b>โหมด <code>"w"</code> ลบของเดิมทันทีที่เปิดไฟล์</b> — ก่อนที่จะเขียนอะไรด้วยซ้ำ
-    ถ้าไม่ได้ตั้งใจลบ ให้ใช้ <code>"a"</code>
+    <b>บน Windows ต้องระวังเครื่องหมาย <code>\</code></b> เพราะ <code>\n</code> <code>\t</code>
+    มีความหมายพิเศษ (บทที่ 11) · เขียน <code>r"..."</code> นำหน้า หรือใช้ <code>/</code> แทนก็ได้
+    Python เข้าใจทั้งคู่
   </div>
 
-  <h2>13.3 อ่าน-เขียนข้อมูลแบบตาราง</h2>
+  <p>ก่อนเปิดไฟล์ควรเช็กก่อนว่ามีจริงไหม จะได้แจ้งผู้ใช้ดี ๆ แทนที่จะให้โปรแกรมพัง</p>
+
+<pre>import os
+
+name = "missing.txt"
+if os.path.exists(name):
+    with open(name, encoding="utf-8") as f:
+        print(f.read())
+else:
+    print(f"ไม่พบไฟล์ {name} · ตรวจชื่อไฟล์และโฟลเดอร์อีกที")</pre>
+<pre class="out-box">ไม่พบไฟล์ missing.txt · ตรวจชื่อไฟล์และโฟลเดอร์อีกที</pre>
+
+
+  <div class="note">
+    <b>เช็กก่อน หรือดักด้วย try-except ดี?</b> — เช็กด้วย <code>os.path.exists()</code> อ่านง่ายดี
+    แต่ไฟล์อาจหายไประหว่างบรรทัดที่เช็กกับบรรทัดที่เปิดก็ได้ · วิธีที่ปลอดภัยกว่าคือ
+    <b>ลองเปิดแล้วดัก error</b> ซึ่งเป็นเรื่องของหัวข้อถัดไป
+  </div>
+
+  <h2>13.7 อ่าน-เขียนข้อมูลแบบตาราง</h2>
 
 <pre><span class="out"># เขียน: ชื่อ,คะแนน บรรทัดละคน</span>
 scores = {"ฟ้า": 85, "นล": 92, "อาร์ม": 78}
@@ -131,7 +373,7 @@ print(loaded)      <span class="out"># {'ฟ้า': 85, 'นล': 92, 'อา�
     ต้อง <code>int()</code> หรือ <code>float()</code> ก่อนเอาไปคำนวณ
   </div>
 
-  <h2>13.4 try-except — กันโปรแกรมพัง</h2>
+  <h2>13.8 try-except — กันโปรแกรมพัง</h2>
 
 <pre>try:
     n = int(input("ใส่ตัวเลข: "))
@@ -169,7 +411,7 @@ except ZeroDivisionError:
     <div class="explain">พอเกิด error Python ทิ้งบรรทัดที่เหลือใน try ทันที แล้วไปหา except ที่ตรงชนิด · ส่วน <code>finally</code> ทำเสมอ</div>
   </div>
 
-  <h2>13.5 โครงสร้างเต็ม</h2>
+  <h2>13.9 โครงสร้างเต็ม</h2>
 
 <pre>try:
     f = open("data.txt", encoding="utf-8")
@@ -202,7 +444,7 @@ except (ValueError, ZeroDivisionError) as e:
     รวมถึง bug ที่เราเขียนผิดเอง ทำให้หาปัญหาไม่เจอ — ระบุชนิดที่คาดไว้เสมอ
   </div>
 
-  <h2>13.6 รูปแบบที่ใช้จริง</h2>
+  <h2>13.10 รูปแบบที่ใช้จริง</h2>
 
 <pre>def read_scores(filename):
     """อ่านไฟล์คะแนน คืน dict — ถ้าไม่มีไฟล์คืน dict ว่าง"""
@@ -251,7 +493,7 @@ save_scores("scores.csv", scores)</pre>
 
 print("อายุของคุณคือ", age)</pre>
 
-  <h2>13.7 Flowchart ของ try-except</h2>
+  <h2>13.11 Flowchart ของ try-except</h2>
 
   <p>try-except วาดเป็นเพชรที่ถามว่า <strong>"เกิด error นี้ไหม?"</strong> ต่อจากกล่องที่เสี่ยงพัง
   ทาง "จริง" คือบล็อก <code>except</code> ทาง "เท็จ" คือทำต่อตามปกติ</p>
@@ -568,6 +810,6 @@ print(n)</pre></div>
   </div>
 </main>
 
-<script src="sidebar.js?v=20260923i"></script>
+<script src="sidebar.js?v=20261020"></script>
 </body>
 </html>
